@@ -1,8 +1,9 @@
 """Rule Engine: 검증된 규칙 트리와 학생 사실로 조건별 3값과 최종 판정을 계산한다.
 
 판정 계산은 이 모듈 한 곳에만 있다(BR-B02, ADR-0002). 같은 입력이면 같은 결과(AC-B10).
-지원: 비교 잎(>=, <=, ==), AND 노드(3값 진리표, 05 §3).
-지원하지 않는 구조(OR 등)는 추측하지 않고 UNKNOWN/UNSUPPORTED_OPERATOR로 둔다 — OR는 #29.
+지원: 비교 잎(>=, <=, ==), AND·OR 노드(3값 진리표, 05 §3), 임의 깊이 중첩.
+트리를 AND로 평탄화하지 않고 원문 구조 그대로 평가한다(AC-B04, BR-B08).
+지원하지 않는 구조는 추측하지 않고 UNKNOWN/UNSUPPORTED_OPERATOR로 둔다.
 """
 
 from collections.abc import Mapping
@@ -14,6 +15,7 @@ from app.eligibility.domain.model import (
     EligibilityGroup,
     Evaluation,
     Fact,
+    RuleNode,
     RuleResult,
 )
 
@@ -30,18 +32,20 @@ def evaluate(expression: Mapping[str, Any], facts: Mapping[str, Fact]) -> Evalua
         return Evaluation((), "UNKNOWN", "NEEDS_REVIEW", reason_code="RULE_UNVERIFIED")
 
     outcomes: list[ConditionOutcome] = []
-    aggregate = _eval_node(expression, dict(facts), outcomes)
-    return Evaluation(tuple(outcomes), aggregate, _GROUP[aggregate])
+    tree = _eval_node(expression, dict(facts), outcomes)
+    return Evaluation(tuple(outcomes), tree.result, _GROUP[tree.result], tree=tree)
 
 
-def _eval_node(node: Any, facts: dict[str, Fact], out: list[ConditionOutcome]) -> RuleResult:
-    if isinstance(node, Mapping) and set(node) == {"and"} and isinstance(node["and"], list):
-        if not node["and"]:
-            return "UNKNOWN"  # 중첩된 빈 AND도 PASS로 보지 않는다
-        return _and([_eval_node(child, facts, out) for child in node["and"]])
+def _eval_node(node: Any, facts: dict[str, Fact], out: list[ConditionOutcome]) -> RuleNode:
+    for key, kind, combine in (("and", "AND", _and), ("or", "OR", _or)):
+        if isinstance(node, Mapping) and set(node) == {key} and isinstance(node[key], list):
+            children = tuple(_eval_node(child, facts, out) for child in node[key])
+            # 빈 AND·OR을 every([])/any([])처럼 PASS·FAIL로 확정하지 않는다
+            result = combine([c.result for c in children]) if children else "UNKNOWN"
+            return RuleNode(kind, result, children=children)
     if isinstance(node, Mapping) and "op" in node and "id" in node:
-        return _eval_leaf(node, facts, out)
-    return _unsupported(node, out)
+        return RuleNode("CONDITION", _eval_leaf(node, facts, out), condition_id=node["id"])
+    return RuleNode("UNSUPPORTED", _unsupported(node, out))
 
 
 def _and(results: list[RuleResult]) -> RuleResult:
@@ -51,6 +55,15 @@ def _and(results: list[RuleResult]) -> RuleResult:
     if "UNKNOWN" in results:
         return "UNKNOWN"
     return "PASS"
+
+
+def _or(results: list[RuleResult]) -> RuleResult:
+    """원문이 명시한 대안 자격 OR: PASS가 있으면 PASS, 없고 UNKNOWN이면 UNKNOWN, 아니면 FAIL."""
+    if "PASS" in results:
+        return "PASS"
+    if "UNKNOWN" in results:
+        return "UNKNOWN"
+    return "FAIL"
 
 
 def _eval_leaf(leaf: Mapping[str, Any], facts: dict[str, Fact], out: list) -> RuleResult:

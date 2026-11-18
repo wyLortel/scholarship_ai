@@ -33,9 +33,21 @@ class ConditionOutcome:
 
 
 @dataclass(frozen=True)
+class RuleNode:
+    """평가한 규칙 트리 한 노드. 원문의 AND/OR 괄호 구조를 그대로 보존한다 (BR-B08)."""
+
+    kind: Literal["AND", "OR", "CONDITION", "UNSUPPORTED"]
+    result: RuleResult
+    condition_id: str | None = None
+    children: tuple["RuleNode", ...] = ()
+
+
+@dataclass(frozen=True)
 class Evaluation:
     conditions: tuple[ConditionOutcome, ...]
     aggregate: RuleResult
     group: EligibilityGroup
     # 규칙 전체를 평가하지 못한 이유 (빈 규칙 등). 정상 평가면 None.
     reason_code: ReasonCode | None = None
+    # 평가한 AND/OR 트리. 규칙을 평가하지 못했으면(빈 규칙) None.
+    tree: RuleNode | None = None
