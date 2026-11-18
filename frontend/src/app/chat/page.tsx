@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ChatSession } from "@/features/chat/ui/ChatSession";
+import { AppShell } from "@/features/navigation/ui/AppShell";
 import type { ChatNotice, ChatQuestion } from "@/features/chat/model/types";
 import { getNotice, getNotices } from "@/lib/api/server";
 import type { NoticeDetail } from "@/lib/api/types";
@@ -24,7 +25,11 @@ export default async function ChatPage() {
       }
     }
   }
-  return <ChatSession notices={notices} />;
+  return (
+    <AppShell current="chat">
+      <ChatSession notices={notices} />
+    </AppShell>
+  );
 }
 
 function toChatNotice(detail: NoticeDetail): ChatNotice {

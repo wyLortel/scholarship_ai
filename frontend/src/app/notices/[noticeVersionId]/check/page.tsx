@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AssessmentForm } from "@/features/assessment/ui/AssessmentForm";
+import { AppShell } from "@/features/navigation/ui/AppShell";
 import { getNotice, getNotices } from "@/lib/api/server";
 
 import { assessAction } from "@/features/assessment/server/actions";
@@ -33,17 +34,19 @@ export default async function CheckPage({
   ];
 
   return (
-    <main style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px" }}>
-      <p>
-        <Link href="/notices">← 공고 목록</Link>
-      </p>
-      {notice.isTestOnly && <p>TEST_ONLY · 가상 공고</p>}
-      <h1>{notice.title}</h1>
-      <p>
-        아래 정보를 선택하면 이 공고의 조건과 비교해 결과를 보여드립니다. 모르는 항목은
-        &lsquo;모름&rsquo;을 고르세요.
-      </p>
-      <AssessmentForm noticeVersionId={noticeVersionId} fields={fields} action={assessAction} />
-    </main>
+    <AppShell current="notices">
+      <main style={{ maxWidth: 760 }}>
+        <p>
+          <Link href="/notices">← 공고 목록</Link>
+        </p>
+        {notice.isTestOnly && <p>TEST_ONLY · 가상 공고</p>}
+        <h1>{notice.title}</h1>
+        <p>
+          아래 정보를 선택하면 이 공고의 조건과 비교해 결과를 보여드립니다. 모르는 항목은
+          &lsquo;모름&rsquo;을 고르세요.
+        </p>
+        <AssessmentForm noticeVersionId={noticeVersionId} fields={fields} action={assessAction} />
+      </main>
+    </AppShell>
   );
 }
