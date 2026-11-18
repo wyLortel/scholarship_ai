@@ -10,6 +10,7 @@
 |---|---|---|---|---|
 | A. 공고 목록·버전·근거 | `notice/` | `features/notices/`, 라우트 `app/notices/page.tsx` | `notice/` | #24, #25, #26(상세 API), BR-A05 |
 | B. 자격 판정 (Rule Engine) | `eligibility/` (계산은 `domain/rules.py`에서만) | `features/assessment/`, 라우트 `app/notices/[noticeVersionId]/check/` | `eligibility/` | #27, #28, #29, AC-B01, AC-B02, AC-B03, AC-B04, AC-B08, AC-B10 |
+| AI 상담(채팅) 데모 | (판정은 `eligibility/`) | `features/chat/`, 라우트 `app/chat/` | — (Storybook `Chat/ChatView`) | #93, AC-B06 |
 | C. 신청 준비 | `preparation/` (빈 패키지) | — | — | #31 이후 |
 | 공통 | `main.py`(라우터 등록), `config.py`, `health.py` | `lib/api/`(FastAPI 호출·타입), `lib/format.ts`, `design-system/` | `contract.py`, `test_contract_examples.py`, `test_health.py` | #23 계약 |
 
