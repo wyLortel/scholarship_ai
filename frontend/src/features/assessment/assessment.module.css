@@ -58,6 +58,8 @@
 
 .resultTag {
   font-size: var(--text-small);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ELIGIBLE,
@@ -128,4 +130,21 @@
   align-items: center;
   margin: 0 0 var(--space-3);
   font-weight: 600;
+}
+
+.groupNote {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-positive-text);
+}
+
+.notNeeded {
+  opacity: 0.55;
+}
+
+.notNeededNote {
+  font-weight: 400;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
 }
