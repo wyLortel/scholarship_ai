@@ -1,0 +1,21 @@
+{
+  "noticeVersionId": "fixture-notice-a-v1",
+  "facts": [
+    {
+      "field": "yearInSchool",
+      "isKnown": true,
+      "value": 3,
+      "unit": "학년",
+      "effectiveAt": null,
+      "source": "STUDENT_PROVIDED"
+    },
+    {
+      "field": "incomeBracket",
+      "isKnown": false,
+      "value": null,
+      "unit": "구간",
+      "effectiveAt": null,
+      "source": "STUDENT_PROVIDED"
+    }
+  ]
+}

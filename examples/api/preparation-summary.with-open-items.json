@@ -1,0 +1,55 @@
+{
+  "noticeId": "fixture-notice-a",
+  "noticeVersionId": "fixture-notice-a-v1",
+  "eligibilityResult": "NEEDS_REVIEW",
+  "preparationStatus": "PREPARED_WITH_OPEN_ITEMS",
+  "checklist": [
+    {
+      "itemId": "doc-enrollment",
+      "documentName": "재학증명서",
+      "reason": "지원 자격(재학생) 확인용으로 제출 서류에 명시됨",
+      "isConditional": false,
+      "appliesWhen": null,
+      "issuer": "재학 중인 대학교",
+      "issuanceGuideUrl": "https://example.org/test-only/issuance/enrollment",
+      "evidence": {
+        "evidenceId": "ev-a-doc-enrollment",
+        "noticeVersionId": "fixture-notice-a-v1",
+        "fileId": "fixture-file-a",
+        "location": "본문 4. 제출 서류 (1)",
+        "quote": "재학증명서 1부",
+        "officialUrl": "https://example.org/test-only/fixture-notice-a",
+        "checkedAt": "2026-11-18T09:00:00+09:00",
+        "verifiedAt": "2026-11-18T09:00:00+09:00"
+      }
+    },
+    {
+      "itemId": "doc-family",
+      "documentName": "가족관계증명서",
+      "reason": "소득구간 확인이 필요한 경우 제출하도록 명시됨",
+      "isConditional": true,
+      "appliesWhen": "소득구간 확인 서류를 요청받은 경우",
+      "issuer": null,
+      "issuanceGuideUrl": null,
+      "evidence": {
+        "evidenceId": "ev-a-doc-family",
+        "noticeVersionId": "fixture-notice-a-v1",
+        "fileId": "fixture-file-a",
+        "location": "본문 4. 제출 서류 (2)",
+        "quote": "해당자에 한하여 가족관계증명서 1부",
+        "officialUrl": "https://example.org/test-only/fixture-notice-a",
+        "checkedAt": "2026-11-18T09:00:00+09:00",
+        "verifiedAt": "2026-11-18T09:00:00+09:00"
+      }
+    }
+  ],
+  "openItems": [
+    {
+      "conditionId": "income",
+      "label": "소득구간 5구간 이하",
+      "reasonCode": "MISSING_FACT"
+    }
+  ],
+  "failedConditions": [],
+  "officialSubmissionUrl": "https://example.org/test-only/fixture-notice-a/apply"
+}

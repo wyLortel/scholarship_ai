@@ -1,0 +1,28 @@
+[
+  {
+    "noticeId": "fixture-notice-a",
+    "noticeVersionId": "fixture-notice-a-v1",
+    "title": "[TEST_ONLY] 가상 재단 학업장려 장학금",
+    "institution": "[TEST_ONLY] 가상 장학재단",
+    "isTestOnly": true,
+    "officialUrl": "https://example.org/test-only/fixture-notice-a",
+    "sourceVerificationStatus": "VERIFIED",
+    "freshnessStatus": "CHECKED_UNCHANGED",
+    "lastCheckedAt": "2026-11-18T09:00:00+09:00",
+    "recruitmentStartAt": "2026-12-01T00:00:00+09:00",
+    "recruitmentEndAt": "2026-12-31T18:00:00+09:00"
+  },
+  {
+    "noticeId": "fixture-notice-b",
+    "noticeVersionId": "fixture-notice-b-v1",
+    "title": "[TEST_ONLY] 가상 지역인재 장학금 (대안 자격)",
+    "institution": "[TEST_ONLY] 가상 지역재단",
+    "isTestOnly": true,
+    "officialUrl": "https://example.org/test-only/fixture-notice-b",
+    "sourceVerificationStatus": "VERIFIED",
+    "freshnessStatus": "CHECKED_UNCHANGED",
+    "lastCheckedAt": "2026-11-18T09:00:00+09:00",
+    "recruitmentStartAt": "2026-12-01T00:00:00+09:00",
+    "recruitmentEndAt": "2026-12-31T18:00:00+09:00"
+  }
+]
