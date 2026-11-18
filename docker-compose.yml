@@ -6,3 +6,17 @@ services:
     volumes:
       - ./backend:/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      API_ORIGIN: http://backend:8000
+      WATCHPACK_POLLING: "true"
+    depends_on:
+      - backend

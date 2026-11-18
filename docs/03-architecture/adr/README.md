@@ -16,6 +16,7 @@
 | [ADR-0010](0010-mcp-readonly.md) | MCP는 AI의 필요 시 조회/검색 도구, 읽기 전용 DB 접근 | `TARGET-DESIGN` |
 | [ADR-0011](0011-notification-workflow.md) | 검증된 신규·변경 공고의 가능 학생에게 알림함+FCM, 실행은 Agent Server 그래프 | `TARGET-DESIGN` |
 | [ADR-0012](0012-no-personal-doc-uploads.md) | 개인 증빙서류는 업로드·보관·진위 검증하지 않고 발급 방법만 안내 | `TARGET-DESIGN` |
+| [ADR-0013](0013-nextjs-app-router-frontend.md) | 프론트엔드는 Next.js App Router, 서버 컴포넌트 기본 (ADR-0008 웹 서버 구성 부분 대체) | `TARGET-DESIGN` |
 
 ## 업데이트 규칙
 
