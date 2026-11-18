@@ -7,6 +7,8 @@ import type { AssessState } from "./actions";
 import styles from "./assessment.module.css";
 import { AssessmentResultView } from "./AssessmentResultView";
 
+// "모름"은 값 없음(null)으로 보낸다. 0·빈 문자열·false로 바꾸지 않는다 (BR-B01).
+const UNKNOWN = "unknown";
 const YEARS = [1, 2, 3, 4, 5, 6];
 const INCOME_BRACKETS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -34,6 +36,7 @@ export function AssessmentForm({ noticeVersionId, action }: Props) {
                 {y}학년
               </option>
             ))}
+            <option value={UNKNOWN}>모름</option>
           </select>
         </label>
         <label className={styles.field}>
@@ -47,6 +50,7 @@ export function AssessmentForm({ noticeVersionId, action }: Props) {
                 {b}구간
               </option>
             ))}
+            <option value={UNKNOWN}>모름</option>
           </select>
         </label>
         <button type="submit" className={styles.submit} disabled={pending}>

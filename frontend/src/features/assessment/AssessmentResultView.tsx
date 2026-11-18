@@ -1,7 +1,7 @@
 import type { AssessmentResult } from "@/lib/api/types";
 
 import styles from "./assessment.module.css";
-import { groupLabel, groupMessage, resultIcon, resultLabel } from "./copy";
+import { groupLabel, groupMessage, resultIcon, resultLabel, unknownReason } from "./copy";
 
 // Rule Engine 응답을 표시만 한다. 결과를 다시 계산하거나 바꾸지 않는다 (BR-B02, UX 계약).
 export function AssessmentResultView({ result }: { result: AssessmentResult }) {
@@ -17,6 +17,9 @@ export function AssessmentResultView({ result }: { result: AssessmentResult }) {
           <li key={d.conditionId} className={styles.condition}>
             <span className={`${styles.resultTag} ${styles[d.result]}`}>
               <span aria-hidden="true">{resultIcon[d.result]}</span> {resultLabel[d.result]}
+              {d.result === "UNKNOWN" && unknownReason[d.reasonCode] && (
+                <> · {unknownReason[d.reasonCode]}</>
+              )}
             </span>
             <span className={styles.conditionLabel}>{d.label}</span>
             {d.evidence && <q className={styles.quote}>{d.evidence.quote}</q>}

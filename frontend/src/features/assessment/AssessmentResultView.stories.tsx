@@ -73,13 +73,24 @@ export const Ineligible: Story = {
   },
 };
 
-/** 서버가 NEEDS_REVIEW를 주면 그대로 표시 (모름 입력 화면은 #28) */
+/** AC-B01: 3학년·소득 모름 → 소득 UNKNOWN(입력하지 않음), 전체 확인 필요 */
 export const NeedsReview: Story = {
   args: {
     result: {
       ...base,
       eligibilityResult: "NEEDS_REVIEW",
       details: [grade("PASS"), income("UNKNOWN")],
+    },
+  },
+};
+
+/** AC-B02: 1학년·소득 모름 → 학년 FAIL이 있어 전체 불가, 소득은 모름 그대로 */
+export const FailWithUnknown: Story = {
+  args: {
+    result: {
+      ...base,
+      eligibilityResult: "INELIGIBLE",
+      details: [grade("FAIL"), income("UNKNOWN")],
     },
   },
 };
