@@ -1,34 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import { getHealth } from './api/client'
+
+type HealthView = { state: 'loading' } | { state: 'ok'; status: string } | { state: 'failed' }
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [health, setHealth] = useState<HealthView>({ state: 'loading' })
+
+  useEffect(() => {
+    let active = true
+    getHealth().then((result) => {
+      if (!active) return
+      setHealth(result.ok ? { state: 'ok', status: result.data.status } : { state: 'failed' })
+    })
+    return () => {
+      active = false
+    }
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    <main>
+      <h1>장학금 통합 지원 AI</h1>
+      <p role="status">
+        {health.state === 'loading' && '서버 상태 확인 중…'}
+        {health.state === 'ok' && `서버 상태: ${health.status}`}
+        {health.state === 'failed' && '서버에 연결하지 못했습니다'}
       </p>
-    </>
+    </main>
   )
 }
 
