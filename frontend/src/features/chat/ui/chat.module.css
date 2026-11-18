@@ -5,15 +5,6 @@
   align-items: start;
 }
 
-.chat,
-.panel {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card);
-  padding: var(--space-5);
-}
-
 .muted {
   font-size: var(--text-small);
   color: var(--color-text-muted);
@@ -26,20 +17,20 @@
   min-height: 70vh;
 }
 
+.chatHeader {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
 .chatHeader h1 {
-  margin: var(--space-2) 0 var(--space-4);
+  margin: var(--space-2) 0 0;
   font-size: var(--text-h2);
 }
 
-.chip {
-  display: inline-block;
-  margin: 0;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  background: var(--color-demo-bg);
-  color: var(--color-demo-text);
-  font-size: var(--text-label);
-  font-weight: 700;
+.resultBadge {
+  margin-bottom: var(--space-2) !important;
 }
 
 .messages {
@@ -82,25 +73,7 @@
 }
 
 .choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
   margin: var(--space-4) 0;
-}
-
-.choices button {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  color: var(--color-text);
-  padding: var(--space-2) var(--space-4);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.choices button:hover {
-  border-color: var(--color-primary-600);
-  color: var(--color-primary-600);
 }
 
 .input {
@@ -110,19 +83,6 @@
 
 .input input {
   flex: 1;
-  height: var(--control-height);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 0 var(--space-3);
-}
-
-.input button {
-  width: var(--control-height);
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--color-primary-600);
-  color: var(--color-surface);
-  opacity: 0.5;
 }
 
 .panel h2 {
