@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import type { AssessState } from "@/app/notices/[noticeVersionId]/check/actions";
+import type { AssessState } from "./actions";
 
 import styles from "./assessment.module.css";
 import { AssessmentResultView } from "./AssessmentResultView";

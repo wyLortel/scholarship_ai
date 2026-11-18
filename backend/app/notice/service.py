@@ -1,5 +1,5 @@
-from app.domain.notice.model import NoticeSummary
-from app.domain.notice.repository import NoticeRepository
+from app.notice.model import NoticeSummary
+from app.notice.repository import NoticeRepository
 
 
 def list_verified_notices(repo: NoticeRepository) -> list[NoticeSummary]:

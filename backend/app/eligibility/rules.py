@@ -9,7 +9,7 @@ from collections.abc import Mapping
 from numbers import Real
 from typing import Any
 
-from app.domain.eligibility.model import (
+from app.eligibility.model import (
     ConditionOutcome,
     EligibilityGroup,
     Evaluation,

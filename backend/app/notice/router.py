@@ -4,11 +4,11 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.application.notices import list_verified_notices
 from app.config import fixture_notices_file
-from app.domain.notice.model import FreshnessStatus, VerificationStatus
-from app.domain.notice.repository import NoticeRepository
-from app.infrastructure.fixtures.fixture_notice_repository import FixtureNoticeRepository
+from app.notice.fixture_repository import FixtureNoticeRepository
+from app.notice.model import FreshnessStatus, VerificationStatus
+from app.notice.repository import NoticeRepository
+from app.notice.service import list_verified_notices
 
 router = APIRouter()
 

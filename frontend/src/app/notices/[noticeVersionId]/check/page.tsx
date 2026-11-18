@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { AssessmentForm } from "@/components/assessment/AssessmentForm";
+import { AssessmentForm } from "@/features/assessment/AssessmentForm";
 import { getNotices } from "@/lib/api/server";
 
-import { assessAction } from "./actions";
+import { assessAction } from "@/features/assessment/actions";
 
 // 개인 입력·판정 화면: 검색 비노출, 캐시 없음 (ADR-0013).
 export const metadata: Metadata = {
