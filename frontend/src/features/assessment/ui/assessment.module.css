@@ -4,80 +4,13 @@
   margin: var(--space-4) 0 var(--space-6);
 }
 
-.field {
-  display: grid;
-  gap: var(--space-2);
-  font-size: var(--text-small);
-  color: var(--color-text-muted);
-}
-
-.field select {
-  height: var(--control-height);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 0 var(--space-3);
-  font-size: var(--text-body);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.submit {
-  height: var(--control-height);
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--color-primary-600);
-  color: var(--color-surface);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.submit:disabled {
-  opacity: 0.6;
-  cursor: progress;
-}
-
-.result {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  background: var(--color-surface);
-}
-
-.groupBadge,
-.resultTag {
-  display: inline-block;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  font-weight: 700;
-}
-
 .groupBadge {
   margin: 0 0 var(--space-3);
-  font-size: var(--text-h3);
 }
 
 .resultTag {
-  font-size: var(--text-small);
   white-space: nowrap;
   flex-shrink: 0;
-}
-
-.ELIGIBLE,
-.PASS {
-  background: var(--color-positive-bg);
-  color: var(--color-positive-text);
-}
-
-.INELIGIBLE,
-.FAIL {
-  background: var(--color-negative-bg);
-  color: var(--color-negative-text);
-}
-
-.NEEDS_REVIEW,
-.UNKNOWN {
-  background: var(--color-caution-bg);
-  color: var(--color-caution-text);
 }
 
 .message {

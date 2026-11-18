@@ -1,8 +1,17 @@
+import { Badge, Panel } from "@/design-system";
 import type { AssessmentResult, ConditionEvaluation, RuleNode } from "@/lib/api/types";
 import { formatDateTime } from "@/lib/format";
 
 import styles from "./assessment.module.css";
-import { groupLabel, groupMessage, resultIcon, resultLabel, unknownReason } from "./copy";
+import {
+  groupLabel,
+  groupMessage,
+  groupTone,
+  resultIcon,
+  resultLabel,
+  resultTone,
+  unknownReason,
+} from "./copy";
 
 // Rule Engine 응답을 표시만 한다. 결과를 다시 계산하거나 바꾸지 않는다 (BR-B02, UX 계약).
 // ruleTree가 있으면 원문의 AND/OR 구조대로 보여 준다(OR은 '다음 중 하나', AC-B04).
@@ -10,9 +19,11 @@ export function AssessmentResultView({ result }: { result: AssessmentResult }) {
   const group = result.eligibilityResult;
   const byId = new Map(result.details.map((d) => [d.conditionId, d]));
   return (
-    <section className={styles.result} aria-live="polite" aria-labelledby="assessment-result">
-      <p className={`${styles.groupBadge} ${styles[group]}`} id="assessment-result">
-        {groupLabel[group]}
+    <Panel aria-live="polite" aria-labelledby="assessment-result">
+      <p className={styles.groupBadge}>
+        <Badge tone={groupTone[group]} size="lg" id="assessment-result">
+          {groupLabel[group]}
+        </Badge>
       </p>
       <p className={styles.message}>{groupMessage(group, result.details)}</p>
       {result.ruleTree ? (
@@ -28,7 +39,7 @@ export function AssessmentResultView({ result }: { result: AssessmentResult }) {
         공고 버전 <code>{result.noticeVersionId}</code> · 평가 시각{" "}
         {formatDateTime(result.assessedAt)}
       </p>
-    </section>
+    </Panel>
   );
 }
 
@@ -82,9 +93,9 @@ function TreeNode({
   return (
     <li className={styles.group}>
       <p className={styles.groupTitle}>
-        <span className={`${styles.resultTag} ${styles[node.result]}`}>
+        <Badge tone={resultTone[node.result]} className={styles.resultTag}>
           <span aria-hidden="true">{resultIcon[node.result]}</span> {resultLabel[node.result]}
-        </span>
+        </Badge>
         {title}
       </p>
       <TreeChildren node={node} byId={byId} />
@@ -104,12 +115,12 @@ function ConditionItem({
 }) {
   return (
     <li className={`${styles.condition} ${notNeeded ? styles.notNeeded : ""}`}>
-      <span className={`${styles.resultTag} ${styles[d.result]}`}>
+      <Badge tone={resultTone[d.result]} className={styles.resultTag}>
         <span aria-hidden="true">{resultIcon[d.result]}</span> {resultLabel[d.result]}
         {d.result === "UNKNOWN" && unknownReason[d.reasonCode] && (
           <> · {unknownReason[d.reasonCode]}</>
         )}
-      </span>
+      </Badge>
       <span className={styles.conditionLabel}>
         {d.label}
         {notNeeded && (

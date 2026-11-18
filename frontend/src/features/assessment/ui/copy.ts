@@ -1,3 +1,4 @@
+import type { BadgeTone } from "@/design-system";
 import type { ConditionEvaluation, EligibilityGroup, RuleResult } from "@/lib/api/types";
 
 import { factName } from "@/features/assessment/model/facts";
@@ -52,3 +53,16 @@ export function objectParticle(word: string): string {
   if (code < 0 || code > 11171) return "을(를)";
   return code % 28 === 0 ? "를" : "을";
 }
+
+// API 값 → 공용 Badge 색조. 색만으로 뜻을 전하지 않도록 라벨(groupLabel·resultLabel)과 함께 쓴다.
+export const groupTone: Record<EligibilityGroup, BadgeTone> = {
+  ELIGIBLE: "positive",
+  INELIGIBLE: "negative",
+  NEEDS_REVIEW: "caution",
+};
+
+export const resultTone: Record<RuleResult, BadgeTone> = {
+  PASS: "positive",
+  FAIL: "negative",
+  UNKNOWN: "caution",
+};

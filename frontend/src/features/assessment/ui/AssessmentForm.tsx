@@ -2,11 +2,12 @@
 
 import { useActionState } from "react";
 
+import { Button, InlineNotice, SelectField } from "@/design-system";
 import type { AssessState } from "@/features/assessment/server/actions";
 
 import styles from "./assessment.module.css";
 import { AssessmentResultView } from "./AssessmentResultView";
-import { FACT_INPUTS, UNKNOWN } from "@/features/assessment/model/facts";
+import { choicesFor, FACT_INPUTS } from "@/features/assessment/model/facts";
 
 type Props = {
   noticeVersionId: string;
@@ -28,40 +29,26 @@ export function AssessmentForm({ noticeVersionId, fields, action }: Props) {
           .map((f) => FACT_INPUTS[f])
           .filter((input) => input !== undefined)
           .map((input) => (
-            <label key={input.field} className={styles.field}>
-              {input.label}
+            <div key={input.field}>
               <input type="hidden" name="field" value={input.field} />
-              <select name={input.field} required defaultValue="">
-                <option value="" disabled>
-                  선택
-                </option>
-                {input.kind === "integer" ? (
-                  input.options.map((o) => (
-                    <option key={o} value={o}>
-                      {o}
-                      {input.unit}
-                    </option>
-                  ))
-                ) : (
-                  <>
-                    <option value="true">{input.yes}</option>
-                    <option value="false">{input.no}</option>
-                  </>
-                )}
-                <option value={UNKNOWN}>모름</option>
-              </select>
-            </label>
+              <SelectField
+                label={input.label}
+                name={input.field}
+                required
+                options={choicesFor(input)}
+              />
+            </div>
           ))}
         {unsupported.length > 0 && (
           <p className={styles.meta}>
             일부 조건은 아직 이 화면에서 입력할 수 없어 &lsquo;확인 필요&rsquo;로 남습니다.
           </p>
         )}
-        <button type="submit" className={styles.submit} disabled={pending}>
-          {pending ? "확인 중…" : "조건 확인하기"}
-        </button>
+        <Button type="submit" variant="primary" block loading={pending} loadingText="확인 중…">
+          조건 확인하기
+        </Button>
       </form>
-      {state.status === "error" && <p role="alert">{state.message}</p>}
+      {state.status === "error" && <InlineNotice tone="danger">{state.message}</InlineNotice>}
       {state.status === "done" && !pending && <AssessmentResultView result={state.result} />}
     </div>
   );
