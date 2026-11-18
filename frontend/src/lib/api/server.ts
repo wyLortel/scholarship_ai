@@ -31,7 +31,10 @@ async function mock<T>(file: string): Promise<ApiResult<T>> {
     const text = await readFile(path.join(EXAMPLES_DIR, file), "utf-8");
     return { ok: true, data: JSON.parse(text) as T };
   } catch (err) {
-    return { ok: false, error: `mock ${file}: ${err instanceof Error ? err.message : "read error"}` };
+    return {
+      ok: false,
+      error: `mock ${file}: ${err instanceof Error ? err.message : "read error"}`,
+    };
   }
 }
 
@@ -58,7 +61,9 @@ function postJson<T>(apiPath: string, body: unknown): Promise<ApiResult<T>> {
 export type Health = { status: string };
 
 export function getHealth(): Promise<ApiResult<Health>> {
-  return API_MOCK ? Promise.resolve({ ok: true, data: { status: "ok (mock)" } }) : request("/api/health");
+  return API_MOCK
+    ? Promise.resolve({ ok: true, data: { status: "ok (mock)" } })
+    : request("/api/health");
 }
 
 export function getNotices(): Promise<ApiResult<NoticeSummary[]>> {
@@ -66,14 +71,18 @@ export function getNotices(): Promise<ApiResult<NoticeSummary[]>> {
 }
 
 export function getNotice(noticeId: string): Promise<ApiResult<NoticeDetail>> {
-  return API_MOCK ? mock("notice.detail.json") : request(`/api/notices/${encodeURIComponent(noticeId)}`);
+  return API_MOCK
+    ? mock("notice.detail.json")
+    : request(`/api/notices/${encodeURIComponent(noticeId)}`);
 }
 
 export function postAssessment(body: AssessmentRequest): Promise<ApiResult<AssessmentResult>> {
   return API_MOCK ? mock(`assessment.${MOCK_ASSESSMENT}.json`) : postJson("/api/assessments", body);
 }
 
-export function postPreparationSummary(body: AssessmentRequest): Promise<ApiResult<PreparationSummary>> {
+export function postPreparationSummary(
+  body: AssessmentRequest,
+): Promise<ApiResult<PreparationSummary>> {
   return API_MOCK
     ? mock(`preparation-summary.${MOCK_PREPARATION}.json`)
     : postJson("/api/preparation-summaries", body);

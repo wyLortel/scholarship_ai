@@ -5,7 +5,12 @@
 body {
   margin: 0;
   padding: 16px;
-  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    sans-serif;
   color: #1a1a1a;
   background: #ffffff;
 }
