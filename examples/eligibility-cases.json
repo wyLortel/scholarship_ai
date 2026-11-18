@@ -1,0 +1,22 @@
+{
+  "type": "TEST_ONLY_FAKE_NOTICES_NOT_REAL_ELIGIBILITY",
+  "noticeVersionId": "fixture-notice-v1",
+  "ruleSet": {
+    "verifiedForFixtureOnly": true,
+    "expression": {
+      "and": [
+        {"id": "grade", "field": "yearInSchool", "op": ">=", "value": 2},
+        {"id": "income", "field": "incomeBracket", "op": "<=", "value": 5}
+      ]
+    },
+    "evidenceIds": ["fixture-evidence-grade", "fixture-evidence-income"]
+  },
+  "cases": [
+    {"id":"AC-B01", "facts":{"yearInSchool":3, "incomeBracket":null}, "perCondition":{"grade":"PASS", "income":"UNKNOWN"}, "expected":"NEEDS_REVIEW"},
+    {"id":"AC-B02", "facts":{"yearInSchool":1, "incomeBracket":null}, "perCondition":{"grade":"FAIL", "income":"UNKNOWN"}, "expected":"INELIGIBLE"},
+    {"id":"AC-B03", "facts":{"yearInSchool":3, "incomeBracket":4}, "perCondition":{"grade":"PASS", "income":"PASS"}, "expected":"ELIGIBLE"},
+    {"id":"AC-B08", "facts":{"yearInSchool":3, "incomeBracket":7}, "perCondition":{"grade":"PASS", "income":"FAIL"}, "expected":"INELIGIBLE"},
+    {"id":"AC-B04", "ruleExpression":{"and":[{"id":"a","constant":"PASS"},{"or":[{"id":"b","constant":"FAIL"},{"id":"c","constant":"PASS"}]}]}, "expected":"ELIGIBLE"},
+    {"id":"AC-B05", "ruleExpression":{"and":[]}, "expected":"NEEDS_REVIEW", "reason":"EMPTY_OR_UNVERIFIED_RULE_SET"}
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type":"TEST_ONLY_NO_REAL_STUDENT_OR_INSTITUTION_DATA",
+  "cases":[
+    {"id":"D1", "noticeVersionId":"fixture-v1", "eligibility":"ELIGIBLE", "factsProvided":["grade","income","student_confirmed_activity"], "expectedFlow":["CHECKING","DRAFTING","PREPARED"], "externalSubmissionVerified":false},
+    {"id":"D2", "noticeVersionId":"fixture-v1", "missingFact":"incomeBracket", "expectedBeforeAnswer":{"eligibility":"NEEDS_REVIEW","preparationStatus":"WAITING_STUDENT"}, "studentAnswer":{"incomeBracket":4}, "expectedAfterAnswer":{"caseId":"SAME_CASE_ID", "next":"REASSESS"}},
+    {"id":"D3", "oldNoticeVersionId":"fixture-v1", "newNoticeVersionId":"fixture-v2", "change":"new verified required condition FAIL", "expected":{"previousAssessmentStale":true, "preparationStatus":"STOPPED", "mustExplainFailure":true}},
+    {"id":"D4", "originalOfficialText":"2학년 이상", "aiCandidateText":"3학년 이상", "expectedBeforeReview":"REVIEW_PENDING", "reviewerDecision":{"decision":"CORRECT", "correctedText":"2학년 이상", "mustRecordEvidenceAndReason":true}, "expectedAfterReview":"RESUME_WITH_VERIFIED_RULE"},
+    {"id":"NO-HALLUCINATION", "question":"수상 경험을 적어주세요", "studentFacts":{"mentoringCount":2}, "expected":{"mustNotInvent":["수상", "소득", "합격", "수혜 이력"], "shouldMarkUnknowns":true}}
+  ]
+}
