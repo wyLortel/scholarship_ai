@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { AssessmentResultView } from "@/features/assessment/ui/AssessmentResultView";
 import assessmentStyles from "@/features/assessment/ui/assessment.module.css";
 import { groupLabel } from "@/features/assessment/ui/copy";
@@ -31,19 +29,6 @@ export function ChatView(props: Props) {
   const { notices, selected, messages, phase, usedFacts } = props;
   return (
     <div className={styles.layout}>
-      <nav className={styles.side} aria-label="메뉴">
-        <p className={styles.brand}>장학금 AI</p>
-        <ul>
-          <li>
-            <span aria-current="page">✦ AI와 장학금 찾기</span>
-          </li>
-          <li>
-            <Link href="/notices">장학금 공고 목록</Link>
-          </li>
-        </ul>
-        <p className={styles.notice}>신청서 제출은 학생이 공식 기관 사이트에서 직접 진행해요.</p>
-      </nav>
-
       <section className={styles.chat} aria-label="AI 상담">
         <header className={styles.chatHeader}>
           <p className={styles.chip}>시연용 · 정해진 질문 (AI 문장 생성 미연결)</p>
