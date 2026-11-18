@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap">
+<style>
+body{margin:0;background:#eceef2;font-family:Pretendard,'Apple SD Gothic Neo',sans-serif;color:#1d2230;-webkit-font-smoothing:antialiased}
+a{color:oklch(0.45 0.13 250)}a:hover{color:oklch(0.35 0.13 250)}
+</style>
+</helmet>
+
+<div style="width:2560px;box-sizing:border-box;padding:60px;background:#fff;display:flex;flex-direction:column;gap:30px">
+
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap">
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="font:700 14px 'JetBrains Mono',monospace;letter-spacing:.14em;color:#6b7385">SYSTEM ARCHITECTURE · v7 (설계 리뷰 반영)</div>
+    <div style="font-size:48px;font-weight:800;line-height:1.15;letter-spacing:-.02em">장학금 통합 지원 AI — 시스템 아키텍처</div>
+    <div style="font-size:19px;color:#4a5264">AWS 배포 목표 아키텍처 — 기존 Scholarship Lab(로컬)에서 RDS · S3 · FCM · 실제 외부 API로 확장하는 설계안 · AI 작업 서버를 LangGraph Agent Server로 (신청서 그래프 PoC 검증 후 전환)</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;font-size:15px">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:99px;background:#1d2230;color:#fff">EC2 안 · 컨테이너</span>우리 서버 컴퓨터 1대 안에서 같이 돌아감</div>
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:99px;background:oklch(0.5 0.09 200);color:#fff">AWS 관리형</span>AWS가 운영하는 서비스 (RDS · S3) — EC2가 꺼져도 데이터 유지</div>
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:99px;background:oklch(0.5 0.14 280);color:#fff">외부 서비스</span>우리 것이 아닌 남의 서비스 (인터넷으로 호출)</div>
+  </div>
+</div>
+
+<div style="position:relative;width:2440px;height:1880px;margin-top:-150px">
+
+  <div style="position:absolute;left:20px;top:420px;width:300px;height:560px;box-sizing:border-box;border:1.5px dashed #c3c9d4;border-radius:20px"></div>
+  <div style="position:absolute;left:20px;top:432px;width:300px;text-align:center;font:800 15px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#44506a">CLIENT</div>
+
+  <div style="position:absolute;left:40px;top:470px;width:260px;height:160px;box-sizing:border-box;background:#fff;border:2px solid #1d2230;border-radius:16px;padding:16px;display:flex;align-items:center;gap:16px">
+    <svg width="64" height="72" viewBox="0 0 64 72"><circle cx="32" cy="20" r="15" fill="#1d2230"></circle><path d="M4 70 C4 48 16 40 32 40 C48 40 60 48 60 70 Z" fill="#1d2230"></path></svg>
+    <div style="display:flex;flex-direction:column;gap:4px"><div style="font-size:22px;font-weight:800">학생</div><div style="font-size:13px;color:#4a5264;line-height:1.4">웹 브라우저<br>모바일</div></div>
+  </div>
+  <div style="position:absolute;left:40px;top:780px;width:260px;height:160px;box-sizing:border-box;background:oklch(0.955 0.035 315);border:2px solid oklch(0.55 0.16 315);border-radius:16px;padding:16px;display:flex;align-items:center;gap:16px">
+    <svg width="64" height="72" viewBox="0 0 64 72"><circle cx="32" cy="20" r="15" fill="oklch(0.45 0.15 315)"></circle><path d="M4 70 C4 48 16 40 32 40 C48 40 60 48 60 70 Z" fill="oklch(0.45 0.15 315)"></path></svg>
+    <div style="display:flex;flex-direction:column;gap:4px"><div style="font-size:22px;font-weight:800;color:oklch(0.34 0.13 315)">관리자</div><div style="font-size:13px;color:#4a5264;line-height:1.4">웹 브라우저<br>검토 화면</div></div>
+  </div>
+
+  <div style="position:absolute;left:400px;top:260px;width:1390px;height:1260px;box-sizing:border-box;border:2.5px solid #1d2230;border-radius:28px"></div>
+  <div style="position:absolute;left:426px;top:274px;display:flex;align-items:center;gap:12px;background:#fff;padding:0 8px">
+    <span style="display:inline-flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:8px;background:#232f3e;color:#ff9900;font:900 18px Arial,sans-serif;letter-spacing:.02em">aws</span>
+    <div style="display:flex;flex-direction:column"><div style="font-size:20px;font-weight:800">Amazon EC2 — 서버 컴퓨터 1대</div><div style="font-size:13px;color:#6b7385">7종 서버 프로그램 · 컨테이너 8개</div><div style="font-size:12.5px;font-weight:700;color:oklch(0.5 0.17 35)">⚠ Phase 1 · 단일 EC2 (MVP) — Agent Server 1개 장애는 복구 · EC2 전체 장애는 미대응</div></div>
+  </div>
+  <div style="position:absolute;left:430px;top:350px;width:1330px;height:1140px;box-sizing:border-box;border:2px dashed #8a93a6;border-radius:20px"></div>
+  <div style="position:absolute;left:454px;top:364px;display:flex;align-items:center;gap:10px">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original-wordmark.svg" alt="Docker" style="height:44px">
+    <div style="font-size:14px;color:#4a5264">컨테이너 8개</div>
+  </div>
+
+  <div style="position:absolute;left:500px;top:470px;width:290px;height:260px;box-sizing:border-box;background:#fff;border:2px solid #44506a;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:800;padding:4px 12px;border-radius:99px;background:#1d2230;color:#fff">웹 서버</span><span style="font-size:11.5px;font-weight:700;color:#6b7385">EC2 안</span></div>
+    <div style="display:flex;align-items:center;gap:12px;height:52px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nginx/nginx-original.svg" alt="Nginx" style="height:46px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React" style="height:46px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="TypeScript" style="height:38px"></div>
+    <div style="font-size:15px;font-weight:800">Nginx + React 화면</div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.5">브라우저에 화면을 보내주고, 데이터 요청(/api)은 API 서버로 넘겨줌 · HTTPS 인증서</div>
+  </div>
+
+  <div style="position:absolute;left:920px;top:470px;width:320px;height:320px;box-sizing:border-box;background:#fff;border:2px solid #44506a;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:800;padding:4px 12px;border-radius:99px;background:#1d2230;color:#fff">API 서버</span><span style="font-size:11.5px;font-weight:700;color:#6b7385">EC2 안</span></div>
+    <div style="display:flex;align-items:center;gap:12px;height:52px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg" alt="FastAPI" style="height:46px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" style="height:42px"></div>
+    <div style="font-size:15px;font-weight:800">FastAPI</div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.5">모든 요청의 입구 · 로그인 확인. 오래 걸리는 AI 작업은 직접 안 하고, 신청 건과 "보낼 할 일(outbox)"을 DB에 한 번에 저장한 뒤 바로 응답</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;font-size:12px;font-weight:700"><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.03 250);color:oklch(0.4 0.13 250)">Resume Gate</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.035 155);color:oklch(0.38 0.11 155)">Idempotency-Key</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">초안 다운로드</span></div>
+    <div style="margin-top:auto;border:1.3px dashed #8a93a6;border-radius:6px;padding:5px 8px;font-size:12px;color:#44506a">+ 테스트용 API: 화면 없이 그래프만 실행</div>
+  </div>
+
+  <div style="position:absolute;left:1380px;top:515px;width:300px;height:255px;box-sizing:border-box;background:oklch(0.975 0.012 200);border:2px solid oklch(0.5 0.09 200);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:800;padding:4px 12px;border-radius:99px;background:#1d2230;color:#fff">큐 서버</span><span style="font-size:11.5px;font-weight:700;color:#6b7385">EC2 안</span></div>
+    <div style="display:flex;align-items:center;gap:10px;height:40px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original-wordmark.svg" alt="Redis" style="height:38px"></div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.5">수집 작업 대기줄(crawler_jobs) + Agent Server 내부 큐 · 스트리밍 신호 · AOF 영속화 + 볼륨</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;font-size:12px;font-weight:700"><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.035 300);color:oklch(0.4 0.14 300)">crawler_jobs (직접)</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.035 300);color:oklch(0.4 0.14 300)">ACK · XAUTOCLAIM · DLQ</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.035 300);color:oklch(0.4 0.14 300)">Agent Server 내장 큐</span></div>
+  </div>
+
+  <div style="position:absolute;left:1380px;top:375px;width:300px;height:100px;box-sizing:border-box;background:#fff;border:2px solid #44506a;border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:17px;font-weight:800;padding:4px 12px;border-radius:99px;background:#1d2230;color:#fff">Outbox Relay</span><span style="font-size:11.5px;font-weight:700;color:#6b7385">EC2 안 · Python</span></div>
+    <div style="font-size:12.5px;color:#4a5264;line-height:1.45">DB의 미전송 outbox를 1초마다 확인 → Agent Server에 run 생성 (HTTP) → 전송 완료 표시</div>
+  </div>
+
+  <div style="position:absolute;left:920px;top:900px;width:320px;height:260px;box-sizing:border-box;background:#fff;border:2px solid #44506a;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:800;padding:4px 12px;border-radius:99px;background:#1d2230;color:#fff">수집 서버 (Crawler)</span><span style="font-size:11.5px;font-weight:700;color:#6b7385">EC2 안</span></div>
+    <div style="display:flex;align-items:center;gap:12px;height:44px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" style="height:38px"><span style="font-size:15px;font-weight:800">Playwright · 스케줄러</span></div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.5">내장 스케줄러가 crawler_jobs 등록 → 꺼내서 수집. 이전 해시와 비교해 새 · 바뀐 공고만 원문 저장 + outbox 기록</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;font-size:12px;font-weight:700"><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">주기적 공고 확인</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">신규 · 변경 감지</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">해시로 중복 방지</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">스케줄 고유 키</span></div>
+    <div style="margin-top:auto;font-size:12px;color:#44506a;padding:5px 8px;border-radius:6px;background:#f1f3f6">사용자가 늘면 이 컨테이너만 다른 서버로 옮기면 됨</div>
+  </div>
+
+  <div style="position:absolute;left:1380px;top:860px;width:300px;height:380px;box-sizing:border-box;background:#fff;border:2.5px solid #1d2230;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;box-shadow:0 0 0 5px oklch(0.92 0.02 260)">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px;font-weight:800;padding:4px 10px;border-radius:99px;background:#1d2230;color:#fff;white-space:nowrap">LangGraph Agent Server</span><span style="font-size:11.5px;font-weight:700;color:#6b7385;white-space:nowrap">컨테이너 2개</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="border:1.5px solid #1d2230;border-radius:8px;padding:4px 8px;display:flex;flex-direction:column;gap:1px"><span style="font:800 12px 'JetBrains Mono',monospace">agent-server-1</span><span style="font-size:11px;font-weight:700;color:#1c3c3c">API + 큐 Worker</span></div>
+      <div style="border:1.5px solid #1d2230;border-radius:8px;padding:4px 8px;display:flex;flex-direction:column;gap:1px"><span style="font:800 12px 'JetBrains Mono',monospace">agent-server-2</span><span style="font-size:11px;font-weight:700;color:#1c3c3c">API + 큐 Worker</span></div>
+    </div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.5">Threads · Runs API로 그래프 실행. 실행 큐 · 재시도 · Checkpoint · interrupt/resume · 스트리밍을 서버가 관리</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;font-size:12px;font-weight:700;margin-top:auto">
+      <span style="padding:3px 7px;border-radius:6px;background:oklch(0.955 0.025 250);color:oklch(0.42 0.13 250)">조건 추출</span>
+      <span style="padding:3px 7px;border-radius:6px;background:oklch(0.955 0.03 155);color:oklch(0.4 0.11 155)">자격 판정</span>
+      <span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 75);color:oklch(0.48 0.13 60)">신청 준비</span>
+      <span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 75);color:oklch(0.48 0.13 60)">초안 작성</span>
+      <span style="padding:3px 7px;border-radius:6px;background:oklch(0.955 0.035 315);color:oklch(0.36 0.14 315)">관리자 검토</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;font-size:12px;font-weight:700"><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.03 250);color:oklch(0.4 0.13 250)">검증 후 색인</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.03 250);color:oklch(0.4 0.13 250)">UNKNOWN → 질문</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.03 250);color:oklch(0.4 0.13 250)">변경 시 재검증</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.03 250);color:oklch(0.4 0.13 250)">알림 발송 run</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.95 0.03 250);color:oklch(0.4 0.13 250)">멱등성</span></div>
+    <div style="font-size:12px;font-weight:700;color:oklch(0.38 0.11 155);padding:5px 8px;border-radius:6px;background:oklch(0.95 0.035 155)">Checkpoint: Agent Server가 RDS PostgreSQL에 자동 저장</div>
+  </div>
+
+  <div style="position:absolute;left:1380px;top:1310px;width:300px;height:170px;box-sizing:border-box;background:oklch(0.98 0.02 60);border:2px solid oklch(0.62 0.16 50);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:17px;font-weight:800;padding:4px 12px;border-radius:99px;background:#1d2230;color:#fff">Tool 서버 (MCP)</span><span style="font-size:11.5px;font-weight:700;color:#6b7385">EC2 안</span></div>
+    <div style="font:600 11px 'JetBrains Mono',monospace;color:#2c3344;line-height:1.5">web_search · fetch_page · parse_document<br>get_program · get_user_profile · vector_search</div>
+    <div style="font-size:12px;color:#4a5264">JSON-RPC (Streamable HTTP) · DB는 읽기 전용</div>
+    <div style="font-size:12px;color:#44506a;font-weight:700">권한 검사: 로그인한 학생 본인 데이터만</div>
+  </div>
+
+  <div style="position:absolute;left:2280px;top:465px;font-size:14px;font-weight:800;color:oklch(0.4 0.08 200)">AWS 관리형</div>
+  <div style="position:absolute;left:1980px;top:500px;width:360px;height:400px;box-sizing:border-box;background:#fff;border:2px dashed oklch(0.5 0.09 200);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:800;padding:4px 12px;border-radius:99px;background:oklch(0.5 0.09 200);color:#fff">DB 서버</span><span style="font-size:11.5px;font-weight:700;color:oklch(0.4 0.08 200)">Amazon RDS</span></div>
+    <div style="display:flex;align-items:center;gap:12px;height:56px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original-wordmark.svg" alt="PostgreSQL" style="height:56px"><span style="font-size:17px;font-weight:800;color:#336791">+ pgvector</span></div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.55">업무 데이터: 회원 · 공고 버전 · 자격 조건 · 근거 · 판정 · 신청 상태 · 초안 · 검토 기록</div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.55">Agent Server 데이터: threads · runs · checkpoints (별도 database)</div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.55">Embedding: 승인된 공고 문장 벡터. 조건 필터(SQL)와 의미 검색을 한 쿼리로</div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:5px">
+      <div style="font-size:12px;font-weight:700;color:oklch(0.38 0.11 155);padding:5px 8px;border-radius:6px;background:oklch(0.95 0.035 155)">Agent Server가 Checkpoint · 실행 기록 관리</div>
+      <div style="font-size:12px;font-weight:700;color:oklch(0.38 0.11 155);padding:5px 8px;border-radius:6px;background:oklch(0.95 0.035 155)">별도 Vector DB 없음 → 데이터 동기화 문제 없음</div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:1980px;top:1000px;width:360px;height:110px;box-sizing:border-box;background:oklch(0.975 0.015 280);border:1.5px solid oklch(0.78 0.08 280);border-radius:14px;padding:12px 16px;display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:8px"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="Firebase" style="height:24px"><div style="font-size:16px;font-weight:800">FCM 푸시 알림</div></div><span style="font-size:11.5px;font-weight:700;color:oklch(0.42 0.14 280)">외부 서비스</span></div>
+    <div style="font-size:12.5px;color:#4a5264;line-height:1.45">Firebase Cloud Messaging — 앱 · 웹 푸시. 요청 1번에 기기 토큰 최대 500개, 구글 서버가 학생 기기로 직접 전달</div>
+  </div>
+
+  <div style="position:absolute;left:600px;top:1630px;display:flex;flex-direction:column;gap:4px;align-items:flex-end;width:220px"><div style="font-size:14px;font-weight:800;color:oklch(0.42 0.14 280)">외부 서비스 · AWS →</div><div style="font-size:12px;color:#6b7385">EC2 바깥</div></div>
+  <div style="position:absolute;left:860px;top:1600px;width:220px;height:110px;box-sizing:border-box;background:oklch(0.975 0.015 280);border:1.5px solid oklch(0.78 0.08 280);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:4px"><div style="font-size:16px;font-weight:800">장학금 기관 사이트</div><div style="font-size:12px;color:#4a5264;line-height:1.4">정부 · 대학 · 재단 공고</div></div>
+  <div style="position:absolute;left:1100px;top:1600px;width:320px;height:200px;box-sizing:border-box;background:#fff;border:2px dashed oklch(0.5 0.09 200);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:17px;font-weight:800;padding:4px 12px;border-radius:99px;background:oklch(0.5 0.09 200);color:#fff">파일 저장소</span><span style="font-size:11.5px;font-weight:700;color:oklch(0.4 0.08 200)">Amazon S3 · AWS 관리형</span></div>
+    <div style="font-size:13px;color:#4a5264;line-height:1.5">공고 원본 PDF · HWP · 첨부파일, 작성된 초안 파일(다운로드용). DB에는 파일 위치(ID)만 저장</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;font-size:12px;font-weight:700"><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">학생이 임시 URL로 직접 다운로드</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">비공개 · 권한 검사</span><span style="padding:3px 7px;border-radius:6px;background:oklch(0.96 0.04 70);color:oklch(0.45 0.13 55)">임시 → 검증 후 사용</span></div>
+  </div>
+  <div style="position:absolute;left:1440px;top:1600px;width:220px;height:110px;box-sizing:border-box;background:oklch(0.975 0.015 280);border:1.5px solid oklch(0.78 0.08 280);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:4px"><div style="font-size:16px;font-weight:800">검색 API</div><div style="font-size:12px;color:#4a5264;line-height:1.4">새 장학금 기관 · 정보 찾기</div></div>
+  <div style="position:absolute;left:1700px;top:1600px;width:220px;height:110px;box-sizing:border-box;background:oklch(0.975 0.015 280);border:1.5px solid oklch(0.78 0.08 280);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:4px"><div style="font-size:16px;font-weight:800">LLM API</div><div style="font-size:12px;color:#4a5264;line-height:1.4">조건 추출 · 설명 · 초안 작성 · 임베딩</div></div>
+
+  {{ diagram }}
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px">
+  <div style="border:1.5px solid oklch(0.8 0.08 70);background:oklch(0.98 0.018 75);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:17px;font-weight:800;color:oklch(0.48 0.13 60)">학생이 "신청 준비하기"를 누르면</div>
+    <div style="font-size:15px;line-height:1.7;color:#2c3344">① 웹 서버 → API 서버로 요청<br>② API 서버가 신청 건(jobs)과 outbox 기록을 한 트랜잭션으로 DB에 저장하고 바로 "접수됨" 응답<br>③ Outbox Relay가 Agent Server에 run 생성 (HTTP) → Agent Server가 그래프 실행<br>④ 학생에게 물어볼 게 생기면 interrupt — Checkpoint가 DB에 저장되고 멈춤 → Agent Server 스트리밍 → API 서버 → 학생 화면에 질문 표시<br>⑤ 답변이 오면 같은 길로 들어가 멈춘 곳부터 다시 실행 (확인 안 된 정보는 UNKNOWN · 기관 확인 필요로 남김)<br>⑥ 필요 서류 체크리스트 · 발급 방법 안내 + 자기소개서 · 학업계획서 · 신청서 초안 생성 → 학생이 확인 · 다운로드 후 공식 사이트에서 직접 신청</div>
+  </div>
+  <div style="border:1.5px solid oklch(0.78 0.06 250);background:oklch(0.978 0.012 250);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:17px;font-weight:800;color:oklch(0.42 0.13 250)">새 장학금 발견 → 학생에게 알림</div>
+    <div style="font-size:15px;line-height:1.7;color:#2c3344"><b style="color:oklch(0.42 0.13 250)">1. 찾기 — 수집 서버</b><br>① 내장 스케줄러가 정해진 시간에 crawler_jobs에 "수집해" 등록<br>② 수집 서버가 꺼내고, DB에서 출처 목록 · 이전 해시를 읽음<br>③ 기관 사이트에서 공고 · 첨부파일을 가져와 해시 비교 → 새 공고 · 바뀐 공고만 남김<br>④ 원문(PDF · HWP)을 S3에 저장하고, 공고 버전과 outbox("분석해 줘 + 파일 위치")를 DB에 기록 → Relay가 분석 run 생성<br><b style="color:oklch(0.42 0.13 250)">2. 분석 — Agent Server</b><br>⑤ Agent Server가 분석 run을 실행하고 S3 원문을 읽음<br>⑥ LLM으로 자격 조건 추출 → 원문 근거 검증 (확신 없으면 관리자 검토로 멈춤)<br>⑦ 통과하면 공고 · 조건 · 임베딩을 DB에 저장<br><b style="color:oklch(0.42 0.13 250)">3. 맞는 학생 찾기 — Agent Server</b><br>⑧ 가입한 학생 프로필과 비교해 자격 판정 → "가능"인 학생 목록<br>⑨ 그 학생들의 기기 토큰을 DB에서 모으고, 학생마다 알림 기록 저장 (앱 알림함용)<br><b style="color:oklch(0.42 0.13 250)">4. 보내기 — Agent Server → FCM</b><br>⑩ 기기 토큰을 500개씩 묶어 묶음마다 알림 발송 run 생성 (1,200대 → run 3개)<br>⑪ Agent Server 큐가 run을 차례로 실행 → FCM에 "이 토큰들에게 보내줘" 요청<br>⑫ FCM(구글)이 학생 휴대폰 · 브라우저에 알림을 띄움 → 실패 토큰 재시도 · 만료 토큰 삭제<br><b style="color:oklch(0.42 0.13 250)">5. 확인 — API 서버</b><br>⑬ 학생이 알림을 눌러 들어오면 API가 DB에서 추천 목록 · 알림함을 보여줌 (알림 권한 없는 학생도 알림함에서 확인)</div>
+  </div>
+  <div style="border:1.5px solid oklch(0.78 0.09 315);background:oklch(0.965 0.028 315);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:17px;font-weight:800;color:oklch(0.36 0.14 315)">AI가 확신하지 못하면 → 관리자</div>
+    <div style="font-size:15px;line-height:1.7;color:#2c3344">① Agent Server가 검토 요청을 DB에 남기고 interrupt로 멈춤<br>② Agent Server 스트리밍 → API 서버 → 관리자 화면에 알림<br>③ 관리자가 승인 / 수정 / 반려<br>④ API 서버가 결정과 outbox를 저장 → Relay가 resume run 생성 (Command(resume)) → 멈춘 곳부터 재개</div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;border-top:1.5px solid #dde1e8;padding-top:26px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><div style="font-size:24px;font-weight:800">아키텍처 드라이버</div><div style="font-size:15px;color:#4a5264">이 조건이 달라지면 구조도 달라진다 — 구조를 결정한 5가지</div></div>
+  <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px">
+    <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font:800 13px 'JetBrains Mono',monospace;color:#6b7385">DRIVER 01</span><span style="font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:oklch(0.95 0.03 250);color:oklch(0.4 0.13 250)">핵심 기능</span></div>
+      <div style="font-size:16px;font-weight:800;line-height:1.4">장시간 실행 · 중단 · 재개되는 AI 업무</div>
+      <div style="font-size:13px;color:#4a5264;line-height:1.5">영향: LangGraph · Thread · Checkpoint</div>
+    </div>
+    <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font:800 13px 'JetBrains Mono',monospace;color:#6b7385">DRIVER 02</span><span style="font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:oklch(0.95 0.035 155);color:oklch(0.38 0.11 155)">품질</span></div>
+      <div style="font-size:16px;font-weight:800;line-height:1.4">대규모 동시 요청에서 안정적 서비스</div>
+      <div style="font-size:13px;color:#4a5264;line-height:1.5">영향: API · Agent 분리 · 큐 · 부하 제어</div>
+    </div>
+    <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font:800 13px 'JetBrains Mono',monospace;color:#6b7385">DRIVER 03</span><span style="font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:oklch(0.95 0.035 155);color:oklch(0.38 0.11 155)">품질</span></div>
+      <div style="font-size:16px;font-weight:800;line-height:1.4">작업 유실 · 중복 실행 방지와 복구</div>
+      <div style="font-size:13px;color:#4a5264;line-height:1.5">영향: Outbox · 멱등성 · Checkpoint</div>
+    </div>
+    <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font:800 13px 'JetBrains Mono',monospace;color:#6b7385">DRIVER 04</span><span style="font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:oklch(0.95 0.035 155);color:oklch(0.38 0.11 155)">품질</span></div>
+      <div style="font-size:16px;font-weight:800;line-height:1.4">자격 판정 정확성 · 근거 추적</div>
+      <div style="font-size:13px;color:#4a5264;line-height:1.5">영향: UNKNOWN · Evidence · 공고 버전 · 관리자 검토</div>
+    </div>
+    <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font:800 13px 'JetBrains Mono',monospace;color:#6b7385">DRIVER 05</span><span style="font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">제약</span></div>
+      <div style="font-size:16px;font-weight:800;line-height:1.4">대규모를 가정하되 한정된 인력 · 기간</div>
+      <div style="font-size:13px;color:#4a5264;line-height:1.5">영향: 단일 EC2 · 컨테이너 분리 · 단계별 확장 · PoC</div>
+    </div>
+  </div>
+  <div style="font-size:14px;color:#4a5264">동시 접속 규모의 구체적 수치는 아직 미정 — 아래 품질 목표의 수치는 실험용 합격선 예시이며 팀 · 교수님 합의로 확정한다.</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;border-top:1.5px solid #dde1e8;padding-top:26px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><div style="font-size:24px;font-weight:800">핵심 설계 결정과 트레이드오프</div><div style="font-size:15px;color:#4a5264">문제 → 선택 → 얻는 것 → 대가</div></div>
+  <div style="display:grid;grid-template-columns:220px 280px minmax(0,1fr) minmax(0,1fr);border:1px solid #dde1e8;border-radius:12px;overflow:hidden;font-size:14.5px;line-height:1.5">
+    <div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">문제</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">선택한 설계</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">얻는 것</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">대가</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">AI 작업이 길어짐</div><div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">FastAPI / Agent Server 분리</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.38 0.11 155);">API 응답과 긴 AI 작업 격리 · 독립 확장</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.45 0.16 30);">서버 간 통신 · 운영 복잡도 · 라이선스</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">수집 작업 폭주</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">Redis Stream (crawler_jobs)</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.38 0.11 155);">부하 완충 · 재처리</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.45 0.16 30);">큐 대기 · 중복 · 순서 관리</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">작업 전달 유실</div><div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">Transactional Outbox</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.38 0.11 155);">DB 저장 후 전달 유실 방지</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.45 0.16 30);">Relay 운영 · 중복 전달 → 멱등성 필요</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">작업 중단</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">LangGraph Checkpoint</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.38 0.11 155);">멈춘 지점부터 재개</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.45 0.16 30);">영속 상태 관리 · 개인정보 보존 기간</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">검색 DB 동기화</div><div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">PostgreSQL + pgvector 통합</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.38 0.11 155);">동기화 문제 없음 · 운영 단순</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.45 0.16 30);">벡터 검색 부하를 DB가 함께 부담</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">파일 보관</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">S3와 DB 분리</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.38 0.11 155);">파일 저장 · 전송 책임 분리</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.45 0.16 30);">S3 ↔ DB 참조 정합성 관리</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">도구 접근 통제</div><div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">MCP Tool 서버 분리</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.38 0.11 155);">읽기 전용 · 권한 정책 한 곳에서</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.45 0.16 30);">통신 단계 · 운영 대상 증가</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">초기 운영 부담</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:700;">단일 EC2 + Docker 8개</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.38 0.11 155);">배포 단순 · 비용 절감</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:oklch(0.45 0.16 30);">호스트 자원 경합 · 단일 장애 지점</div>
+    <div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">잘못된 공고 유통</div><div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:700;">검증 후 색인</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.38 0.11 155);">오정보 노출 위험 감소</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:oklch(0.45 0.16 30);">등록 지연 · 관리자 처리 부담</div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;border-top:1.5px solid #dde1e8;padding-top:26px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><div style="font-size:24px;font-weight:800">품질 목표 · 품질 시나리오</div><div style="font-size:15px;color:#4a5264">측정 가능한 문장으로 — 수치는 실험용 합격선 예시</div></div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;align-items:start">
+    <div style="display:grid;grid-template-columns:110px minmax(0,1fr) 190px;border:1px solid #dde1e8;border-radius:12px;overflow:hidden;font-size:14px;line-height:1.5">
+      <div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">ID</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">품질 목표</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">검증 방법</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;font:800 13px 'JetBrains Mono',monospace;">Q1 성능</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">지정 부하에서 장학금 목록 API p95 2초 이내</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:#4a5264;">k6 부하 테스트</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font:800 13px 'JetBrains Mono',monospace;">Q2 접수</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;">AI 작업 접수는 완료를 기다리지 않고 접수 ID 즉시 반환</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:#4a5264;">API 응답시간 · 응답 내용</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;font:800 13px 'JetBrains Mono',monospace;">Q3 복구</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">Agent Server 중단 후 미완료 run 재처리</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:#4a5264;">강제 종료 · 재시작 테스트</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font:800 13px 'JetBrains Mono',monospace;">Q4 중복</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;">같은 신청 재요청 시 논리적 작업 1건 유지</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:#4a5264;">중복 요청 · DB 기록 검증</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;font:800 13px 'JetBrains Mono',monospace;">Q5 정확성</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">정보 부족만으로 FAIL 처리하지 않음 (UNKNOWN)</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:#4a5264;">UNKNOWN 판정 테스트</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font:800 13px 'JetBrains Mono',monospace;">Q6 보안</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;">학생 A 인증으로 학생 B 정보 조회 불가</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:#4a5264;">권한 우회 테스트</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;font:800 13px 'JetBrains Mono',monospace;">Q7 최신성</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">수정된 공고의 버전 · 마지막 확인 시각 확인 가능</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:#4a5264;">변경 공고 재수집 테스트</div>
+    </div>
+    <div style="display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);border:1px solid #dde1e8;border-radius:12px;overflow:hidden;font-size:14px;line-height:1.5">
+      <div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">시나리오</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">맥락 · 자극</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">응답</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">측정</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:800;">요청 폭증</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">학기 초 동시 접속 → 검색 API 급증</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">처리량 유지, 한계 초과 시 요청 제한</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:#4a5264;">p95 · 오류율 · DB 연결 대기</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:800;">Agent 장애</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;">초안 생성 중 Agent Server 프로세스 중단</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;">Checkpoint로 재처리 · 재개</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:#4a5264;">유실 0 · 중복 결과 0 · 복구 시간</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;font-weight:800;">공고 변경</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">기관이 지원 조건 수정</div><div style="padding:11px 14px;border-top:1px solid #eceef2;">새 버전 기록 · 재검증 · 영향 판정 갱신</div><div style="padding:11px 14px;border-top:1px solid #eceef2;color:#4a5264;">버전 추적 · 오래된 판정 노출 여부</div>
+      <div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;font-weight:800;">알림 폭증</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;">새 공고로 대량 알림 발생</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;">알림 처리 중에도 신청 준비 지연 방지</div><div style="padding:11px 14px;border-top:1px solid #eceef2;background:#fafbfc;color:#4a5264;">알림 대기 · 신청 준비 지연 · 실패율</div>
+    </div>
+  </div>
+  <div style="font-size:14px;color:#4a5264">API 응답시간과 AI 작업 완료시간은 별도 목표로 관리한다. 동시 접속자 수 ≠ RPS ≠ 처리량 ≠ 대기시간.</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;border-top:1.5px solid #dde1e8;padding-top:26px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><div style="font-size:24px;font-weight:800">확장 단계</div><div style="font-size:15px;color:#4a5264">대규모를 고려한 설계 ≠ 대규모가 구현된 상태 — 초기 배치와 확장 목표를 구분</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+    <div style="border:2px solid #1d2230;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:18px;font-weight:800">Phase 1 · 초기 배포</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#1d2230;color:#fff">현재 그림</span></div>
+      <div style="font-size:15px;font-weight:700">EC2 1대 + Docker 8개 + RDS + S3</div>
+      <div style="font-size:14px;color:#4a5264;line-height:1.6">개발 · 운영 복잡성을 제한하면서 역할별 실행 환경 분리</div>
+    </div>
+    <div style="border:1.5px dashed #a3aab8;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:18px;font-weight:800">Phase 2 · 트래픽 증가</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#eef0f4;color:#44506a">병목 확인 시</span></div>
+      <div style="font-size:15px;font-weight:700">API · Crawler · Agent Server를 서로 다른 EC2로 분리</div>
+      <div style="font-size:14px;color:#4a5264;line-height:1.6">측정된 병목만 선택적으로 확장 · Notification Worker · Redis 물리 분리</div>
+    </div>
+    <div style="border:1.5px dashed #a3aab8;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:18px;font-weight:800">Phase 3 · 장애 대응 강화</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#eef0f4;color:#44506a">고가용성 필요 시</span></div>
+      <div style="font-size:15px;font-weight:700">다중 가용 영역 · 로드밸런서 · ElastiCache · RDS Multi-AZ</div>
+      <div style="font-size:14px;color:#4a5264;line-height:1.6">서버 한 대 장애가 전체 중단으로 이어지지 않게</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;border-top:1.5px solid #dde1e8;padding-top:26px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><div style="font-size:24px;font-weight:800">설계 보완 — 컨테이너 수 그대로</div><div style="font-size:15px;color:#4a5264">시스템 아키텍처 = 어느 서버가 무엇을 맡고 어떻게 통신하는가 · AI의 판단 순서와 분기는 LangGraph 흐름도에서</div></div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">① Checkpointer — PostgreSQL로 확정</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.035 155);color:oklch(0.38 0.11 155)">결정 완료</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">일반 DB 저장(회원 · 공고 · 신청 상태)과 Checkpoint(멈춘 지점부터 다시 실행하기 위한 상태)는 다르다. LangGraph 공식 Checkpointer가 PostgreSQL · SQLite · MongoDB 기반이라 RDS를 MySQL에서 PostgreSQL로 변경했다. 업무 데이터와 Checkpoint 모두 같은 RDS PostgreSQL에 저장. v6에서는 Agent Server가 Checkpoint를 직접 관리 (업무 DB와 database만 분리).</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">② Redis Stream 분리</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.94 0.05 30);color:oklch(0.45 0.16 30)">매우 높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">Redis 서버는 하나 그대로. 우리가 직접 관리하는 Stream은 crawler_jobs 하나만 남고, AI 실행 · 알림 발송 큐는 Agent Server 내장 큐가 맡는다. 서로 다른 종류의 작업이 한 대기줄에 섞이지 않게 하기 위함.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">③ 장애 복구 책임 분리</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">AI 작업: Agent Server가 실행 중 꺼진 run을 다시 실행하고 Checkpoint에서 이어간다 (직접 구현 X). 수집 작업: Crawler가 crawler_jobs를 가져간 뒤 꺼지면 XAUTOCLAIM으로 다시 가져가고, 반복 실패는 DLQ로. 어느 쪽이든 재실행될 수 있으니 결과 저장은 멱등하게.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">④ 검증 후 색인</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">수집 → 조건 추출 → Evidence 검증 → 판정. 성공하면 RDS에 승인 기록과 embedding(pgvector)을 같은 트랜잭션으로 저장, 실패하면 관리자 검토. 원문을 읽었다고 추출한 조건까지 정확한 것은 아니기 때문.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑤ Crawler와 MCP 역할</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#eef0f4;color:#44506a">중간</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">Crawler: 정해진 시간에 등록된 기관을 돌며 공고 · 첨부파일을 모은다. MCP Tool 서버: AI가 실행 중 필요할 때 공식 페이지 조회 · 검색, 그리고 DB 조회 · 벡터 검색을 맡는다(읽기 전용). Checkpoint와 결과 저장은 트랜잭션 때문에 Agent Server가 DB에 직접 쓴다 (Checkpoint는 Agent Server가 자동 관리).</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑥ 서류는 안내만 · 신청은 학생이 직접</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#eef0f4;color:#44506a">중간</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">필요 서류 확인 → 서류 체크리스트 생성 → 발급 · 준비 방법 안내 → 작성이 필요한 항목은 Drafting Agent가 초안 생성 → 학생 확인 · 다운로드 → 학생이 공식 사이트에서 직접 신청. 학생 개인 증빙서류는 업로드 · 보관 · 검증하지 않는다.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑦ 데이터 3종류 — 사라지면 서비스가 망가지나?</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">해야 할 일 → Agent Server run (분석 · 알림) · crawler_jobs (수집). 잠깐의 진행 신호(검색 중 · 30%) → Agent Server 스트리밍, 끊겨도 다시 연결해 이어 받음. 반드시 기억할 상태(추가 질문 · 답변 대기 · 결과) → PostgreSQL · Checkpoint. 학생이 다시 접속하면 API가 DB에서 대기 중인 질문을 조회해 보여준다.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑧ Vector DB — pgvector로 통합</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.035 155);color:oklch(0.38 0.11 155)">결정 완료</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">공고 정보와 embedding은 같은 도메인 데이터이고 규모도 수천~수만 건이라, 별도 Qdrant 대신 PostgreSQL pgvector를 쓴다. 두 DB 간 동기화 문제가 없고, 마감일 · 지역 같은 SQL 조건과 의미 검색을 한 쿼리로 처리한다. 벡터 검색 부하가 따로 커지면 그때 전용 Vector DB로 분리.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑨ Outbox — run 생성을 잃지 않기</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">API나 Crawler가 DB 저장 후 Agent Server에 run을 만들기 직전에 죽으면 작업이 사라진다. 그래서 업무 데이터와 outbox를 한 트랜잭션으로 저장하고 Relay가 run을 대신 만든다. Relay가 두 번 보낼 수 있으니 run 생성에 고유 키(멱등성)를 함께 쓴다.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑩ 멱등성 3단계</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">API 접수: Idempotency-Key + UNIQUE로 같은 요청 중복 접수 방지. run 생성: outbox id를 고유 키로 써서 같은 run 두 번 생성 방지. 결과 저장: UNIQUE · ON CONFLICT로 중복 결과 방지. 실행이 두 번 일어나도 결과는 한 번만 남게 하는 것.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑪ Heartbeat · Lease — Agent Server가 담당</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.035 155);color:oklch(0.38 0.11 155)">직접 구현 X</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">Worker 생존 확인 · 작업 점유 · 죽은 run 회수는 Agent Server의 실행 관리 기능이 처리한다. 우리가 직접 해야 하는 건 외부 효과(FCM 발송 · S3 저장 · 결과 저장)의 중복 방지뿐. PoC에서 Worker 강제 종료 테스트로 실제 동작을 확인한다.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑫ 데이터 보존 · 정리</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#eef0f4;color:#44506a">중간</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">crawler_jobs의 XACK는 삭제가 아니라 완료 확인 — 오래된 메시지는 XTRIM으로 정리. 완료된 오래된 thread · run · Checkpoint는 보존 기간 후 정리, 작성 중 Checkpoint는 유지. Pub/Sub은 저장되지 않음. 운영 전 보존 기간 정책 확정 필요.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑬ 구현 완료 vs 목표 설계</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#eef0f4;color:#44506a">중간</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">로컬 랩(구현 완료): Docker Compose · postgres 컨테이너 · MinIO · mock-sites · Mock HTTP 수집 · Mock LLM · Mock 알림 · MCP 도구 3개. 이 그림(목표 설계): EC2 · RDS · S3 · 실제 기관 사이트 · Playwright · 외부 LLM · FCM · MCP 도구 확장. Crawler 해시 조회, MCP의 학생 조회 · 벡터 검색, FCM 발송은 아직 구현 전.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑭ 단일 EC2의 한계</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.94 0.05 30);color:oklch(0.45 0.16 30)">매우 높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">Worker 2개는 프로세스 장애 대응이지 서버 장애 대응이 아니다. EC2가 꺼지면 Web · API · Redis · Worker · MCP가 함께 멈춘다. RDS · S3의 데이터는 유지되므로 EC2 재기동 후 Checkpoint와 outbox로 재개. 확장 순서: EC2 2대 이상 · 여러 가용 영역 → Redis를 ElastiCache로.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑮ Redis 손실 대비 — Reconciliation</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">Relay가 전송 완료로 표시한 뒤 run이나 crawler_jobs가 사라지면 Outbox만으로는 다시 넣어주지 않는다. 그래서 Redis는 AOF 영속화 + 영속 볼륨, 그리고 주기적으로 "DB에는 미완료인데 Agent Server · Redis에 없는 작업"을 찾아 다시 만드는 정합성 재검사를 둔다.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑯ 알림 처리 주체</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">알림은 Agent Server의 "알림 발송" 그래프로 실행 — 토큰 500개 묶음 1개 = run 1개. 재시도 · 순서 관리는 Agent Server 큐가 맡아 notify_jobs가 필요 없다. 알림량이 커져 신청서 작업이 밀리면 Notification Worker 컨테이너로 분리.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑰ Agent Server 전환 조건</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.94 0.05 30);color:oklch(0.45 0.16 30)">매우 높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">① 자체 호스팅 운영 라이선스 · 비용을 공식 문서로 확인 ② 신청서 작성 그래프 하나만 먼저 올려 PoC ③ 기존 장애 테스트 그대로 적용 — 실행 중 Worker 강제 종료 · interrupt 후 서버 재시작 → resume · 같은 요청 2번 → 결과 1번 · 학생 화면까지 스트리밍 ④ 통과하면 전환, 기존 자체 Worker 코드는 그때까지 유지.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑱ 안정성 2종류</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.94 0.05 30);color:oklch(0.45 0.16 30)">매우 높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">시스템 안정성(서버가 죽어도 작업이 사라지지 않는가) → Agent Server의 검증된 실행 기반에 맡긴다. 서비스 정확성(지원할 수 없는 장학금을 추천하거나 조건을 잘못 안내하지 않는가) → 아낀 시간을 공고 누락 방지 · 자격 조건 추출 정확도 · 근거 검증 · 판정 회귀 테스트에 쓴다.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑲ 자원 격리 · 백프레셔 (Bulkhead)</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">API: 요청 수 제한 · 타임아웃 · DB 연결 수 제한. AI: 동시 실행 수 · 학생별 중복 작업 제한. 알림: 묶음 · 발송 속도 제한. 대기열이 너무 길면 신규 요청을 무제한 받지 않고 예상 대기 안내. 알림이 신청 준비를 지연시키는지 테스트 후 Worker Pool 분리.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">⑳ 스케줄러 중복 실행 방지</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">Crawler를 여러 개로 늘리면 내장 스케줄러가 같은 수집 작업을 여러 번 등록할 수 있다. 수집 대상 · 시각으로 만든 고유 키로 중복 등록을 막고, 확장 시 스케줄러를 단일 실행 요소로 분리하거나 분산 잠금으로 한 인스턴스만 등록.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">㉑ S3 ↔ DB 정합성</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">DB 트랜잭션은 S3 업로드까지 묶지 못한다. 원본을 임시 상태로 업로드 → 파일 ID와 공고 버전 기록 → 검증 후 사용 가능 상태로 전환. 실패한 임시 파일 · 고아 객체는 주기적으로 정리, 파일 ID는 내용 해시 기반으로 중복 업로드 방지.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">㉒ 외부 호출 실패 정책</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">LLM · 검색 API · 기관 사이트 호출마다 타임아웃 · 재시도 조건 · 횟수 · 실패 후 상태를 정한다. 일시 네트워크 오류 → 제한된 재시도(Backoff). 429 → 대기 후 재시도. 지속 장애 → Circuit Breaker로 일정 시간 차단. 잘못된 입력 → 재시도 없이 오류. 정보 부족 → 오류가 아니라 학생에게 질문.</div>
+  </div>
+  <div style="border:1px solid #dde1e8;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">㉓ Outbox 장애 테스트 4종</div><span style="font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:oklch(0.95 0.05 70);color:oklch(0.45 0.12 60)">높음</span></div>
+    <div style="font-size:14px;line-height:1.65;color:#2c3344">① DB 커밋 직후 FastAPI 종료 ② Relay가 run 생성 요청 직후 종료 ③ Agent Server 실행 중 종료 ④ 결과 저장 직전 같은 작업 재실행. 결과가 DB에 한 번만 남는 것과 외부 LLM · FCM 호출이 한 번만 일어나는 것은 별개의 목표로 각각 검증.</div>
+  </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;border-top:1.5px solid #dde1e8;padding-top:26px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><div style="font-size:24px;font-weight:800">관측 지표 (Observability)</div><div style="font-size:15px;color:#4a5264">느려졌을 때 왜 느린지 알 수 있어야 한다</div></div>
+  <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px">
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;font-weight:800">API</div><div style="font-size:13px;color:#4a5264;line-height:1.5">RPS · p95/p99 · 오류율</div></div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;font-weight:800">Redis</div><div style="font-size:13px;color:#4a5264;line-height:1.5">대기 작업 수 · 가장 오래 기다린 시간</div></div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;font-weight:800">Agent Server</div><div style="font-size:13px;color:#4a5264;line-height:1.5">run 실행 · 대기 · 실패 · 재시도 건수</div></div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;font-weight:800">PostgreSQL</div><div style="font-size:13px;color:#4a5264;line-height:1.5">활성 연결 · 쿼리 지연 · 잠금 대기</div></div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;font-weight:800">외부 LLM</div><div style="font-size:13px;color:#4a5264;line-height:1.5">호출 지연 · 실패 · 토큰 사용량 · 비용</div></div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;font-weight:800">Crawler</div><div style="font-size:13px;color:#4a5264;line-height:1.5">수집 성공률 · 마지막 확인 시각 · 변경 감지</div></div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:15px;font-weight:800">도메인</div><div style="font-size:13px;color:#4a5264;line-height:1.5">UNKNOWN 발생률 · 검증 실패 · 관리자 검토 건수</div></div>
+  </div>
+  <div style="font-size:14px;color:#2c3344;line-height:1.6">모든 요청에 공통 <b style="font-family:'JetBrains Mono',monospace">trace_id</b>를 붙여 FastAPI → Outbox → Agent Server → MCP까지 한 요청을 따라간다. 로그에는 소득 · 성적 · 자기소개서 원문 같은 개인정보를 남기지 않는다.</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;border-top:1.5px solid #dde1e8;padding-top:26px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><div style="font-size:24px;font-weight:800">서버 간 연결 설정</div><div style="font-size:15px;color:#4a5264">그림의 화살표 하나 = 아래 한 줄 · 어디에 있는지 · 어떤 방식으로 · 누가 접근 가능한지 · 어떤 설정값(환경변수)이 필요한지</div></div>
+  <div style="display:grid;grid-template-columns:260px 300px 230px minmax(0,1fr) minmax(0,1fr);border:1px solid #dde1e8;border-radius:12px;overflow:hidden;font-size:14px;line-height:1.5">
+    <div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">누가 → 누구에게</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">① 주소</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">② 통신 방식</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">③ 접근 허용 (보안)</div><div style="padding:12px 14px;background:#1d2230;color:#fff;font-weight:700">④ 필요한 설정값 (환경변수)</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700">학생 · 관리자 → 웹 서버</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace">https://도메인:443</div><div style="padding:10px 14px;border-top:1px solid #eceef2">HTTPS · SSE</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264">인터넷 전체 허용 — 외부에 열린 포트는 443 하나뿐</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344">SSL 인증서 (Let's Encrypt)</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700;background:#fafbfc">웹 서버 → API 서버</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;background:#fafbfc">http://api:8000</div><div style="padding:10px 14px;border-top:1px solid #eceef2;background:#fafbfc">HTTP · REST</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264;background:#fafbfc">Docker 내부망만 · 외부 포트 닫음</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344;background:#fafbfc">API_UPSTREAM=api:8000 · JWT_SECRET (API)</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700">Crawler · Agent Server → 큐 서버</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace">redis:6379</div><div style="padding:10px 14px;border-top:1px solid #eceef2">Redis 프로토콜</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264">Docker 내부망만 · 비밀번호 필수</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344">REDIS_URL · REDIS_PASSWORD · STREAM_NAME=crawler_jobs · CONSUMER_GROUP · Agent Server: REDIS_URI</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700;background:#fafbfc">API · Relay · Crawler · Agent Server → DB 서버</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;background:#fafbfc">xxx.rds.amazonaws.com:5432</div><div style="padding:10px 14px;border-top:1px solid #eceef2;background:#fafbfc">SQL (PostgreSQL · TLS)</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264;background:#fafbfc">RDS 보안 그룹: 우리 EC2에서 오는 5432만 허용 · 인터넷 공개 안 함</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344;background:#fafbfc">DATABASE_URL · DB_USER · DB_PASSWORD · OUTBOX_POLL_SEC=1 · Agent Server: DATABASE_URI</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700">Relay · API → Agent Server</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace">http://agent-server:8000</div><div style="padding:10px 14px;border-top:1px solid #eceef2">HTTP · REST · SSE</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264">Docker 내부망만 · 외부 포트 닫음</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344">AGENT_SERVER_URL · 라이선스 키 (LANGSMITH_API_KEY 등 — 공식 문서 확인)</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700">Agent Server → Tool 서버 (MCP) → DB 조회</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace">http://mcp:8100</div><div style="padding:10px 14px;border-top:1px solid #eceef2">MCP (JSON-RPC · Streamable HTTP)</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264">Docker 내부망만 · MCP는 DB를 읽기 전용 계정으로만 접속</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344">MCP_SERVER_URL · MCP_DB_READONLY_URL</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700;background:#fafbfc">API · Crawler · Agent Server → 파일 저장소</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;background:#fafbfc">s3.ap-northeast-2.amazonaws.com</div><div style="padding:10px 14px;border-top:1px solid #eceef2;background:#fafbfc">HTTPS (S3 API)</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264;background:#fafbfc">버킷 비공개 · EC2에 IAM Role 부여 (Access Key를 코드에 넣지 않음)</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344;background:#fafbfc">S3_BUCKET · AWS_REGION</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700">학생 → 파일 저장소 (초안 다운로드)</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace">Presigned URL</div><div style="padding:10px 14px;border-top:1px solid #eceef2">HTTPS GET</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264">API가 서명한 URL만 · 일정 시간 후 만료</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344">PRESIGN_EXPIRES_SEC=300</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700;background:#fafbfc">Agent Server · Tool 서버 → LLM API</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;background:#fafbfc">외부 API 주소</div><div style="padding:10px 14px;border-top:1px solid #eceef2;background:#fafbfc">HTTPS · REST (JSON)</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264;background:#fafbfc">EC2 → 인터넷 나가는 방향만 · API Key로 인증</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344;background:#fafbfc">LLM_API_KEY · LLM_MODEL · EMBEDDING_MODEL</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700">Tool 서버 → 검색 API</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace">외부 API 주소</div><div style="padding:10px 14px;border-top:1px solid #eceef2">HTTPS · REST</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264">나가는 방향만 · API Key로 인증</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344">SEARCH_API_KEY</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700;background:#fafbfc">Crawler · Tool 서버 → 기관 사이트</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;background:#fafbfc">등록된 기관 URL</div><div style="padding:10px 14px;border-top:1px solid #eceef2;background:#fafbfc">HTTPS (크롤링)</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264;background:#fafbfc">나가는 방향만 · robots.txt 준수 · 요청 간격 제한</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344;background:#fafbfc">CRAWL_USER_AGENT · CRAWL_INTERVAL</div>
+
+    <div style="padding:10px 14px;border-top:1px solid #eceef2;font-weight:700">Agent Server → FCM → 학생</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace">외부 API 주소</div><div style="padding:10px 14px;border-top:1px solid #eceef2">HTTPS</div><div style="padding:10px 14px;border-top:1px solid #eceef2;color:#4a5264">나가는 방향만 · Key로 인증</div><div style="padding:10px 14px;border-top:1px solid #eceef2;font:600 13px 'JetBrains Mono',monospace;color:#2c3344">FCM 서비스 계정 키 (GOOGLE_APPLICATION_CREDENTIALS) · NOTIFY_BATCH_SIZE=500</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.6;color:#2c3344"><b>서로 찾는 방법</b> — 같은 EC2 안 컨테이너는 Docker Compose의 서비스 이름(api · redis · mcp · outbox-relay · agent-server)으로 서로를 찾는다. IP를 코드에 적지 않는다.</div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.6;color:#2c3344"><b>비밀값 보관</b> — 비밀번호 · API Key는 .env 또는 AWS Secrets Manager에 두고 Git에 올리지 않는다. .env.example에는 변수 이름만.</div>
+    <div style="border:1px solid #dde1e8;border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.6;color:#2c3344"><b>열린 문은 하나</b> — 외부에서 들어올 수 있는 곳은 웹 서버 443뿐. Redis · MCP · API · Relay · Agent Server 포트와 RDS는 외부에서 직접 접근 불가.</div>
+  </div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const h = React.createElement;
+const SANS = "Pretendard,'Apple SD Gothic Neo',sans-serif";
+const C = { sync: '#44506a', queue: 'oklch(0.5 0.09 200)', event: 'oklch(0.6 0.17 45)', ext: 'oklch(0.5 0.14 280)' };
+const DARK = { [C.queue]: 'oklch(0.38 0.09 200)', [C.event]: 'oklch(0.48 0.16 45)', [C.ext]: 'oklch(0.4 0.15 280)' };
+
+function head(x, y, a, color, k) {
+  const s = 12, w = 6.5, c = Math.cos(a), si = Math.sin(a);
+  return h('polygon', { key: k, fill: color, points: [[x, y], [x - s * c + w * si, y - s * si - w * c], [x - s * c - w * si, y - s * si + w * c]].map(p => p.join(',')).join(' ') });
+}
+
+// [points, color, label, lx, ly, anchor, both, proto, dy]
+const EDGES = [
+  [[[300, 520], [500, 520]], C.sync, '요청', 400, 508, 'middle', false, 'HTTPS', -17],
+  [[[500, 600], [300, 600]], C.event, '화면 · 실시간 알림', 400, 624, 'middle', false, 'HTTPS · SSE', 17],
+  [[[300, 860], [645, 860], [645, 730]], C.sync, '검토 화면 · 승인/반려', 470, 848, 'middle', true, 'HTTPS', -17],
+  [[[790, 600], [920, 600]], C.sync, '/api 전달', 855, 588, 'middle', true, 'HTTP · REST', -17],
+  [[[1240, 650], [1290, 650], [1290, 980], [1380, 980]], C.event, '진행 스트리밍 · 상태 조회', 1283, 822, 'end', true, 'HTTP · SSE', 17],
+  [[[1380, 455], [1350, 455], [1350, 1030], [1380, 1030]], C.sync, 'run 생성', 1343, 548, 'end', false, 'HTTP', 17],
+  [[[1680, 420], [2060, 420], [2060, 500]], C.sync, '미전송 outbox 조회 · 전송 표시', 1870, 408, 'middle', true, 'SQL · 1초 폴링', 30],
+  [[[1530, 770], [1530, 860]], C.queue, '내장 큐 · 스트림', 1542, 806, 'start', true, 'Redis (내부 사용)', 18],
+  [[[1240, 950], [1320, 950], [1320, 720], [1380, 720]], C.queue, 'crawler_jobs', 1312, 885, 'end', true],
+  [[[1080, 470], [1080, 320], [2160, 320], [2160, 500]], C.sync, '신청 접수 = jobs + outbox 한 트랜잭션 · 조회', 1620, 308, 'middle', true, 'SQL (PostgreSQL)', -17],
+  [[[1240, 920], [1265, 920], [1265, 240], [2250, 240], [2250, 500]], C.sync, '출처 목록 · 이전 해시 조회 · 공고 버전 + outbox 기록', 1760, 232, 'middle', true, 'SQL', 25],
+  [[[920, 770], [840, 770], [840, 1730], [1100, 1730]], C.sync, '다운로드 임시 URL 발급', 828, 1200, 'end', false, '권한 확인 → Presigned 서명', 18],
+  [[[1680, 880], [1980, 880]], C.sync, '결과 · 질문 · 알림 기록 · Checkpoint', 1830, 868, 'middle', true, 'SQL (Checkpoint 자동)', 30],
+  [[[1680, 1395], [1900, 1395], [1900, 940], [2030, 940], [2030, 900]], C.sync, '공고 · 학생 조회 · 벡터 검색', 1912, 1300, 'start', true, 'SQL · 읽기 전용 계정', 18],
+  [[[1680, 1055], [1980, 1055]], C.ext, '묶음별 발송', 1830, 1043, 'middle', false, 'FCM 멀티캐스트 · HTTPS', 30],
+  [[[2340, 1055], [2380, 1055], [2380, 165], [250, 165], [250, 470]], C.ext, '새 장학금 알림 도착 — FCM 앱 · 웹 푸시', 1200, 155, 'middle', false],
+  [[[1530, 1240], [1530, 1310]], 'oklch(0.55 0.16 45)', 'Tool 호출', 1542, 1270, 'start', true, 'MCP (JSON-RPC)', 18],
+  [[[960, 1160], [960, 1600]], C.ext, '공고 가져오기', 948, 1556, 'end', false, 'HTTPS (크롤링)', 18],
+  [[[1150, 1160], [1150, 1600]], C.sync, '공고 원문 저장', 1138, 1556, 'end', false, 'HTTPS (S3 API)', 18],
+  [[[1380, 1200], [1330, 1200], [1330, 1600]], C.sync, '원문 읽기 · 초안 저장', 1342, 1556, 'start', true, 'HTTPS (S3 API)', 18],
+  [[[1380, 1440], [1040, 1440], [1040, 1600]], C.ext, '공식 페이지 확인 (fetch_page)', 1215, 1430, 'middle', false, 'HTTPS', 30],
+  [[[1560, 1480], [1560, 1600]], C.ext, '검색', 1572, 1556, 'start', false, 'HTTPS', 18],
+  [[[1680, 1180], [1730, 1180], [1730, 1600]], C.ext, 'AI 호출', 1718, 1556, 'end', false, 'HTTPS · REST', 18],
+  [[[1680, 1455], [1800, 1455], [1800, 1600]], C.ext, '검색어 임베딩', 1812, 1540, 'start', false, 'HTTPS', 18]
+];
+
+class Component extends DCLogic {
+  diagram() {
+    const lines = [], labels = [];
+    EDGES.forEach(([pts, color, label, lx, ly, anchor, both, proto, dy], i) => {
+      const P = pts.map(p => p.join(',')).join(' ');
+      lines.push(h('polyline', { key: 'w' + i, points: P, fill: 'none', stroke: '#fff', strokeWidth: 9, strokeLinejoin: 'round' }));
+      lines.push(h('polyline', { key: 'p' + i, points: P, fill: 'none', stroke: color, strokeWidth: 2.8, strokeLinejoin: 'round' }));
+      const a = pts[pts.length - 2], b = pts[pts.length - 1];
+      lines.push(head(b[0], b[1], Math.atan2(b[1] - a[1], b[0] - a[0]), color, 'h' + i));
+      if (both) lines.push(head(pts[0][0], pts[0][1], Math.atan2(pts[0][1] - pts[1][1], pts[0][0] - pts[1][0]), color, 's' + i));
+      labels.push(h('text', { key: 't' + i, x: lx, y: ly, textAnchor: anchor || 'middle', fontFamily: SANS, fontSize: 14.5, fontWeight: 800, fill: color === C.sync ? '#1d2230' : (DARK[color] || color), stroke: '#fff', strokeWidth: 5, paintOrder: 'stroke', strokeLinejoin: 'round' }, label));
+      if (proto) labels.push(h('text', { key: 'q' + i, x: lx, y: ly + dy, textAnchor: anchor || 'middle', fontFamily: "'JetBrains Mono',monospace", fontSize: 12.5, fontWeight: 800, fill: '#2c3344', stroke: '#fff', strokeWidth: 4, paintOrder: 'stroke', strokeLinejoin: 'round' }, proto));
+    });
+    return h('svg', { width: 2440, height: 1880, style: { position: 'absolute', left: 0, top: 0, pointerEvents: 'none', overflow: 'visible' } }, lines.concat(labels));
+  }
+  renderVals() {
+    return { diagram: this.diagram() };
+  }
+}
+</script>
+</body>
+</html>

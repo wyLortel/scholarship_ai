@@ -60,7 +60,7 @@ C. 신청 준비 직전 최신성 재확인 → 서류 체크리스트·발급 �
 
 ## 설계 입력과 런타임 프롬프트
 
-- [`reference/team-business-brief.md`](reference/team-business-brief.md) — 팀이 직접 정의한 A/B/C·D1~D4·알림·범위 제외의 **원래 의도 스냅샷**.
+- `reference/team-business-brief.md` — 팀이 직접 정의한 A/B/C·D1~D4·알림·범위 제외의 **원래 의도 스냅샷**. **원본 미확보 — OPEN-17.**
 - [`reference/architecture-v7.html`](reference/architecture-v7.html) — v7 아키텍처 원본 보존.
 - [`prompts/`](prompts/README.md) — 공고 추출/검증/판정 설명/초안 **AI 역할별** 프롬프트 계약. 판정은 LLM이 아니라 Rule Engine.
 
