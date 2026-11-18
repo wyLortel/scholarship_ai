@@ -1,4 +1,5 @@
 import type { AssessmentResult, ConditionEvaluation, RuleNode } from "@/lib/api/types";
+import { formatDateTime } from "@/lib/format";
 
 import styles from "./assessment.module.css";
 import { groupLabel, groupMessage, resultIcon, resultLabel, unknownReason } from "./copy";
@@ -24,7 +25,8 @@ export function AssessmentResultView({ result }: { result: AssessmentResult }) {
         </ul>
       )}
       <p className={styles.meta}>
-        공고 버전 <code>{result.noticeVersionId}</code>
+        공고 버전 <code>{result.noticeVersionId}</code> · 평가 시각{" "}
+        {formatDateTime(result.assessedAt)}
       </p>
     </section>
   );
@@ -78,7 +80,13 @@ function ConditionItem({ detail: d }: { detail: ConditionEvaluation }) {
         )}
       </span>
       <span className={styles.conditionLabel}>{d.label}</span>
-      {d.evidence && <q className={styles.quote}>{d.evidence.quote}</q>}
+      {d.evidence && (
+        <span className={styles.quote}>
+          <q>{d.evidence.quote}</q>
+          <br />
+          {d.evidence.location} · 원문 확인 {formatDateTime(d.evidence.checkedAt) ?? "시각 없음"}
+        </span>
+      )}
     </li>
   );
 }
