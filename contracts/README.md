@@ -19,6 +19,7 @@
 | 공통 오류 | `DomainError` | `error.notice-not-verified.json` |
 
 - **미검증 공고 정책:** 공고 버전이 VERIFIED가 아니면 409 `NOTICE_NOT_VERIFIED`. VERIFIED 공고인데 규칙이 비었거나 평가할 수 없으면 200 + `NEEDS_REVIEW`(조건 `reasonCode=RULE_UNVERIFIED`/`UNSUPPORTED_OPERATOR`). 어느 쪽도 `ELIGIBLE`을 만들지 않는다.
+- **규칙 구조 (0.3.0, #29):** `AssessmentResult.ruleTree`는 평가한 AND/OR 트리다. 화면은 OR 묶음을 '다음 중 하나'로 보여 주고, 트리를 AND로 평탄화해 다시 계산하지 않는다. `NoticeCondition.studentFactRef`는 입력 화면이 물을 사실을 고르는 데만 쓴다.
 - **근거 완결성:** 조건별 `missingEvidenceFields`가 비어 있지 않거나 `evidenceComplete=false`면 화면에 '근거 검증 완료'를 표시하지 않는다.
 - **검사:** `backend/tests/test_contract_examples.py`가 예제를 이 스키마로 검사한다(계약에 없는 필드도 실패). 스키마를 바꾸면 예제와 테스트를 같이 고친다. BE 응답도 같은 도우미(`backend/tests/contract.py`의 `validate`)로 검사한다.
 

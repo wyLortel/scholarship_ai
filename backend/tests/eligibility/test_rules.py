@@ -85,7 +85,7 @@ def test_condition_order_follows_rule_tree():
     assert [c.field for c in evaluation.conditions] == ["yearInSchool", "incomeBracket"]
 
 
-# --- 안전 가드: 아래 동작의 화면·수용 테스트는 #28(모름), #29(OR), #30(빈 규칙)에서 확장한다.
+# --- 안전 가드: 모름은 #28, OR은 #29(test_or_rules.py), 빈 규칙 화면은 #30에서 확장한다.
 
 
 def test_guard_missing_fact_is_unknown_never_fail():
@@ -112,7 +112,6 @@ def test_guard_empty_rule_is_never_eligible():
         pytest.param(
             {"and": [{"id": "x", "field": "f", "op": "!=", "value": 1}]}, id="unknown-operator"
         ),
-        pytest.param({"or": [{"id": "x", "field": "f", "op": ">=", "value": 1}]}, id="or-node"),
         pytest.param({"not": {"id": "x"}}, id="unknown-node"),
     ],
 )

@@ -25,7 +25,8 @@
         "officialUrl": "https://example.org/test-only/fixture-notice-a",
         "checkedAt": "2026-11-18T09:00:00+09:00",
         "verifiedAt": "2026-11-18T09:00:00+09:00"
-      }
+      },
+      "studentFactRef": "yearInSchool"
     },
     {
       "conditionId": "income",
@@ -39,7 +40,8 @@
         "officialUrl": "https://example.org/test-only/fixture-notice-a",
         "checkedAt": "2026-11-18T09:00:00+09:00",
         "verifiedAt": "2026-11-18T09:00:00+09:00"
-      }
+      },
+      "studentFactRef": "incomeBracket"
     }
   ]
 }

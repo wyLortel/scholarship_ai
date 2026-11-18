@@ -1,4 +1,6 @@
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 from app.notice.domain.model import EvidenceRef, NoticeCondition, NoticeSummary, NoticeVersion
 from app.notice.infrastructure.fixture_loader import (
@@ -18,17 +20,46 @@ class FixtureNoticeRepository:
         return [_summary(n) for n in load_fixture_notices(self._path)]
 
     def get_version(self, notice_version_id: str) -> NoticeVersion | None:
-        for n in load_fixture_notices(self._path):
-            if n.noticeVersionId == notice_version_id:
-                return NoticeVersion(
-                    summary=_summary(n),
-                    ruleExpression=n.ruleSet.expression,
-                    conditions=tuple(
-                        NoticeCondition(c.conditionId, c.label, _evidence(c.evidence))
-                        for c in n.conditions
-                    ),
-                )
-        return None
+        return next(
+            (
+                _version(n)
+                for n in load_fixture_notices(self._path)
+                if n.noticeVersionId == notice_version_id
+            ),
+            None,
+        )
+
+    def get_current_version(self, notice_id: str) -> NoticeVersion | None:
+        """fixture는 공고마다 버전이 하나라서 그 버전이 현재 버전이다."""
+        notices = load_fixture_notices(self._path)
+        return next((_version(n) for n in notices if n.noticeId == notice_id), None)
+
+
+def _version(n: FixtureNotice) -> NoticeVersion:
+    fields = dict(_leaf_fields(n.ruleSet.expression))
+    return NoticeVersion(
+        summary=_summary(n),
+        ruleExpression=n.ruleSet.expression,
+        conditions=tuple(
+            NoticeCondition(
+                c.conditionId, c.label, _evidence(c.evidence), fields.get(c.conditionId)
+            )
+            for c in n.conditions
+        ),
+    )
+
+
+def _leaf_fields(node: Any):
+    """규칙식 잎의 (조건 ID, 학생 사실 필드). 평가는 하지 않는다."""
+    if isinstance(node, Mapping):
+        if "id" in node:
+            yield node["id"], node.get("field")
+            return
+        for value in node.values():
+            yield from _leaf_fields(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from _leaf_fields(value)
 
 
 def _summary(n: FixtureNotice) -> NoticeSummary:

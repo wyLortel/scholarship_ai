@@ -40,14 +40,20 @@ export type NoticeSummary = {
   recruitmentEndAt?: string | null;
 };
 
-export type NoticeCondition = { conditionId: string; label: string; evidence: EvidenceRef };
+export type NoticeCondition = {
+  conditionId: string;
+  label: string;
+  evidence: EvidenceRef;
+  /** 이 조건이 비교하는 학생 사실 필드. 입력 화면이 무엇을 물을지 고르는 데만 쓴다 */
+  studentFactRef?: string | null;
+};
 export type NoticeDetail = { notice: NoticeSummary; conditions: NoticeCondition[] };
 
 export type StudentFact = {
   field: string;
   isKnown: boolean;
   /** 모름이면 반드시 null (0/false 금지, BR-B01) */
-  value: number | string | null;
+  value: number | string | boolean | null;
   unit?: string | null;
   effectiveAt?: string | null;
   source: "STUDENT_PROVIDED" | "USER_CONFIRMED";
@@ -75,6 +81,15 @@ export type AssessmentResult = {
   assessedAt: string;
   isStale: boolean;
   warning?: string | null;
+  /** 평가한 AND/OR 트리(원문 구조 보존). 빈 규칙이면 null (계약 0.3.0) */
+  ruleTree?: RuleNode | null;
+};
+
+export type RuleNode = {
+  type: "AND" | "OR" | "CONDITION" | "UNSUPPORTED";
+  result: RuleResult;
+  conditionId?: string | null;
+  children: RuleNode[];
 };
 
 export type ChecklistItem = {

@@ -11,6 +11,7 @@ from app.eligibility.api.schemas import (
     AssessmentResultOut,
     ConditionEvaluationOut,
     EvidenceOut,
+    RuleNodeOut,
 )
 from app.eligibility.application.service import (
     Assessment,
@@ -18,7 +19,7 @@ from app.eligibility.application.service import (
     NoticeNotVerified,
     assess,
 )
-from app.eligibility.domain.model import Fact
+from app.eligibility.domain.model import Fact, RuleNode
 from app.notice.api.router import get_notice_repository
 from app.notice.domain.repository import NoticeRepository
 
@@ -67,6 +68,16 @@ def _to_response(a: Assessment) -> AssessmentResultOut:
         assessedAt=a.assessed_at,
         isStale=False,
         warning=None,
+        ruleTree=_tree(a.evaluation.tree) if a.evaluation.tree else None,
+    )
+
+
+def _tree(node: RuleNode) -> RuleNodeOut:
+    return RuleNodeOut(
+        type=node.kind,
+        result=node.result,
+        conditionId=node.condition_id,
+        children=[_tree(c) for c in node.children],
     )
 
 

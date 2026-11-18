@@ -94,3 +94,67 @@ export const FailWithUnknown: Story = {
     },
   },
 };
+
+// TEST_ONLY 공고 B: 재학 AND (소득 3구간 이하 OR 다자녀)
+const bCondition = (
+  conditionId: string,
+  label: string,
+  quote: string,
+  result: ConditionEvaluation["result"],
+  studentFactRef: string,
+): ConditionEvaluation => ({
+  conditionId,
+  label,
+  result,
+  reasonCode:
+    result === "FAIL" ? "VALUE_MISMATCH" : result === "UNKNOWN" ? "MISSING_FACT" : "EVALUATED",
+  evidence: {
+    ...evidence(`ev-b-${conditionId}`, "본문 2. 지원 자격", quote),
+    noticeVersionId: "fixture-notice-b-v1",
+  },
+  missingEvidenceFields: [],
+  studentFactRef,
+});
+
+/** AC-B04: 재학 PASS, 소득 FAIL, 다자녀 PASS → OR 묶음 충족, 전체 가능 (평탄화하면 FAIL이 됨) */
+export const OrGroupEligible: Story = {
+  args: {
+    result: {
+      ...base,
+      noticeVersionId: "fixture-notice-b-v1",
+      eligibilityResult: "ELIGIBLE",
+      details: [
+        bCondition("enrolled", "재학생", "공고일 현재 재학 중인 학생", "PASS", "isEnrolled"),
+        bCondition(
+          "income",
+          "소득구간 3구간 이하",
+          "가. 학자금 지원구간 3구간 이하인 자",
+          "FAIL",
+          "incomeBracket",
+        ),
+        bCondition(
+          "multiChild",
+          "다자녀 가구",
+          "나. 다자녀 가구(자녀 3명 이상)의 자녀",
+          "PASS",
+          "isMultiChildHousehold",
+        ),
+      ],
+      ruleTree: {
+        type: "AND",
+        result: "PASS",
+        children: [
+          { type: "CONDITION", result: "PASS", conditionId: "enrolled", children: [] },
+          {
+            type: "OR",
+            result: "PASS",
+            children: [
+              { type: "CONDITION", result: "FAIL", conditionId: "income", children: [] },
+              { type: "CONDITION", result: "PASS", conditionId: "multiChild", children: [] },
+            ],
+          },
+        ],
+      },
+    },
+  },
+};

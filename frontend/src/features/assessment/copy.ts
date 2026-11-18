@@ -1,5 +1,7 @@
 import type { ConditionEvaluation, EligibilityGroup, RuleResult } from "@/lib/api/types";
 
+import { factName } from "./facts";
+
 // UX 계약(docs/02-product/03-UX-contract.md)의 의사결정 순간별 카피. 판정 값은 서버가 준 것만 쓴다.
 export const groupLabel: Record<EligibilityGroup, string> = {
   ELIGIBLE: "조건상 가능",
@@ -26,16 +28,6 @@ export function groupMessage(group: EligibilityGroup, details: ConditionEvaluati
     return "이 조건은 공식 기관의 해석이 필요합니다. 저희가 임의로 결정하지 않습니다.";
   }
   return "아직 판단을 마치지 못한 조건이 있습니다. 아래 '확인 필요' 조건을 확인해 주세요.";
-}
-
-// 학생 사실 이름(표시용). 판정에는 쓰지 않는다.
-const FACT_NAMES: Record<string, string> = {
-  yearInSchool: "학년",
-  incomeBracket: "소득구간",
-};
-
-export function factName(field: string | null | undefined): string {
-  return (field && FACT_NAMES[field]) ?? field ?? "정보";
 }
 
 // UNKNOWN일 때 이유를 함께 보여준다(색상만으로 상태를 전달하지 않음).

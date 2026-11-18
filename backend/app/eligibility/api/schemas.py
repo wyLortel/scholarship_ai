@@ -55,6 +55,13 @@ class ConditionEvaluationOut(BaseModel):
     studentFactRef: str | None
 
 
+class RuleNodeOut(BaseModel):
+    type: Literal["AND", "OR", "CONDITION", "UNSUPPORTED"]
+    result: RuleResult
+    conditionId: str | None = None
+    children: list["RuleNodeOut"]
+
+
 class AssessmentResultOut(BaseModel):
     assessmentId: str
     noticeVersionId: str
@@ -64,3 +71,4 @@ class AssessmentResultOut(BaseModel):
     assessedAt: datetime
     isStale: bool
     warning: str | None
+    ruleTree: RuleNodeOut | None

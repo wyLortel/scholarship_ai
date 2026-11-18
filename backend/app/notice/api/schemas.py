@@ -21,3 +21,26 @@ class NoticeSummaryResponse(BaseModel):
     lastCheckedAt: datetime | None
     recruitmentStartAt: datetime | None
     recruitmentEndAt: datetime | None
+
+
+class EvidenceResponse(BaseModel):
+    evidenceId: str
+    noticeVersionId: str
+    fileId: str
+    location: str
+    quote: str
+    officialUrl: str | None
+    checkedAt: datetime | None
+    verifiedAt: datetime | None
+
+
+class NoticeConditionResponse(BaseModel):
+    conditionId: str
+    label: str
+    evidence: EvidenceResponse
+    studentFactRef: str | None
+
+
+class NoticeDetailResponse(BaseModel):
+    notice: NoticeSummaryResponse
+    conditions: list[NoticeConditionResponse]
