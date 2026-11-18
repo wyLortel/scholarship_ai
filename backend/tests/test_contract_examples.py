@@ -99,3 +99,23 @@ def test_example_notices_are_marked_test_only():
     notices = load("notices.list.json") + [load("notice.detail.json")["notice"]]
     assert notices
     assert all(n["isTestOnly"] is True for n in notices)
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda d: d.update(extra="x"), id="unknown-field"),
+        pytest.param(lambda d: d.update(group=d.pop("eligibilityResult")), id="old-field-name"),
+        pytest.param(lambda d: d.update(eligibilityResult="MAYBE"), id="bad-enum"),
+        pytest.param(lambda d: d["details"][0].update(result="PASSED"), id="bad-condition-result"),
+        pytest.param(lambda d: d["details"][0].pop("missingEvidenceFields"), id="missing-required"),
+    ],
+)
+def test_contract_check_rejects_mismatched_response(mutate):
+    """검사기가 실제로 어긋난 응답을 잡는지 (FE·BE 필드 불일치 방지)."""
+    from jsonschema import ValidationError
+
+    data = load("assessment.eligible.json")
+    mutate(data)
+    with pytest.raises(ValidationError):
+        validate(data, "AssessmentResult")
