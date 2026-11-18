@@ -18,8 +18,14 @@ services:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
+      - ./examples:/examples:ro
     environment:
       API_ORIGIN: http://backend:8000
+      # API_MOCK=1 docker compose up → examples/api 계약 예제로 화면 확인 (#23)
+      API_MOCK: ${API_MOCK:-0}
+      API_MOCK_ASSESSMENT: ${API_MOCK_ASSESSMENT:-needs-review}
+      API_MOCK_PREPARATION: ${API_MOCK_PREPARATION:-with-open-items}
+      EXAMPLES_DIR: /examples/api
       WATCHPACK_POLLING: "true"
     depends_on:
       - backend
