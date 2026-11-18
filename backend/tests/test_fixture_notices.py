@@ -4,7 +4,11 @@ fixture는 실제 장학금 규정이 아니다(CLAUDE.md §4). 로더는 형식
 판정은 하지 않는다 — 빈 규칙(D)·미검증(C)도 그대로 로드해 판정/목록 쪽이 막게 한다.
 """
 
-from app.infrastructure.fixtures.notice_fixture_loader import load_fixture_notices
+import json
+
+import pytest
+
+from app.infrastructure.fixtures.notice_fixture_loader import FixtureError, load_fixture_notices
 from tests.contract import ROOT
 
 FIXTURE_FILE = ROOT / "examples" / "fixture-notices.json"
@@ -86,3 +90,69 @@ def test_documents_have_reason_and_never_invent_issuer():
         assert d.issuanceGuideUrl != ""
         if d.isConditional:
             assert d.appliesWhen
+
+
+def _set(path, value):
+    def mutate(data):
+        node = data
+        for key in path[:-1]:
+            node = node[key]
+        node[path[-1]] = value
+
+    return mutate
+
+
+def _drop(path):
+    def mutate(data):
+        node = data
+        for key in path[:-1]:
+            node = node[key]
+        del node[path[-1]]
+
+    return mutate
+
+
+A = ("notices", 0)
+A_EV = (*A, "conditions", 0, "evidence")
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(_drop((*A_EV, "quote")), id="missing-quote"),
+        pytest.param(_set((*A_EV, "quote"), "  "), id="blank-quote"),
+        pytest.param(_drop((*A_EV, "checkedAt")), id="missing-checkedAt"),
+        pytest.param(
+            _set((*A_EV, "noticeVersionId"), "fixture-notice-a-v2"), id="version-mismatch"
+        ),
+        pytest.param(_drop((*A, "conditions", 0, "evidence")), id="missing-evidence"),
+        pytest.param(_set((*A, "isTestOnly"), False), id="not-test-only"),
+        pytest.param(_set((*A, "title"), "가상 재단 학업장려 장학금"), id="title-without-marker"),
+        pytest.param(_set((*A, "officialUrl"), "https://www.kosaf.go.kr/"), id="real-domain-url"),
+        pytest.param(_set((*A, "extra"), "x"), id="unknown-field"),
+        pytest.param(_drop((*A, "documents")), id="missing-documents"),
+        pytest.param(_set((*A, "documents", 0, "issuer"), ""), id="blank-issuer"),
+        pytest.param(
+            _set((*A, "documents", 1, "appliesWhen"), None), id="conditional-without-when"
+        ),
+        pytest.param(
+            _set((*A, "ruleSet", "expression"), {"and": []}), id="rule-condition-mismatch"
+        ),
+        pytest.param(
+            _set(("notices", 1, "noticeId"), "fixture-notice-a"), id="duplicate-notice-id"
+        ),
+        pytest.param(_set(("type",), "REAL_NOTICES"), id="file-not-test-only"),
+    ],
+)
+def test_loader_rejects_incomplete_or_non_test_fixture(tmp_path, mutate):
+    data = json.loads(FIXTURE_FILE.read_text(encoding="utf-8"))
+    mutate(data)
+    broken = tmp_path / "broken.json"
+    broken.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(FixtureError):
+        load_fixture_notices(broken)
+
+
+def test_loader_rejects_missing_file(tmp_path):
+    with pytest.raises(FixtureError):
+        load_fixture_notices(tmp_path / "none.json")
