@@ -13,6 +13,9 @@ export default async function Home() {
         {health.ok ? `서버 상태: ${health.data.status}` : "서버에 연결하지 못했습니다"}
       </p>
       <p>
+        <Link href="/chat">AI 상담으로 장학금 확인하기</Link>
+      </p>
+      <p>
         <Link href="/notices">장학금 공고 보기</Link>
       </p>
     </main>

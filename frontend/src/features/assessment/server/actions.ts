@@ -3,7 +3,7 @@
 import { postAssessment } from "@/lib/api/server";
 import type { AssessmentResult, StudentFact } from "@/lib/api/types";
 
-import { FACT_INPUTS, toStudentFact } from "./facts";
+import { FACT_INPUTS, toStudentFact } from "@/features/assessment/model/facts";
 
 export type AssessState =
   | { status: "idle" }
@@ -14,9 +14,28 @@ export type AssessState =
 // 입력값(학년·소득 등)은 로그에 남기지 않는다(CLAUDE.md §2-9). 판정 계산은 하지 않는다.
 export async function assessAction(_prev: AssessState, formData: FormData): Promise<AssessState> {
   const noticeVersionId = String(formData.get("noticeVersionId") ?? "");
-  const fields = formData.getAll("field").map(String);
-  const inputs = fields.map((f) => FACT_INPUTS[f]).filter((i) => i !== undefined);
-  const facts = inputs.map((input) => toStudentFact(input, formData.get(input.field)));
+  const answers = formData
+    .getAll("field")
+    .map(String)
+    .map((field) => ({ field, raw: formData.get(field) }));
+  return assess(noticeVersionId, answers);
+}
+
+/** 채팅 화면용: 폼 없이 {필드, 선택값} 목록으로 판정을 요청한다. */
+export async function assessAnswers(
+  noticeVersionId: string,
+  answers: { field: string; raw: string }[],
+): Promise<AssessState> {
+  return assess(noticeVersionId, answers);
+}
+
+async function assess(
+  noticeVersionId: string,
+  answers: { field: string; raw: FormDataEntryValue | null }[],
+): Promise<AssessState> {
+  const facts = answers
+    .filter((a) => FACT_INPUTS[a.field] !== undefined)
+    .map((a) => toStudentFact(FACT_INPUTS[a.field], a.raw));
 
   if (!noticeVersionId || facts.some((f) => f === null)) {
     return { status: "error", message: "모든 항목을 선택해 주세요. 모르면 '모름'을 고르세요." };

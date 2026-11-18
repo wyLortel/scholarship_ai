@@ -1,6 +1,6 @@
 import type { ConditionEvaluation, EligibilityGroup, RuleResult } from "@/lib/api/types";
 
-import { factName } from "./facts";
+import { factName } from "@/features/assessment/model/facts";
 
 // UX 계약(docs/02-product/03-UX-contract.md)의 의사결정 순간별 카피. 판정 값은 서버가 준 것만 쓴다.
 export const groupLabel: Record<EligibilityGroup, string> = {
@@ -47,7 +47,7 @@ export const resultLabel: Record<RuleResult, string> = {
 export const resultIcon: Record<RuleResult, string> = { PASS: "✓", FAIL: "✕", UNKNOWN: "?" };
 
 // 받침 있으면 "을", 없으면 "를" (한글이 아니면 "을(를)").
-function objectParticle(word: string): string {
+export function objectParticle(word: string): string {
   const code = word.charCodeAt(word.length - 1) - 0xac00;
   if (code < 0 || code > 11171) return "을(를)";
   return code % 28 === 0 ? "를" : "을";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { NoticeList } from "@/features/notices/NoticeList";
+import { NoticeList } from "@/features/notices/ui/NoticeList";
 import { getNotices } from "@/lib/api/server";
 
 export const metadata: Metadata = { title: "공고 목록 | 장학금 통합 지원 AI" };
