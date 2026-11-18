@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from app.notice.model import NoticeSummary, NoticeVersion
+from app.notice.domain.model import NoticeSummary, NoticeVersion
 
 
 class NoticeRepository(Protocol):

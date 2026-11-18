@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
 from app import health
-from app.eligibility import router as eligibility
-from app.notice import router as notice
+from app.eligibility.api import router as eligibility
+from app.notice.api import router as notice
 
 app = FastAPI(title="Scholarship AI API")
 app.include_router(health.router, prefix="/api")

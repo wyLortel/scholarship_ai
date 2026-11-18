@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from app.notice.fixture_loader import (
+from app.notice.domain.model import EvidenceRef, NoticeCondition, NoticeSummary, NoticeVersion
+from app.notice.infrastructure.fixture_loader import (
     FixtureEvidence,
     FixtureNotice,
     load_fixture_notices,
 )
-from app.notice.model import EvidenceRef, NoticeCondition, NoticeSummary, NoticeVersion
 
 
 class FixtureNoticeRepository:

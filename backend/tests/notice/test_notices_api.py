@@ -6,9 +6,9 @@ TEST_ONLY fixture(#24): A·B·D = VERIFIED, C = REVIEW_PENDING.
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.notice.model import NoticeSummary
-from app.notice.router import get_notice_repository
-from app.notice.service import list_verified_notices
+from app.notice.api.router import get_notice_repository
+from app.notice.application.service import list_verified_notices
+from app.notice.domain.model import NoticeSummary
 from tests.contract import validate
 
 client = TestClient(app)
