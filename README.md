@@ -28,6 +28,7 @@ docker compose run --rm frontend sh -c "npm run lint && npm run build"         #
 - 백엔드 코드는 `backend/app/`에 있다. 자격 판정 계산은 `backend/app/domain/eligibility/` 한 곳에서만 한다.
 - 프론트 코드는 `frontend/src/`에 있다(Next.js App Router + TypeScript, [ADR-0013](docs/03-architecture/adr/0013-nextjs-app-router-frontend.md)). 서버 컴포넌트가 기본이며, 서버 컴포넌트를 포함해 프론트는 판정 결과를 표시만 하고 자격을 계산하지 않는다. FastAPI 서버 호출은 `frontend/src/lib/api/server.ts`(서버 전용).
 - 의존성을 바꾸면 이미지를 다시 빌드한다: `docker compose build`.
+- **커밋 hook (처음 clone 후 한 번):** 루트에서 `npm install`(hook 설치)과 `cd backend && uv sync`(ruff용 host venv). 이후 커밋하면 스테이징된 파일만 ESLint·Prettier·ruff로 검사하고, 메시지는 commitlint로 `type(#이슈): 설명` 형식을 확인한다. 실패하면 커밋이 만들어지지 않는다. 규칙은 [CLAUDE.md §5](CLAUDE.md).
 - API 계약은 [`contracts/`](contracts/README.md)(MVP 경로는 `x-mvp: true`), 예제 응답은 `examples/api/`. 백엔드 없이 화면을 보려면 `API_MOCK=1 docker compose up` — 판정 예제는 `API_MOCK_ASSESSMENT=eligible|ineligible|needs-review`로 고른다(입력값으로 고르지 않음).
 
 ## 무엇이 어느 문서의 유일한 책임인가? (Single Source of Truth)

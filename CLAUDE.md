@@ -50,3 +50,9 @@
 - **기술 선택:** 기존 v7 + ADR은 목표 설계; 실제 실행 환경은 저장소에서 확인. 양쪽이 다르면 이슈를 보고한다.
 - **시험용 fixture:** 도메인 예시일 뿐 실제 장학금 규정이 아니다.
 - **화면/문구:** 미확인 상태를 숨기거나 `가능`처럼 과장하지 않는다.
+
+## 5. 커밋 규칙
+- **형식:** `type(#이슈): 설명` (Conventional Commits). type은 `feat`, `fix`, `test`, `refactor`, `chore`, `docs`, `style` 중 하나. 예: `test(#27): AND rule fails when income exceeds limit (red)`.
+- **한 커밋 = 한 가지 변경.** TDD는 `test … (red)` → `feat … (green)` → 필요 시 `refactor`.
+- **커밋 전:** 바뀐 파일을 다시 보고, 관련 테스트·lint를 실행한다. 본문 한 줄은 100자 이내.
+- **hook을 우회하지 않는다.** pre-commit(lint-staged: ESLint·Prettier·ruff)과 commit-msg(commitlint)가 실패하면 원인을 고친다. `--no-verify` 금지. hook은 로컬 검사일 뿐이며 전체 타입 검사·테스트는 CI가 맡는다.
