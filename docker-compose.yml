@@ -5,6 +5,9 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      # 계약·가상 fixture는 읽기 전용 (tests는 /contracts, /examples 경로로 읽음)
+      - ./contracts:/contracts:ro
+      - ./examples:/examples:ro
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
