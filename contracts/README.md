@@ -6,9 +6,25 @@
 
 `DRAFT — 팀 승인 전`. `api-draft.yaml`은 개념 API를 설계한 예시이지 실제 저장소의 엔드포인트를 조사한 결과가 아니다. 실제 코드 확인 후 **하나의 API 기준**으로 갱신한다.
 
+## MVP 범위 (#23, 2026-11-18)
+
+`api-draft.yaml`에서 `x-mvp: true`인 경로만 MVP에서 구현한다. 로그인·DB 없이 TEST_ONLY fixture로 동작한다.
+
+| 경로 | 응답 스키마 | 예제 (`../examples/api/`) |
+|---|---|---|
+| `GET /notices` | `NoticeSummary[]` (VERIFIED만) | `notices.list.json` |
+| `GET /notices/{noticeId}` | `NoticeDetail` (조건별 원문 근거) | `notice.detail.json` |
+| `POST /assessments` | `AssessmentResult` | `assessment.eligible.json`, `assessment.ineligible.json`, `assessment.needs-review.json` (요청: `assessment.request.unknown-income.json`) |
+| `POST /preparation-summaries` | `PreparationSummary` (MVP 전용, 준비 건 생성 안 함) | `preparation-summary.prepared.json`, `preparation-summary.with-open-items.json` |
+| 공통 오류 | `DomainError` | `error.notice-not-verified.json` |
+
+- **미검증 공고 정책:** 공고 버전이 VERIFIED가 아니면 409 `NOTICE_NOT_VERIFIED`. VERIFIED 공고인데 규칙이 비었거나 평가할 수 없으면 200 + `NEEDS_REVIEW`(조건 `reasonCode=RULE_UNVERIFIED`/`UNSUPPORTED_OPERATOR`). 어느 쪽도 `ELIGIBLE`을 만들지 않는다.
+- **근거 완결성:** 조건별 `missingEvidenceFields`가 비어 있지 않거나 `evidenceComplete=false`면 화면에 '근거 검증 완료'를 표시하지 않는다.
+- **검사:** `backend/tests/test_contract_examples.py`가 예제를 이 스키마로 검사한다(계약에 없는 필드도 실패). 스키마를 바꾸면 예제와 테스트를 같이 고친다. BE 응답도 같은 도우미(`backend/tests/contract.py`의 `validate`)로 검사한다.
+
 ## 필드 의미의 일관성
 
-- 사용자의 미입력은 `null/unknown`, `false/0`을 자동 대체하지 않는다.
+- 사용자의 미입력은 `null/unknown`, `false/0`을 자동 대체하지 않는다. 요청의 `StudentFact`는 `isKnown: false`, `value: null`.
 - `noticeVersionId`는 필수 근거 컨텍스트, `lastCheckedAt`은 마지막 **성공한** 확인 시각. 실패 시 `freshnessStatus=CHECK_FAILED`를 별도 포함.
 - `eligibilityResult`는 `ELIGIBLE/INELIGIBLE/NEEDS_REVIEW`. 각 조건은 `PASS/FAIL/UNKNOWN`. `sourceVerificationStatus`는 완전히 별개.
 - `preparationStatus`는 준비 워크플로, `executionStatus`는 백그라운드 run 상태, 외부 `submitted`는 확인되지 않는다.

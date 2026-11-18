@@ -1,0 +1,45 @@
+{
+  "notice": {
+    "noticeId": "fixture-notice-a",
+    "noticeVersionId": "fixture-notice-a-v1",
+    "title": "[TEST_ONLY] 가상 재단 학업장려 장학금",
+    "institution": "[TEST_ONLY] 가상 장학재단",
+    "isTestOnly": true,
+    "officialUrl": "https://example.org/test-only/fixture-notice-a",
+    "sourceVerificationStatus": "VERIFIED",
+    "freshnessStatus": "CHECKED_UNCHANGED",
+    "lastCheckedAt": "2026-11-18T09:00:00+09:00",
+    "recruitmentStartAt": "2026-12-01T00:00:00+09:00",
+    "recruitmentEndAt": "2026-12-31T18:00:00+09:00"
+  },
+  "conditions": [
+    {
+      "conditionId": "grade",
+      "label": "2학년 이상",
+      "evidence": {
+        "evidenceId": "ev-a-grade",
+        "noticeVersionId": "fixture-notice-a-v1",
+        "fileId": "fixture-file-a",
+        "location": "본문 2. 지원 자격 (1)",
+        "quote": "신청일 기준 2학년 이상 재학생",
+        "officialUrl": "https://example.org/test-only/fixture-notice-a",
+        "checkedAt": "2026-11-18T09:00:00+09:00",
+        "verifiedAt": "2026-11-18T09:00:00+09:00"
+      }
+    },
+    {
+      "conditionId": "income",
+      "label": "소득구간 5구간 이하",
+      "evidence": {
+        "evidenceId": "ev-a-income",
+        "noticeVersionId": "fixture-notice-a-v1",
+        "fileId": "fixture-file-a",
+        "location": "본문 2. 지원 자격 (2)",
+        "quote": "학자금 지원구간(소득구간) 5구간 이하인 자",
+        "officialUrl": "https://example.org/test-only/fixture-notice-a",
+        "checkedAt": "2026-11-18T09:00:00+09:00",
+        "verifiedAt": "2026-11-18T09:00:00+09:00"
+      }
+    }
+  ]
+}

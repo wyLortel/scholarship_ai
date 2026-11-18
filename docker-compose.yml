@@ -5,6 +5,9 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      # 계약·가상 fixture는 읽기 전용 (tests는 /contracts, /examples 경로로 읽음)
+      - ./contracts:/contracts:ro
+      - ./examples:/examples:ro
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
@@ -15,8 +18,14 @@ services:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
+      - ./examples:/examples:ro
     environment:
       API_ORIGIN: http://backend:8000
+      # API_MOCK=1 docker compose up → examples/api 계약 예제로 화면 확인 (#23)
+      API_MOCK: ${API_MOCK:-0}
+      API_MOCK_ASSESSMENT: ${API_MOCK_ASSESSMENT:-needs-review}
+      API_MOCK_PREPARATION: ${API_MOCK_PREPARATION:-with-open-items}
+      EXAMPLES_DIR: /examples/api
       WATCHPACK_POLLING: "true"
     depends_on:
       - backend
