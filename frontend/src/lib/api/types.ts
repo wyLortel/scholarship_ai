@@ -3,8 +3,10 @@
 
 export type EligibilityGroup = "ELIGIBLE" | "INELIGIBLE" | "NEEDS_REVIEW";
 export type RuleResult = "PASS" | "FAIL" | "UNKNOWN";
-export type VerificationStatus = "CANDIDATE" | "EXTRACTING" | "REVIEW_PENDING" | "VERIFIED" | "REJECTED";
-export type FreshnessStatus = "UNCHECKED" | "CHECKED_UNCHANGED" | "CHECKED_CHANGED" | "CHECK_FAILED";
+export type VerificationStatus =
+  "CANDIDATE" | "EXTRACTING" | "REVIEW_PENDING" | "VERIFIED" | "REJECTED";
+export type FreshnessStatus =
+  "UNCHECKED" | "CHECKED_UNCHANGED" | "CHECKED_CHANGED" | "CHECK_FAILED";
 export type ReasonCode =
   | "EVALUATED"
   | "VALUE_MISMATCH"
@@ -101,4 +103,9 @@ export type PreparationSummary = {
   officialSubmissionUrl: string | null;
 };
 
-export type DomainError = { code: string; message: string; traceId: string; noticeVersionId?: string | null };
+export type DomainError = {
+  code: string;
+  message: string;
+  traceId: string;
+  noticeVersionId?: string | null;
+};
