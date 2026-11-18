@@ -10,6 +10,7 @@
 - [ ] 영향받는 API·상태·권한·최신성·버전 경계를 확인했다.
 - [ ] 결정되지 않은 정책은 [`../00-governance/03-open-decisions.md`](../00-governance/03-open-decisions.md)에 OPEN으로 올렸다. **코드에서 임의로 결정하지 않는다.**
 - [ ] 현재 저장소의 실제 구조·테스트 명령을 직접 확인했다(문서의 예시 구조를 그대로 가정하지 않음).
+- [ ] 설계 경계에 영향이 있으면 [설계 가이드](../03-architecture/guides)에서 해당 주제의 PR 항목을 확인했다. 의존성을 추가하는 변경은 [모듈성 가이드](../03-architecture/guides/01-modularity.md)를 참고한다.
 
 ### 티켓 양식
 
