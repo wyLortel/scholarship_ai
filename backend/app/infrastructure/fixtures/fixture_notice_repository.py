@@ -1,7 +1,11 @@
 from pathlib import Path
 
-from app.domain.notice.model import NoticeSummary
-from app.infrastructure.fixtures.notice_fixture_loader import load_fixture_notices
+from app.domain.notice.model import EvidenceRef, NoticeCondition, NoticeSummary, NoticeVersion
+from app.infrastructure.fixtures.notice_fixture_loader import (
+    FixtureEvidence,
+    FixtureNotice,
+    load_fixture_notices,
+)
 
 
 class FixtureNoticeRepository:
@@ -11,19 +15,46 @@ class FixtureNoticeRepository:
         self._path = path
 
     def list_notices(self) -> list[NoticeSummary]:
-        return [
-            NoticeSummary(
-                noticeId=n.noticeId,
-                noticeVersionId=n.noticeVersionId,
-                title=n.title,
-                institution=n.institution,
-                isTestOnly=n.isTestOnly,
-                officialUrl=n.officialUrl,
-                sourceVerificationStatus=n.sourceVerificationStatus,
-                freshnessStatus=n.freshnessStatus,
-                lastCheckedAt=n.lastCheckedAt,
-                recruitmentStartAt=n.recruitmentStartAt,
-                recruitmentEndAt=n.recruitmentEndAt,
-            )
-            for n in load_fixture_notices(self._path)
-        ]
+        return [_summary(n) for n in load_fixture_notices(self._path)]
+
+    def get_version(self, notice_version_id: str) -> NoticeVersion | None:
+        for n in load_fixture_notices(self._path):
+            if n.noticeVersionId == notice_version_id:
+                return NoticeVersion(
+                    summary=_summary(n),
+                    ruleExpression=n.ruleSet.expression,
+                    conditions=tuple(
+                        NoticeCondition(c.conditionId, c.label, _evidence(c.evidence))
+                        for c in n.conditions
+                    ),
+                )
+        return None
+
+
+def _summary(n: FixtureNotice) -> NoticeSummary:
+    return NoticeSummary(
+        noticeId=n.noticeId,
+        noticeVersionId=n.noticeVersionId,
+        title=n.title,
+        institution=n.institution,
+        isTestOnly=n.isTestOnly,
+        officialUrl=n.officialUrl,
+        sourceVerificationStatus=n.sourceVerificationStatus,
+        freshnessStatus=n.freshnessStatus,
+        lastCheckedAt=n.lastCheckedAt,
+        recruitmentStartAt=n.recruitmentStartAt,
+        recruitmentEndAt=n.recruitmentEndAt,
+    )
+
+
+def _evidence(e: FixtureEvidence) -> EvidenceRef:
+    return EvidenceRef(
+        evidenceId=e.evidenceId,
+        noticeVersionId=e.noticeVersionId,
+        fileId=e.fileId,
+        location=e.location,
+        quote=e.quote,
+        officialUrl=e.officialUrl,
+        checkedAt=e.checkedAt,
+        verifiedAt=e.verifiedAt,
+    )
