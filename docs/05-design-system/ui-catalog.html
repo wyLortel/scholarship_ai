@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>장학금 AI — 디자인 시스템 부품 카탈로그</title>
+  <link rel="stylesheet" href="../../frontend/src/design-system/design-tokens.css" />
+  <link rel="stylesheet" href="../../frontend/src/design-system/components.css" />
+  <style>
+    .catalog-section { margin-block: var(--space-12); }
+    .catalog-section__title { margin-bottom: var(--space-4); }
+    .catalog-block { display: flex; flex-direction: column; gap: var(--space-4); }
+    .catalog-thumbnail { width: min(100%, 12rem); height: auto; border-radius: var(--radius-md); }
+    .catalog-chat-layout { margin-top: var(--space-5); }
+    .catalog-summary { background: var(--color-surface-tinted); padding: var(--space-3); border-radius: var(--radius-md); }
+    .catalog-swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem,1fr)); gap: var(--space-3); }
+    .catalog-swatch { border: 1px solid var(--color-border); padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); }
+    .catalog-swatch__paint { height: 3rem; border-radius: var(--radius-sm); margin-bottom: var(--space-2); border: 1px solid var(--color-border); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="ui-header">
+    <div class="ui-container ui-header__inner">
+      <div class="ui-logo"><span class="ui-logo__mark" aria-hidden="true">🎓</span>장학금 AI</div>
+      <nav class="ui-nav" aria-label="디자인 부품 샘플"><a href="#tokens">토큰</a><a href="#cards">자격 카드</a><a href="#chat">AI 대화</a><a href="#draft">초안</a></nav>
+      <span class="ui-badge ui-badge--demo">디자인 카탈로그 · 시연용</span>
+    </div>
+  </header>
+  <main id="main" class="ui-container ui-main">
+    <div class="ui-hero">
+      <div class="ui-hero__body">
+        <span class="ui-badge ui-badge--demo">디자인 시스템 v0.1</span>
+        <h1 class="ui-display">부품을 조립해 만드는<br>장학금 AI 화면</h1>
+        <p class="ui-muted">이 페이지는 디자인 확인을 위한 정적 샘플입니다. Google 로그인, AI 답변, 기관 데이터 연동은 포함하지 않습니다.</p>
+      </div>
+      <img class="catalog-thumbnail" src="../../screens/12_AI채팅_첫상담.png" alt="AI 장학금 상담 참고 화면 일부가 아닌 전체 시안 미리보기" />
+    </div>
+
+    <section id="tokens" class="catalog-section" aria-labelledby="token-heading">
+      <h2 id="token-heading" class="ui-h2 catalog-section__title">01 · 색상과 상태</h2>
+      <div class="catalog-swatches">
+        <div class="catalog-swatch"><div class="catalog-swatch__paint" style="background:var(--color-primary-600)"></div><strong>Primary</strong><div class="ui-small ui-muted">--color-primary-600</div></div>
+        <div class="catalog-swatch"><div class="catalog-swatch__paint" style="background:var(--color-violet-600)"></div><strong>Violet</strong><div class="ui-small ui-muted">--color-violet-600</div></div>
+        <div class="catalog-swatch"><div class="catalog-swatch__paint" style="background:var(--color-bg)"></div><strong>Background</strong><div class="ui-small ui-muted">--color-bg</div></div>
+        <div class="catalog-swatch"><div class="catalog-swatch__paint" style="background:var(--color-surface-tinted)"></div><strong>Soft surface</strong><div class="ui-small ui-muted">--color-surface-tinted</div></div>
+      </div>
+      <div class="ui-panel ui-stack" style="margin-top:var(--space-4)">
+        <div class="ui-row"><span class="ui-badge ui-badge--possible">조건상 가능</span><span class="ui-badge ui-badge--needs-info">확인 필요</span><span class="ui-badge ui-badge--ineligible">현재 정보 기준 불가</span><span class="ui-badge ui-badge--pending">판정 보류</span><span class="ui-badge ui-badge--changed">재판정 필요</span></div>
+        <div class="ui-row"><button class="ui-button ui-button--primary" type="button">Primary CTA</button><button class="ui-button ui-button--secondary" type="button">Secondary CTA</button><button class="ui-button ui-button--quiet" type="button">Text CTA</button><button class="ui-button" type="button" disabled>Disabled</button></div>
+        <div class="ui-banner ui-banner--caution">⚠ 확인되지 않은 항목은 불가가 아닙니다. 출처를 확인하거나 학생에게 질문해야 합니다.</div>
+      </div>
+    </section>
+
+    <section id="cards" class="catalog-section" aria-labelledby="cards-heading">
+      <h2 id="cards-heading" class="ui-h2 catalog-section__title">02 · 장학금 카드 + 조건별 근거</h2>
+      <div class="ui-detail-layout">
+        <div class="ui-stack">
+          <article class="ui-panel ui-scholarship">
+            <div class="ui-scholarship__top"><div><h3 class="ui-h3">지역 성장 장학금 B</h3><div class="ui-muted ui-small">가상재단 · MOCK-02 v1</div></div><span class="ui-badge ui-badge--needs-info">확인 필요</span></div>
+            <div><span class="ui-badge ui-badge--demo">시연용 가상 공고</span></div>
+            <div class="ui-scholarship__details">주요 조건: 대구광역시 거주 AND 소득구간 5 이하<br>모집 상태: 데이터 미입력</div>
+            <div class="ui-row"><button class="ui-button" type="button">자격 근거 보기</button><button class="ui-button ui-button--primary" type="button">AI에게 추가 질문</button></div>
+          </article>
+          <section class="ui-panel">
+            <h3 class="ui-h3">왜 확인이 필요한가요?</h3>
+            <div class="ui-condition"><div><strong>① 대구광역시 거주</strong><p class="ui-condition__source">공고 조건: 대구 거주 · 내 정보: 대구 거주</p></div><span class="ui-badge ui-badge--possible">충족</span></div>
+            <div class="ui-condition"><div><strong>② 소득구간 5 이하</strong><p class="ui-condition__source">공고 조건: 5구간 이하 · 내 정보: 모름</p></div><span class="ui-badge ui-badge--needs-info">확인 필요</span></div>
+            <div class="ui-evidence"><strong>📚 [시연용 가상 원문] 제3항</strong><blockquote class="ui-evidence__quote">지원자는 대구광역시에 거주하며, 소득구간이 5 이하여야 한다.</blockquote><p class="ui-muted ui-small">실제 공식 기관 공고가 아닙니다. 공식 URL이 등록되지 않았습니다.</p></div>
+          </section>
+        </div>
+        <aside class="ui-panel ui-stack">
+          <h3 class="ui-h3">🗂 판정 요약</h3>
+          <dl><div class="ui-kv"><dt>조건상 충족</dt><dd>1개</dd></div><div class="ui-kv"><dt>확인 필요</dt><dd>1개</dd></div><div class="ui-kv"><dt>불충족</dt><dd>0개</dd></div></dl>
+          <p class="catalog-summary ui-small">입력된 사실과 가상의 원문을 비교한 시연입니다. 최종 신청 가능 여부나 기관 심사 결과가 아닙니다.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="chat" class="catalog-section" aria-labelledby="chat-heading">
+      <h2 id="chat-heading" class="ui-h2 catalog-section__title">03 · AI 상담 3열 화면 + 모바일 재배치</h2>
+      <div class="ui-chat-layout catalog-chat-layout">
+        <aside class="ui-panel ui-sidebar">
+          <h3 class="ui-h3">진행 중인 장학금</h3>
+          <a class="ui-sidebar__item" aria-current="true" href="#chat">📍 지역 성장 장학금 B<br><span class="ui-muted">소득구간 확인 대기</span></a>
+          <a class="ui-sidebar__item" href="#chat">🎓 캠퍼스 희망 장학금 A<br><span class="ui-muted">준비 시작 전</span></a>
+          <div class="ui-banner">신청·제출은 공식 기관 사이트에서 직접 진행해요.</div>
+        </aside>
+        <section class="ui-panel ui-chat" aria-label="AI 상담 예제">
+          <header class="ui-chat__head"><h3 class="ui-h3">지역 성장 장학금 B · AI 상담</h3><div class="ui-muted ui-small">모르는 정보는 '모름'으로 남겨둘 수 있어요.</div></header>
+          <div class="ui-chat__messages">
+            <div class="ui-chat__msg"><span class="ui-chat__avatar" aria-hidden="true">🤖</span><div class="ui-chat__bubble">안녕하세요. 저장된 학적과 거주지는 확인했어요. 소득구간 정보가 빠져 있어요.</div></div>
+            <div class="ui-chat__msg"><span class="ui-chat__avatar" aria-hidden="true">🤖</span><div class="ui-chat__bubble"><strong>소득구간을 확인하셨나요?</strong><p class="ui-muted ui-small">이 장학금의 조건은 5구간 이하예요. 확인할 수 없다면 판정은 '확인 필요'로 남깁니다.</p><div class="ui-chips"><button type="button" class="ui-chip">4구간이에요</button><button type="button" class="ui-chip">아직 몰라요</button><button type="button" class="ui-chip">확인 방법 알려줘</button><button type="button" class="ui-chip">나중에 답하기</button></div></div></div>
+            <div class="ui-chat__msg ui-chat__msg--user"><div class="ui-chat__bubble">아직 잘 모르겠어요.</div></div>
+            <div class="ui-chat__msg"><span class="ui-chat__avatar" aria-hidden="true">🤖</span><div class="ui-chat__bubble">괜찮아요. <strong>확인 필요</strong>로 유지할게요. 조건이 확인되면 이 대화에서 다시 비교할 수 있어요.</div></div>
+          </div>
+          <form class="ui-chat__composer" onsubmit="event.preventDefault(); alert('이 페이지는 UI 예시입니다. 실제 AI 연동은 포함하지 않습니다.')"><input class="ui-input" aria-label="AI 상담 메시지" placeholder="질문을 입력해 보세요" /><button class="ui-button ui-button--primary" type="submit" aria-label="메시지 보내기">➤</button></form>
+        </section>
+        <aside class="ui-chat__inspector">
+          <section class="ui-panel ui-stack"><h3 class="ui-h3">현재 장학금 요약</h3><span class="ui-badge ui-badge--needs-info">확인 필요</span><div class="ui-kv"><span>공고 조건</span><strong>가상 원문 확인됨</strong></div><div class="ui-kv"><span>모집 상태</span><strong>미확인</strong></div></section>
+          <section class="ui-panel ui-stack"><h3 class="ui-h3">준비할 서류</h3><div class="ui-kv"><span>제출서류 A</span><strong>발급 안내</strong></div><div class="ui-kv"><span>작성 문항 B</span><strong>AI 초안</strong></div><p class="ui-muted ui-small">시연용 목록이며 실제 기관 서류를 대신하지 않습니다.</p></section>
+        </aside>
+        <details class="ui-chat__mobile-context ui-panel"><summary>현재 장학금 요약 및 근거 보기</summary><p>대구 거주: 충족 · 소득구간: 확인 필요 · 모집 상태: 미확인</p></details>
+      </div>
+    </section>
+
+    <section id="draft" class="catalog-section" aria-labelledby="draft-heading">
+      <h2 id="draft-heading" class="ui-h2 catalog-section__title">04 · 초안과 사용한 사실 분리</h2>
+      <div class="ui-draft-layout">
+        <aside class="ui-panel ui-stack"><h3 class="ui-h3">작성 항목</h3><div class="ui-sidebar__item">① 지원자 소개</div><div class="ui-sidebar__item">② 학업 상황</div><div class="ui-sidebar__item">③ 지원 동기 · 확인 필요</div></aside>
+        <section class="ui-panel ui-stack"><div class="ui-row ui-row--spread"><h3 class="ui-h3">지원자 소개 및 학업 계획</h3><span class="ui-badge ui-badge--needs-info">추가 확인 필요</span></div><div class="ui-banner">학적: 3학년 · 재학 중. 구체적인 활동/지원 동기는 아직 확인되지 않았습니다.</div><label class="ui-field"><span class="ui-field__label">편집 가능한 초안</span><textarea class="ui-input ui-draft-editor">저는 가상대학교 컴퓨터공학과에 재학 중인 3학년 학생입니다.\n\n[추가 확인 필요: 본인이 직접 경험한 활동과 역할]\n\n[추가 확인 필요: 이 장학금에 지원하는 개인적인 이유]</textarea></label><div class="ui-row ui-row--spread"><span class="ui-small ui-muted">AI 초안이며 제출 전에 본인이 검토해야 합니다.</span><button class="ui-button ui-button--primary" type="button">초안 저장</button></div></section>
+        <aside class="ui-panel ui-stack"><h3 class="ui-h3">초안에 사용한 사실</h3><div class="ui-kv"><span>학년</span><strong>3학년</strong></div><div class="ui-kv"><span>거주</span><strong>대구광역시</strong></div><div class="ui-kv"><span>소득구간</span><strong>미확인</strong></div><div class="ui-banner ui-banner--caution">지원 동기·실제 활동은 학생에게 추가 질문 필요</div></aside>
+      </div>
+    </section>
+    <footer class="ui-muted ui-small">© 장학금 AI — 재사용 부품 샘플 v0.1. 화면에 표시된 공고/기관은 시연용입니다.</footer>
+  </main>
+</body>
+</html>
