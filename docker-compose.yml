@@ -29,3 +29,17 @@ services:
       WATCHPACK_POLLING: "true"
     depends_on:
       - backend
+
+  # 프론트 화면 상태 확인용 (테스트 코드 대신 Storybook). docker compose --profile storybook up storybook
+  storybook:
+    profiles: ["storybook"]
+    build: ./frontend
+    ports:
+      - "6006:6006"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      WATCHPACK_POLLING: "true"
+    command: npm run storybook -- --host 0.0.0.0
+
