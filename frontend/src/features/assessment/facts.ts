@@ -68,3 +68,19 @@ export function toStudentFact(
   if (!Number.isInteger(value) || !input.options.includes(value)) return null;
   return { ...base, unit, isKnown: true, value };
 }
+
+/** 선택지 목록(값, 표시 문구). 마지막은 항상 모름. */
+export function choicesFor(input: FactInput): { value: string; label: string }[] {
+  const known =
+    input.kind === "integer"
+      ? input.options.map((o) => ({ value: String(o), label: `${o}${input.unit}` }))
+      : [
+          { value: "true", label: input.yes },
+          { value: "false", label: input.no },
+        ];
+  return [...known, { value: UNKNOWN, label: "모름" }];
+}
+
+export function answerLabel(input: FactInput, raw: string): string {
+  return choicesFor(input).find((c) => c.value === raw)?.label ?? raw;
+}
