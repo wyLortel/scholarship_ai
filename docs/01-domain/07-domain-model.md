@@ -4,6 +4,8 @@
 
 ## 컨텍스트 관계
 
+용어와 모델의 경계를 검토할 때는 [도메인 주도 설계 가이드](../03-architecture/guides/03-domain-driven-design.md)를 참고한다.
+
 ```mermaid
 flowchart LR
     A[공고·근거 관리 A] -->|VerifiedRuleSet & NoticeVersion| B[자격 판정 B]
