@@ -1,14 +1,14 @@
 """판정 유스케이스: 공고 버전을 찾고, 검증 여부를 확인하고, Rule Engine 결과에 근거를 붙인다.
 
-판정 계산은 하지 않는다 — app.domain.eligibility.evaluator만 계산한다(BR-B02).
+판정 계산은 하지 않는다 — app.eligibility.rules만 계산한다(BR-B02).
 """
 
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
 
-from app.domain.eligibility.evaluator import evaluate
-from app.domain.eligibility.model import ConditionOutcome, Evaluation, Fact
+from app.eligibility.model import ConditionOutcome, Evaluation, Fact
+from app.eligibility.rules import evaluate
 from app.notice.model import NoticeCondition, NoticeVersion
 from app.notice.repository import NoticeRepository
 

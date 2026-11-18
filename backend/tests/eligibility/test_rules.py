@@ -6,8 +6,8 @@ TEST_ONLY 공고 A: grade(yearInSchool >= 2) AND income(incomeBracket <= 5).
 
 import pytest
 
-from app.domain.eligibility.evaluator import evaluate
-from app.domain.eligibility.model import Fact
+from app.eligibility.model import Fact
+from app.eligibility.rules import evaluate
 
 RULE_A = {
     "and": [

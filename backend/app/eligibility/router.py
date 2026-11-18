@@ -7,13 +7,13 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from app.application.assessments import (
+from app.eligibility.model import EligibilityGroup, Fact, ReasonCode, RuleResult
+from app.eligibility.service import (
     Assessment,
     NoticeNotFound,
     NoticeNotVerified,
     assess,
 )
-from app.domain.eligibility.model import EligibilityGroup, Fact, ReasonCode, RuleResult
 from app.notice.repository import NoticeRepository
 from app.notice.router import get_notice_repository
 

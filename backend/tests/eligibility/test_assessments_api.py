@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 import pytest
 from fastapi.testclient import TestClient
 
-from app.api.assessments import get_clock
+from app.eligibility.router import get_clock
 from app.main import app
 from tests.contract import validate
 
