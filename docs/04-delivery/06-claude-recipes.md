@@ -16,7 +16,7 @@ CLAUDE.md를 읽고 현재 저장소의 파일 구조와 테스트 명령을 직
 ## 2. 수집 공고 검증 구현
 
 ```text
-A-01·D3·D4와 BR-A01~A09, docs/01-domain/08-notice-governance.md를 읽어.
+A-01·D3·D4와 BR-A01, BR-A02, BR-A03, BR-A04, BR-A05, BR-A06, BR-A07, BR-A08, BR-A09, docs/01-domain/08-notice-governance.md를 읽어.
 이 기능은 '공식 원문 확인 → 신규/변경/동일/접속 실패 분류 → 원문 버전 → 추출 후보 → 근거 검증'을 담당해.
 공식성 미확인 사이트나 검증 실패 후보는 Rule Engine으로 넘기지 마.
 인덱스 공개/관리자 검토/구버전 stale 처리의 수용 테스트부터 보여줘.
@@ -25,7 +25,7 @@ A-01·D3·D4와 BR-A01~A09, docs/01-domain/08-notice-governance.md를 읽어.
 ## 3. 자격 판정 구현
 
 ```text
-D1/D2, BR-B01~B09, eligibility-policy 진리표, examples/eligibility-cases.json을 읽어.
+D1/D2, BR-B01, BR-B02, BR-B03, BR-B04, BR-B05, BR-B06, BR-B07, BR-B08, BR-B09, eligibility-policy 진리표, examples/eligibility-cases.json을 읽어.
 Rule Engine은 VerifiedRuleSet AST와 StudentFactSnapshot으로 PASS/FAIL/UNKNOWN을 계산해야 해.
 LLM·React·FastAPI 라우트에서 판정 로직을 재구현하지 마. 미검증/빈 규칙은 ELIGIBLE 금지.
 AND/OR 전수 테스트, FAIL+UNKNOWN, 원문 버전 stale 테스트를 만든 다음 구현해.
@@ -34,7 +34,7 @@ AND/OR 전수 테스트, FAIL+UNKNOWN, 원문 버전 stale 테스트를 만든 �
 ## 4. LangGraph 신청 준비 그래프 작성
 
 ```text
-C-01/D2, BR-C01~C09, state-machines, application-preparation, agent-workflow-contract를 읽어.
+C-01/D2, BR-C01, BR-C02, BR-C03, BR-C04, BR-C05, BR-C06, BR-C07, BR-C08, BR-C09, state-machines, application-preparation, agent-workflow-contract를 읽어.
 우리는 신청 준비가 끝나도 기관 제출은 하지 않아. 개인 증빙 업로드 기능도 만들지 마.
 그래프 노드는 최신성/판정 호출/질문/체크리스트/초안/검증의 한 책임을 갖게 제안하고, 노드 출력 타입과 interrupt/resume 저장 경계를 문서화해.
 현재 Agent Server 코드를 확인하고, 자체 호스팅 라이선스/PoC 미확정이라면 기존 Worker 제거를 제안하지 마.

@@ -20,7 +20,7 @@
 | 사람의 업무는 원래 어떻게 흘렀는가 | [`01/as-is.md`](docs/01-domain/01-as-is.md) | 제품 기능/기술을 끼워 넣지 않음 |
 | 미래 업무 A/B/C · D1~D4 | [`01/to-be.md`](docs/01-domain/02-to-be.md) | 행위자, 행동, 정보만 기록 |
 | 주요 업무 용어의 의미 | [`01/glossary.md`](docs/01-domain/03-glossary.md) | 용어 정의 복제 금지 |
-| **업무 불변식 BR-001~** | [`01/business-rules.md`](docs/01-domain/04-business-rules.md) | 판정기·UI·프롬프트가 링크 |
+| **업무 불변식 BR** | [`01/business-rules.md`](docs/01-domain/04-business-rules.md) | 판정기·UI·프롬프트가 링크 |
 | Rule Engine 진리표·OR/AND | [`01/eligibility-policy.md`](docs/01-domain/05-eligibility-policy.md) | 계산은 여기만 정의 |
 | 상태/이벤트 전이 | [`01/state-machines.md`](docs/01-domain/06-state-machines.md) | 단순한 단일 status 금지 |
 | 업무 객체·데이터 소유권 | [`01/domain-model.md`](docs/01-domain/07-domain-model.md) | DB 테이블 설계와 구분 |
