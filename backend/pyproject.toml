@@ -30,3 +30,7 @@ target-version = "py313"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+# hook(저장소 루트에서 실행)과 컨테이너(backend/)에서 같은 정렬 결과가 나오게 고정
+known-first-party = ["app", "tests"]
