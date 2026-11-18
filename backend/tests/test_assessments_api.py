@@ -6,9 +6,9 @@ TEST_ONLY 공고 A(fixture-notice-a-v1): grade >= 2 AND income <= 5. C는 미검
 from datetime import UTC, datetime
 
 import pytest
-from app.api.assessments import get_clock
 from fastapi.testclient import TestClient
 
+from app.api.assessments import get_clock
 from app.main import app
 from tests.contract import validate
 
