@@ -1,6 +1,6 @@
 {
   "type": "TEST_ONLY_FAKE_NOTICES_NOT_REAL_ELIGIBILITY",
-  "noticeVersionId": "fixture-notice-v1",
+  "noticeVersionId": "fixture-notice-a-v1",
   "ruleSet": {
     "verifiedForFixtureOnly": true,
     "expression": {
