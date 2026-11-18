@@ -156,3 +156,35 @@ def test_loader_rejects_incomplete_or_non_test_fixture(tmp_path, mutate):
 def test_loader_rejects_missing_file(tmp_path):
     with pytest.raises(FixtureError):
         load_fixture_notices(tmp_path / "none.json")
+
+
+def _api_example(name):
+    return json.loads((ROOT / "examples" / "api" / name).read_text(encoding="utf-8"))
+
+
+def test_fixture_matches_contract_examples():
+    """#23 mock 예제와 같은 공고 ID·문구를 써서 화면·판정이 같은 데이터를 본다."""
+    notices = notices_by_id()
+    for summary in _api_example("notices.list.json"):
+        notice = notices[summary["noticeId"]]
+        assert notice.noticeVersionId == summary["noticeVersionId"]
+        assert notice.title == summary["title"]
+        assert notice.sourceVerificationStatus == summary["sourceVerificationStatus"]
+
+    detail = _api_example("notice.detail.json")
+    a = notices[detail["notice"]["noticeId"]]
+    assert [(c.conditionId, c.label, c.evidence.quote) for c in a.conditions] == [
+        (c["conditionId"], c["label"], c["evidence"]["quote"]) for c in detail["conditions"]
+    ]
+
+    summary = _api_example("preparation-summary.prepared.json")
+    assert {d.itemId for d in a.documents} == {i["itemId"] for i in summary["checklist"]}
+    assert a.officialSubmissionUrl == summary["officialSubmissionUrl"]
+
+
+def test_fixture_notice_a_is_the_eligibility_cases_notice():
+    """기존 판정 케이스(AC-B01, AC-B02, AC-B03, AC-B08)가 공고 A의 규칙을 그대로 쓴다."""
+    cases = json.loads((ROOT / "examples" / "eligibility-cases.json").read_text(encoding="utf-8"))
+    a = notices_by_id()["fixture-notice-a"]
+    assert cases["noticeVersionId"] == a.noticeVersionId
+    assert cases["ruleSet"]["expression"] == a.ruleSet.expression
