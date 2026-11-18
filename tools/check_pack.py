@@ -16,7 +16,7 @@ REQUIRED = [
     'docs/01-domain/02-to-be.md', 'docs/01-domain/04-business-rules.md',
     'docs/01-domain/05-eligibility-policy.md', 'docs/01-domain/06-state-machines.md',
     'docs/02-product/01-PRD.md', 'docs/03-architecture/01-architecture-v7.md',
-    'docs/04-delivery/01-acceptance-tests.md',
+    'docs/04-delivery/01-acceptance-tests.md', 'docs/04-delivery/workflow.md',
     'contracts/api-draft.yaml', 'examples/eligibility-cases.json',
 ]
 # 접두사 → 정의 소유 문서. 정의 = 소유 문서의 `### ID` 제목 또는 표의 첫 칸.
@@ -27,8 +27,8 @@ OWNERS = {
     'NFR': 'docs/02-product/01-PRD.md',
     'OPEN': 'docs/00-governance/03-open-decisions.md',
     'EV': 'docs/00-governance/01-evidence.md',
-    'ST': 'docs/02-product/02-user-stories.md',
-    'OP': 'docs/02-product/02-user-stories.md',
+    'ST': 'docs/02-product/01-PRD.md',
+    'OP': 'docs/02-product/01-PRD.md',
 }
 AC_FILE = OWNERS['AC']
 SKIP_DIRS = {'reference', '.git'}
