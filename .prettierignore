@@ -1,0 +1,13 @@
+# 문서·계약·예제는 손으로 관리한다 (tools/check_pack.py가 검사)
+*.md
+docs/
+contracts/
+examples/
+prompts/
+reference/
+# 생성물·잠금 파일
+package-lock.json
+**/.next/
+**/node_modules/
+frontend/next-env.d.ts
+frontend/tsconfig.tsbuildinfo
