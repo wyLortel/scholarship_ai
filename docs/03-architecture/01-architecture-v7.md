@@ -10,7 +10,7 @@
 
 | 실행 요소 | 수 | 책임 | 주의 |
 |---|---:|---|---|
-| Nginx + React 웹 서버 | 1 | 브라우저 화면·HTTPS·`/api` 프록시 | 단일 EC2 장애에 함께 영향 |
+| Nginx + Next.js 웹 서버 ([ADR-0013](adr/0013-nextjs-app-router-frontend.md), v7 원안은 Nginx + React 정적) | 1 | 브라우저 화면·HTTPS·`/api` 프록시, 공고 페이지 서버 렌더링 | 단일 EC2 장애에 함께 영향. Next는 Node 서버 프로세스 — 컨테이너 분리 여부 미정 |
 | FastAPI | 1 | 사용자 인증/권한, 요청 입구, 업무 데이터+outbox 접수 | 긴 AI 작업 자체를 동기로 수행하지 않음 |
 | Redis | 1 | 자체 `crawler_jobs` Stream, Agent Server 내부 실행 큐/스트리밍 의존성 | 업무 영속의 단일 원본 DB 아님 |
 | Outbox Relay (Python) | 1 | DB outbox → Agent Server run 전달·전달 상태 갱신 | 중복 전달 가능 → 멱등성 필요 |
@@ -32,7 +32,7 @@
 ```mermaid
 sequenceDiagram
     actor S as 학생
-    participant FE as React/Nginx
+    participant FE as Next.js/Nginx
     participant API as FastAPI
     participant DB as RDS 업무 DB
     participant O as Outbox Relay
@@ -107,7 +107,7 @@ sequenceDiagram
 
 | 컴포넌트 | 한 가지 핵심 책임 | 주로 읽음 | 주로 씀/외부 효과 | 하지 않음 |
 |---|---|---|---|---|
-| Frontend (React) | 사용자에게 업무 상태를 보여주고 입력 받기 | API 결과 | 인증 요청·학생 답변/선택 | 자격 판정 조건 계산·DB 직접 조회 |
+| Frontend (Next.js, ADR-0013) | 사용자에게 업무 상태를 보여주고 입력 받기 | API 결과(서버 컴포넌트는 FastAPI를 서버에서 호출) | 인증 요청·학생 답변/선택 | 자격 판정 조건 계산(서버 컴포넌트 포함)·DB 직접 조회·개인 데이터 캐시 |
 | Nginx | 웹/HTTPS와 `/api` 라우팅 | 정적 파일·서비스 주소 | 프록시 | 도메인 정책 |
 | FastAPI | 권한 확인한 업무 요청 접수/조회·트랜잭션 | 인증/DB 상태 | 업무 데이터 + outbox, 응답 | 오래 걸리는 그래프 직접 실행·LLM 결과 믿고 검증 생략 |
 | Crawler | 등록된 공식 출처에서 공고 원문 수집 | 소스 목록/이전 버전 | 원문 S3, 버전/수집 outbox | 학생 프로필 판정, 임의 기관 정책 결정 |
