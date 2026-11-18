@@ -25,7 +25,7 @@ docker compose run --rm backend sh -c "ruff check . && ruff format --check ."  #
 docker compose run --rm frontend sh -c "npm run lint && npm run build"         # 프론트 린트·타입 검사·빌드
 ```
 
-- 백엔드 코드는 `backend/app/`에 업무 경계별 폴더(`notice/`, `eligibility/`, `preparation/`)로 있다. 자격 판정 계산은 `backend/app/eligibility/rules.py` 한 곳에서만 한다. **무엇이 어디 있는지는 [`docs/CODEMAP.md`](docs/CODEMAP.md).**
+- 백엔드 코드는 `backend/app/`에 업무 경계별 폴더(`notice/`, `eligibility/`, `preparation/`)로 있다. 자격 판정 계산은 `backend/app/eligibility/domain/rules.py` 한 곳에서만 한다. **무엇이 어디 있는지는 [`docs/CODEMAP.md`](docs/CODEMAP.md).**
 - 프론트 코드는 `frontend/src/`에 있다(Next.js App Router + TypeScript, [ADR-0013](docs/03-architecture/adr/0013-nextjs-app-router-frontend.md)). 서버 컴포넌트가 기본이며, 서버 컴포넌트를 포함해 프론트는 판정 결과를 표시만 하고 자격을 계산하지 않는다. FastAPI 서버 호출은 `frontend/src/lib/api/server.ts`(서버 전용).
 - 의존성을 바꾸면 이미지를 다시 빌드한다: `docker compose build`.
 - **화면 확인:** 공고 목록은 http://localhost:3000/notices (검증된 공고만, #25). 프론트는 테스트 코드 대신 Storybook으로 상태별 화면을 본다: `docker compose --profile storybook up --build storybook` → http://localhost:6006 (스토리는 `frontend/src/**/*.stories.tsx`).

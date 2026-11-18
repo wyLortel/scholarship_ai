@@ -19,7 +19,7 @@
 | AI 프롬프트 / LLM 단계 | [`prompts/README.md`](prompts/README.md), [`04-agent-workflow-contract.md`](docs/03-architecture/04-agent-workflow-contract.md) | 추출·설명·초안 프롬프트를 판정에 사용 금지 |
 | 인프라 / AI 실행 | [`01-architecture-v7.md`](docs/03-architecture/01-architecture-v7.md), 관련 [`adr/`](docs/03-architecture/adr/README.md) | v7은 목표 설계, 자체 Worker 제거 금지(ADR-0007) |
 | 제품 범위·우선순위 | [`01-PRD.md`](docs/02-product/01-PRD.md), [`03-open-decisions.md`](docs/00-governance/03-open-decisions.md) | `PROPOSED`는 자동 승인 아님 |
-| 코드 위치가 헷갈릴 때 | [`docs/CODEMAP.md`](docs/CODEMAP.md) | 판정 계산은 `backend/app/eligibility/rules.py`에서만 |
+| 코드 위치가 헷갈릴 때 | [`docs/CODEMAP.md`](docs/CODEMAP.md) | 판정 계산은 `backend/app/eligibility/domain/rules.py`에서만 |
 | 용어가 헷갈릴 때 | [`03-glossary.md`](docs/01-domain/03-glossary.md), [`07-domain-model.md`](docs/01-domain/07-domain-model.md) | — |
 
 시작·완료 체크리스트와 보고 양식은 모든 작업 공통으로 [`docs/04-delivery/workflow.md`](docs/04-delivery/workflow.md)를 따른다.

@@ -5,8 +5,8 @@ import itertools
 import pytest
 from fastapi.testclient import TestClient
 
-from app.eligibility.model import Fact
-from app.eligibility.rules import evaluate
+from app.eligibility.domain.model import Fact
+from app.eligibility.domain.rules import evaluate
 from app.main import app
 from tests.contract import validate
 

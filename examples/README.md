@@ -1,6 +1,6 @@
 # TEST_ONLY 예제 — 실제 장학금 요건이 아니다
 
-- `fixture-notices.json` (#24): MVP 데모·테스트용 **가상 공고 4건**. 조건별 근거(원문 문장·위치·버전·확인 시각), 서류(이유·조건부 여부·발급처), 공식 제출 URL(가상 `example.org/test-only`)을 담는다. 백엔드 로더 `backend/app/notice/fixture_loader.py`가 근거 누락·TEST_ONLY 표시 누락을 거부한다.
+- `fixture-notices.json` (#24): MVP 데모·테스트용 **가상 공고 4건**. 조건별 근거(원문 문장·위치·버전·확인 시각), 서류(이유·조건부 여부·발급처), 공식 제출 URL(가상 `example.org/test-only`)을 담는다. 백엔드 로더 `backend/app/notice/infrastructure/fixture_loader.py`가 근거 누락·TEST_ONLY 표시 누락을 거부한다.
   | 공고 | 상태 | 규칙 | 쓰는 곳 |
   |---|---|---|---|
   | `fixture-notice-a` | VERIFIED | `grade AND income` | AC-B01, AC-B02, AC-B03, AC-B08 (`eligibility-cases.json`과 같은 규칙) |
