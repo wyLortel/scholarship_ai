@@ -1,0 +1,356 @@
+{
+  "type": "TEST_ONLY_FAKE_NOTICES_NOT_REAL_ELIGIBILITY",
+  "description": "MVP 데모·테스트용 가상 공고(#24). 실제 장학금 규정이 아니다. A: AND, B: AND(OR), C: 미검증, D: 빈 규칙.",
+  "notices": [
+    {
+      "noticeId": "fixture-notice-a",
+      "noticeVersionId": "fixture-notice-a-v1",
+      "isTestOnly": true,
+      "title": "[TEST_ONLY] 가상 재단 학업장려 장학금",
+      "institution": "[TEST_ONLY] 가상 장학재단",
+      "officialUrl": "https://example.org/test-only/fixture-notice-a",
+      "officialSubmissionUrl": "https://example.org/test-only/fixture-notice-a/apply",
+      "sourceVerificationStatus": "VERIFIED",
+      "freshnessStatus": "CHECKED_UNCHANGED",
+      "lastCheckedAt": "2026-11-18T09:00:00+09:00",
+      "recruitmentStartAt": "2026-12-01T00:00:00+09:00",
+      "recruitmentEndAt": "2026-12-31T18:00:00+09:00",
+      "ruleSet": {
+        "expression": {
+          "and": [
+            {
+              "id": "grade",
+              "field": "yearInSchool",
+              "op": ">=",
+              "value": 2
+            },
+            {
+              "id": "income",
+              "field": "incomeBracket",
+              "op": "<=",
+              "value": 5
+            }
+          ]
+        }
+      },
+      "conditions": [
+        {
+          "conditionId": "grade",
+          "label": "2학년 이상",
+          "field": "yearInSchool",
+          "op": ">=",
+          "value": 2,
+          "evidence": {
+            "evidenceId": "ev-a-grade",
+            "noticeVersionId": "fixture-notice-a-v1",
+            "fileId": "fixture-file-a",
+            "location": "본문 2. 지원 자격 (1)",
+            "quote": "신청일 기준 2학년 이상 재학생",
+            "officialUrl": "https://example.org/test-only/fixture-notice-a",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        },
+        {
+          "conditionId": "income",
+          "label": "소득구간 5구간 이하",
+          "field": "incomeBracket",
+          "op": "<=",
+          "value": 5,
+          "evidence": {
+            "evidenceId": "ev-a-income",
+            "noticeVersionId": "fixture-notice-a-v1",
+            "fileId": "fixture-file-a",
+            "location": "본문 2. 지원 자격 (2)",
+            "quote": "학자금 지원구간(소득구간) 5구간 이하인 자",
+            "officialUrl": "https://example.org/test-only/fixture-notice-a",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        }
+      ],
+      "documents": [
+        {
+          "itemId": "doc-enrollment",
+          "documentName": "재학증명서",
+          "reason": "지원 자격(재학생) 확인용으로 제출 서류에 명시됨",
+          "isConditional": false,
+          "appliesWhen": null,
+          "issuer": "재학 중인 대학교",
+          "issuanceGuideUrl": "https://example.org/test-only/issuance/enrollment",
+          "evidence": {
+            "evidenceId": "ev-a-doc-enrollment",
+            "noticeVersionId": "fixture-notice-a-v1",
+            "fileId": "fixture-file-a",
+            "location": "본문 4. 제출 서류 (1)",
+            "quote": "재학증명서 1부",
+            "officialUrl": "https://example.org/test-only/fixture-notice-a",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        },
+        {
+          "itemId": "doc-family",
+          "documentName": "가족관계증명서",
+          "reason": "소득구간 확인이 필요한 경우 제출하도록 명시됨",
+          "isConditional": true,
+          "appliesWhen": "소득구간 확인 서류를 요청받은 경우",
+          "issuer": null,
+          "issuanceGuideUrl": null,
+          "evidence": {
+            "evidenceId": "ev-a-doc-family",
+            "noticeVersionId": "fixture-notice-a-v1",
+            "fileId": "fixture-file-a",
+            "location": "본문 4. 제출 서류 (2)",
+            "quote": "해당자에 한하여 가족관계증명서 1부",
+            "officialUrl": "https://example.org/test-only/fixture-notice-a",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        }
+      ]
+    },
+    {
+      "noticeId": "fixture-notice-b",
+      "noticeVersionId": "fixture-notice-b-v1",
+      "isTestOnly": true,
+      "title": "[TEST_ONLY] 가상 지역인재 장학금 (대안 자격)",
+      "institution": "[TEST_ONLY] 가상 지역재단",
+      "officialUrl": "https://example.org/test-only/fixture-notice-b",
+      "officialSubmissionUrl": "https://example.org/test-only/fixture-notice-b/apply",
+      "sourceVerificationStatus": "VERIFIED",
+      "freshnessStatus": "CHECKED_UNCHANGED",
+      "lastCheckedAt": "2026-11-18T09:00:00+09:00",
+      "recruitmentStartAt": "2026-12-01T00:00:00+09:00",
+      "recruitmentEndAt": "2026-12-31T18:00:00+09:00",
+      "ruleSet": {
+        "expression": {
+          "and": [
+            {
+              "id": "enrolled",
+              "field": "isEnrolled",
+              "op": "==",
+              "value": true
+            },
+            {
+              "or": [
+                {
+                  "id": "income",
+                  "field": "incomeBracket",
+                  "op": "<=",
+                  "value": 3
+                },
+                {
+                  "id": "multiChild",
+                  "field": "isMultiChildHousehold",
+                  "op": "==",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "conditions": [
+        {
+          "conditionId": "enrolled",
+          "label": "재학생",
+          "field": "isEnrolled",
+          "op": "==",
+          "value": true,
+          "evidence": {
+            "evidenceId": "ev-b-enrolled",
+            "noticeVersionId": "fixture-notice-b-v1",
+            "fileId": "fixture-file-b",
+            "location": "본문 2. 지원 자격 (1)",
+            "quote": "공고일 현재 재학 중인 학생",
+            "officialUrl": "https://example.org/test-only/fixture-notice-b",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        },
+        {
+          "conditionId": "income",
+          "label": "소득구간 3구간 이하",
+          "field": "incomeBracket",
+          "op": "<=",
+          "value": 3,
+          "evidence": {
+            "evidenceId": "ev-b-income",
+            "noticeVersionId": "fixture-notice-b-v1",
+            "fileId": "fixture-file-b",
+            "location": "본문 2. 지원 자격 (2) 가목",
+            "quote": "가. 학자금 지원구간 3구간 이하인 자",
+            "officialUrl": "https://example.org/test-only/fixture-notice-b",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        },
+        {
+          "conditionId": "multiChild",
+          "label": "다자녀 가구",
+          "field": "isMultiChildHousehold",
+          "op": "==",
+          "value": true,
+          "evidence": {
+            "evidenceId": "ev-b-multiChild",
+            "noticeVersionId": "fixture-notice-b-v1",
+            "fileId": "fixture-file-b",
+            "location": "본문 2. 지원 자격 (2) 나목",
+            "quote": "나. 다자녀 가구(자녀 3명 이상)의 자녀",
+            "officialUrl": "https://example.org/test-only/fixture-notice-b",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        }
+      ],
+      "documents": [
+        {
+          "itemId": "doc-enrollment",
+          "documentName": "재학증명서",
+          "reason": "지원 자격(재학생) 확인용으로 제출 서류에 명시됨",
+          "isConditional": false,
+          "appliesWhen": null,
+          "issuer": "재학 중인 대학교",
+          "issuanceGuideUrl": "https://example.org/test-only/issuance/enrollment",
+          "evidence": {
+            "evidenceId": "ev-b-doc-enrollment",
+            "noticeVersionId": "fixture-notice-b-v1",
+            "fileId": "fixture-file-b",
+            "location": "본문 4. 제출 서류 (1)",
+            "quote": "재학증명서 1부",
+            "officialUrl": "https://example.org/test-only/fixture-notice-b",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        },
+        {
+          "itemId": "doc-multichild",
+          "documentName": "가족관계증명서",
+          "reason": "다자녀 가구 자격으로 신청하는 경우 제출하도록 명시됨",
+          "isConditional": true,
+          "appliesWhen": "다자녀 가구 자격(나목)으로 신청하는 경우",
+          "issuer": null,
+          "issuanceGuideUrl": null,
+          "evidence": {
+            "evidenceId": "ev-b-doc-multichild",
+            "noticeVersionId": "fixture-notice-b-v1",
+            "fileId": "fixture-file-b",
+            "location": "본문 4. 제출 서류 (2)",
+            "quote": "(2)의 나목 해당자는 가족관계증명서 1부",
+            "officialUrl": "https://example.org/test-only/fixture-notice-b",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        }
+      ]
+    },
+    {
+      "noticeId": "fixture-notice-c",
+      "noticeVersionId": "fixture-notice-c-v1",
+      "isTestOnly": true,
+      "title": "[TEST_ONLY] 가상 성적우수 장학금 (검토 대기)",
+      "institution": "[TEST_ONLY] 가상 교육재단",
+      "officialUrl": "https://example.org/test-only/fixture-notice-c",
+      "officialSubmissionUrl": "https://example.org/test-only/fixture-notice-c/apply",
+      "sourceVerificationStatus": "REVIEW_PENDING",
+      "freshnessStatus": "UNCHECKED",
+      "lastCheckedAt": "2026-11-18T09:00:00+09:00",
+      "recruitmentStartAt": "2026-12-01T00:00:00+09:00",
+      "recruitmentEndAt": "2026-12-31T18:00:00+09:00",
+      "ruleSet": {
+        "expression": {
+          "and": [
+            {
+              "id": "gpa",
+              "field": "previousGpa",
+              "op": ">=",
+              "value": 3.0
+            }
+          ]
+        }
+      },
+      "conditions": [
+        {
+          "conditionId": "gpa",
+          "label": "직전 학기 성적 3.0 이상",
+          "field": "previousGpa",
+          "op": ">=",
+          "value": 3.0,
+          "evidence": {
+            "evidenceId": "ev-c-gpa",
+            "noticeVersionId": "fixture-notice-c-v1",
+            "fileId": "fixture-file-c",
+            "location": "본문 2. 지원 자격 (1)",
+            "quote": "직전 학기 평점 3.0 이상인 자",
+            "officialUrl": "https://example.org/test-only/fixture-notice-c",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": null
+          }
+        }
+      ],
+      "documents": [
+        {
+          "itemId": "doc-transcript",
+          "documentName": "성적증명서",
+          "reason": "성적 기준 확인용으로 제출 서류에 명시됨",
+          "isConditional": false,
+          "appliesWhen": null,
+          "issuer": "재학 중인 대학교",
+          "issuanceGuideUrl": null,
+          "evidence": {
+            "evidenceId": "ev-c-doc-transcript",
+            "noticeVersionId": "fixture-notice-c-v1",
+            "fileId": "fixture-file-c",
+            "location": "본문 4. 제출 서류 (1)",
+            "quote": "직전 학기 성적증명서 1부",
+            "officialUrl": "https://example.org/test-only/fixture-notice-c",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": null
+          }
+        }
+      ]
+    },
+    {
+      "noticeId": "fixture-notice-d",
+      "noticeVersionId": "fixture-notice-d-v1",
+      "isTestOnly": true,
+      "title": "[TEST_ONLY] 가상 특별 장학금 (규칙 없음)",
+      "institution": "[TEST_ONLY] 가상 복지재단",
+      "officialUrl": "https://example.org/test-only/fixture-notice-d",
+      "officialSubmissionUrl": "https://example.org/test-only/fixture-notice-d/apply",
+      "sourceVerificationStatus": "VERIFIED",
+      "freshnessStatus": "CHECKED_UNCHANGED",
+      "lastCheckedAt": "2026-11-18T09:00:00+09:00",
+      "recruitmentStartAt": "2026-12-01T00:00:00+09:00",
+      "recruitmentEndAt": "2026-12-31T18:00:00+09:00",
+      "ruleSet": {
+        "expression": {
+          "and": []
+        }
+      },
+      "conditions": [],
+      "documents": [
+        {
+          "itemId": "doc-application",
+          "documentName": "장학금 신청서",
+          "reason": "공고에 신청서 제출이 명시됨",
+          "isConditional": false,
+          "appliesWhen": null,
+          "issuer": null,
+          "issuanceGuideUrl": null,
+          "evidence": {
+            "evidenceId": "ev-d-doc-application",
+            "noticeVersionId": "fixture-notice-d-v1",
+            "fileId": "fixture-file-d",
+            "location": "본문 4. 제출 서류 (1)",
+            "quote": "소정의 장학금 신청서 1부",
+            "officialUrl": "https://example.org/test-only/fixture-notice-d",
+            "checkedAt": "2026-11-18T09:00:00+09:00",
+            "verifiedAt": "2026-11-18T09:00:00+09:00"
+          }
+        }
+      ]
+    }
+  ]
+}
