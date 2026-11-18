@@ -676,7 +676,7 @@ button:disabled {
   }
 }
 
-/* 공용 부품 보강 (#109) — 토큰만 쓴다 */
+/* 공용 부품 보강 (이슈 109) — 토큰만 쓴다 */
 .ui-badge--lg {
   font-size: var(--text-h3);
   padding: var(--space-1) var(--space-4);

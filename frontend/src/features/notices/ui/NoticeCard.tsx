@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Badge, Panel } from "@/design-system";
+
 import { formatDateTime } from "@/lib/format";
 import type { NoticeSummary } from "@/lib/api/types";
 
@@ -12,10 +14,12 @@ export function NoticeCard({ notice }: { notice: NoticeSummary }) {
   const checkedAt = formatDateTime(notice.lastCheckedAt);
 
   return (
-    <article className={styles.card} aria-labelledby={`notice-${notice.noticeId}`}>
+    <Panel as="article" compact aria-labelledby={`notice-${notice.noticeId}`}>
       {notice.isTestOnly && (
-        <p className={styles.badge} title="실제 장학금 공고가 아닌 시험용 가상 공고입니다">
-          TEST_ONLY · 가상 공고
+        <p className={styles.badge}>
+          <Badge tone="demo" title="실제 장학금 공고가 아닌 시험용 가상 공고입니다">
+            TEST_ONLY · 가상 공고
+          </Badge>
         </p>
       )}
       <h2 id={`notice-${notice.noticeId}`} className={styles.title}>
@@ -51,6 +55,6 @@ export function NoticeCard({ notice }: { notice: NoticeSummary }) {
           내 정보로 조건 확인하기 →
         </Link>
       </p>
-    </article>
+    </Panel>
   );
 }
