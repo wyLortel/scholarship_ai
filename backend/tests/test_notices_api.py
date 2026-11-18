@@ -3,11 +3,11 @@
 TEST_ONLY fixture(#24): A·B·D = VERIFIED, C = REVIEW_PENDING.
 """
 
+from fastapi.testclient import TestClient
+
 from app.api.notices import get_notice_repository
 from app.application.notices import list_verified_notices
 from app.domain.notice.model import NoticeSummary
-from fastapi.testclient import TestClient
-
 from app.main import app
 from tests.contract import validate
 
