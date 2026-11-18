@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { SelectField } from "./SelectField";
 
 const meta = {
-  title: "Design System/SelectField",
+  title: "Shared Components/SelectField",
   component: SelectField,
   args: {
     label: "학년",

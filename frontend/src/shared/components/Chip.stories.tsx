@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Chip, ChipGroup } from "./Chip";
 
 const meta = {
-  title: "Design System/Chip",
+  title: "Shared Components/Chip",
   component: Chip,
   args: { children: "3학년" },
 } satisfies Meta<typeof Chip>;

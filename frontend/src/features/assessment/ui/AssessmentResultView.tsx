@@ -1,4 +1,4 @@
-import { Badge, Panel } from "@/design-system";
+import { Badge, Panel } from "@/shared/components";
 import type { AssessmentResult, ConditionEvaluation, RuleNode } from "@/lib/api/types";
 import { formatDateTime } from "@/lib/format";
 

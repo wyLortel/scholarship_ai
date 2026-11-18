@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Badge, Panel } from "@/design-system";
+import { Badge, Panel } from "@/shared/components";
 
 import { formatDateTime } from "@/lib/format";
 import type { NoticeSummary } from "@/lib/api/types";

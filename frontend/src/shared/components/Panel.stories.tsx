@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Panel } from "./Panel";
 
 const meta = {
-  title: "Design System/Panel",
+  title: "Shared Components/Panel",
   component: Panel,
   args: { children: <p style={{ margin: 0 }}>정보를 묶는 기본 카드예요.</p> },
 } satisfies Meta<typeof Panel>;

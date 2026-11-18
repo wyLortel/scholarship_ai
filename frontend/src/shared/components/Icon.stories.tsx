@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Icon, ICON_NAMES } from "./Icon";
 
 const meta = {
-  title: "Design System/Icon",
+  title: "Shared Components/Icon",
   component: Icon,
   args: { name: "mascot-robot", size: 96 },
 } satisfies Meta<typeof Icon>;

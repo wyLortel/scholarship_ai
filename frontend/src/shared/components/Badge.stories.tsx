@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Badge } from "./Badge";
 
 const meta = {
-  title: "Design System/Badge",
+  title: "Shared Components/Badge",
   component: Badge,
   args: { tone: "positive", children: "충족" },
 } satisfies Meta<typeof Badge>;

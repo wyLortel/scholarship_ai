@@ -5,7 +5,7 @@
  */
 import * as React from "react";
 
-import { Badge, Button, Panel } from "./index";
+import { Badge, Button, Panel } from "@/shared/components";
 
 export type EligibilityState = "possible" | "needs-info" | "ineligible" | "pending" | "changed";
 

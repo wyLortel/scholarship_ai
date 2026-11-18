@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Button } from "./Button";
 
 const meta = {
-  title: "Design System/Button",
+  title: "Shared Components/Button",
   component: Button,
   args: { children: "조건 확인하기" },
 } satisfies Meta<typeof Button>;

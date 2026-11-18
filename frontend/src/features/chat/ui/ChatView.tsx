@@ -1,4 +1,4 @@
-import { Badge, Button, Chip, ChipGroup, Icon, Panel } from "@/design-system";
+import { Badge, Button, Chip, ChipGroup, Icon, Panel } from "@/shared/components";
 import { AssessmentResultView } from "@/features/assessment/ui/AssessmentResultView";
 import { groupLabel, groupTone } from "@/features/assessment/ui/copy";
 

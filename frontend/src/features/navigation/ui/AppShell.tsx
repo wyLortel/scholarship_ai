@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Icon, type IconName } from "@/design-system";
+import { Icon, type IconName } from "@/shared/components";
 
 import styles from "./navigation.module.css";
 

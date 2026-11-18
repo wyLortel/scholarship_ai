@@ -1,4 +1,4 @@
-import type { BadgeTone } from "@/design-system";
+import type { BadgeTone } from "@/shared/components";
 import type { ConditionEvaluation, EligibilityGroup, RuleResult } from "@/lib/api/types";
 
 import { factName } from "@/features/assessment/model/facts";

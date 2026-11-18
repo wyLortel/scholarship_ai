@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { Button, InlineNotice, SelectField } from "@/design-system";
+import { Button, InlineNotice, SelectField } from "@/shared/components";
 import type { AssessState } from "@/features/assessment/server/actions";
 
 import styles from "./assessment.module.css";

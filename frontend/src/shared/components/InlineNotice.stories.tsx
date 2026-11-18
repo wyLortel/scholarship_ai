@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { InlineNotice } from "./InlineNotice";
 
 const meta = {
-  title: "Design System/InlineNotice",
+  title: "Shared Components/InlineNotice",
   component: InlineNotice,
   args: { children: "신청서 제출과 증빙 발급은 공식 기관에서 직접 진행해 주세요." },
 } satisfies Meta<typeof InlineNotice>;
