@@ -43,5 +43,24 @@
   ],
   "assessedAt": "2026-11-18T09:00:00+09:00",
   "isStale": false,
-  "warning": null
+  "warning": null,
+  "ruleTree": {
+    "type": "AND",
+    "result": "UNKNOWN",
+    "conditionId": null,
+    "children": [
+      {
+        "type": "CONDITION",
+        "result": "PASS",
+        "conditionId": "grade",
+        "children": []
+      },
+      {
+        "type": "CONDITION",
+        "result": "UNKNOWN",
+        "conditionId": "income",
+        "children": []
+      }
+    ]
+  }
 }

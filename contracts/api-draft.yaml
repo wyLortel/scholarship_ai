@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Scholarship AI illustrative API contract
-  version: 0.2.0-draft
+  version: 0.3.0-draft
   description: |
     팀 승인 전 개념 계약. 실제 엔드포인트가 존재한다고 주장하지 않는다.
     MVP(#23, 2026-11-18): `x-mvp: true` 표시한 4개 경로만 먼저 구현한다(로그인·DB 없음, TEST_ONLY fixture).
@@ -330,6 +330,10 @@ components:
           description: 사람이 읽는 조건 표현 (예 "2학년 이상")
         evidence:
           $ref: '#/components/schemas/EvidenceRef'
+        studentFactRef:
+          type: string
+          nullable: true
+          description: 이 조건이 비교하는 학생 사실 필드(예 incomeBracket). 입력 화면이 무엇을 물을지 고르는 데만 쓴다
     NoticeDetail:
       type: object
       required: [notice, conditions]
@@ -394,6 +398,24 @@ components:
         assessedAt: {type: string, format: date-time}
         isStale: {type: boolean}
         warning: {type: string, nullable: true}
+        ruleTree:
+          nullable: true
+          description: 평가한 AND/OR 트리(원문 괄호 구조 보존, BR-B08). 화면은 OR을 '다음 중 하나'로 묶는다. 규칙을 평가하지 못했으면(빈 규칙) null
+          allOf:
+            - $ref: '#/components/schemas/RuleNode'
+    RuleNode:
+      type: object
+      required: [type, result, children]
+      properties:
+        type: {type: string, enum: [AND, OR, CONDITION, UNSUPPORTED]}
+        result: {$ref: '#/components/schemas/RuleResult'}
+        conditionId:
+          type: string
+          nullable: true
+          description: type=CONDITION일 때 details[].conditionId
+        children:
+          type: array
+          items: {$ref: '#/components/schemas/RuleNode'}
     ChecklistItem:
       type: object
       required: [itemId, documentName, reason, isConditional, issuer, issuanceGuideUrl, evidence]
