@@ -16,9 +16,9 @@
 필요한 것: Docker + Docker Compose. 비밀값은 `.env`에 두고 커밋하지 않는다(`.env.example` 참고).
 
 ```bash
-docker compose up --build              # 프론트 http://localhost:5173, 백엔드 http://localhost:8000
+docker compose up --build              # 프론트 http://localhost:3000, 백엔드 http://localhost:8000
 curl http://localhost:8000/api/health  # {"status":"ok"}
-curl http://localhost:5173/api/health  # 프론트 개발 서버가 /api를 백엔드로 프록시
+curl http://localhost:3000/api/health  # Next.js가 /api를 백엔드로 전달(rewrites)
 
 docker compose run --rm backend pytest                                # 백엔드 테스트
 docker compose run --rm backend sh -c "ruff check . && ruff format --check ."  # 백엔드 린트·포맷 검사
@@ -26,7 +26,7 @@ docker compose run --rm frontend sh -c "npm run lint && npm run build"         #
 ```
 
 - 백엔드 코드는 `backend/app/`에 있다. 자격 판정 계산은 `backend/app/domain/eligibility/` 한 곳에서만 한다.
-- 프론트 코드는 `frontend/src/`에 있다(Vite + React + TypeScript). 프론트는 서버가 준 판정 결과를 표시만 하고 자격을 계산하지 않는다.
+- 프론트 코드는 `frontend/src/`에 있다(Next.js App Router + TypeScript, [ADR-0013](docs/03-architecture/adr/0013-nextjs-app-router-frontend.md)). 서버 컴포넌트가 기본이며, 서버 컴포넌트를 포함해 프론트는 판정 결과를 표시만 하고 자격을 계산하지 않는다. FastAPI 서버 호출은 `frontend/src/lib/api/server.ts`(서버 전용).
 - 의존성을 바꾸면 이미지를 다시 빌드한다: `docker compose build`.
 
 ## 무엇이 어느 문서의 유일한 책임인가? (Single Source of Truth)
