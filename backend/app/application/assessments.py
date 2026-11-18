@@ -9,8 +9,8 @@ from datetime import datetime
 
 from app.domain.eligibility.evaluator import evaluate
 from app.domain.eligibility.model import ConditionOutcome, Evaluation, Fact
-from app.domain.notice.model import NoticeCondition, NoticeVersion
-from app.domain.notice.repository import NoticeRepository
+from app.notice.model import NoticeCondition, NoticeVersion
+from app.notice.repository import NoticeRepository
 
 
 class NoticeNotFound(Exception):

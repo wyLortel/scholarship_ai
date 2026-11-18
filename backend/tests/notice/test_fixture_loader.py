@@ -8,7 +8,7 @@ import json
 
 import pytest
 
-from app.infrastructure.fixtures.notice_fixture_loader import FixtureError, load_fixture_notices
+from app.notice.fixture_loader import FixtureError, load_fixture_notices
 from tests.contract import ROOT
 
 FIXTURE_FILE = ROOT / "examples" / "fixture-notices.json"
