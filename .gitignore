@@ -1,1 +1,18 @@
 .DS_Store
+
+# secrets — commit only .env.example
+.env
+.env.*
+!.env.example
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+dist/
+coverage/

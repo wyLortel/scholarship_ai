@@ -31,7 +31,8 @@ OWNERS = {
     'OP': 'docs/02-product/01-PRD.md',
 }
 AC_FILE = OWNERS['AC']
-SKIP_DIRS = {'reference', '.git'}
+SKIP_DIRS = {'reference', '.git', 'node_modules', '.venv', 'dist'}  # 의존성·빌드 산출물은 문서 팩이 아님
+JSONC_FILES = re.compile(r'^tsconfig(\..+)?\.json$')  # TypeScript 설정은 주석 허용 JSONC
 # ────────────────────────────────────────────────────────────────
 
 PREFIX = '|'.join(sorted(OWNERS, key=len, reverse=True))
@@ -65,6 +66,8 @@ for path in files('md'):
 
 # 2) JSON 구조
 for path in files('json'):
+    if JSONC_FILES.match(path.name):
+        continue
     try:
         json.loads(path.read_text(encoding='utf-8'))
     except (json.JSONDecodeError, UnicodeDecodeError) as ex:
