@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { ChatSession } from "@/features/chat/ChatSession";
-import type { ChatNotice, ChatQuestion } from "@/features/chat/types";
+import { ChatSession } from "@/features/chat/ui/ChatSession";
+import type { ChatNotice, ChatQuestion } from "@/features/chat/model/types";
 import { getNotice, getNotices } from "@/lib/api/server";
 import type { NoticeDetail } from "@/lib/api/types";
 

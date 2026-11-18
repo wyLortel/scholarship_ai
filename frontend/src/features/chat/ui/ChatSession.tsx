@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react";
 
-import { assessAnswers } from "@/features/assessment/actions";
-import { FACT_INPUTS, answerLabel, choicesFor, factName } from "@/features/assessment/facts";
+import { assessAnswers } from "@/features/assessment/server/actions";
+import { FACT_INPUTS, answerLabel, choicesFor, factName } from "@/features/assessment/model/facts";
 
 import { ChatView } from "./ChatView";
 import { GREETING, questionText, startText } from "./script";
@@ -14,7 +14,7 @@ import type {
   ChatPhase,
   ChatQuestion,
   UsedFact,
-} from "./types";
+} from "@/features/chat/model/types";
 
 type Answer = { field: string; raw: string };
 

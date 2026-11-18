@@ -2,11 +2,11 @@
 
 import { useActionState } from "react";
 
-import type { AssessState } from "./actions";
+import type { AssessState } from "@/features/assessment/server/actions";
 
 import styles from "./assessment.module.css";
 import { AssessmentResultView } from "./AssessmentResultView";
-import { FACT_INPUTS, UNKNOWN } from "./facts";
+import { FACT_INPUTS, UNKNOWN } from "@/features/assessment/model/facts";
 
 type Props = {
   noticeVersionId: string;

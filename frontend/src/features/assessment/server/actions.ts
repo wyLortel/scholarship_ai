@@ -3,7 +3,7 @@
 import { postAssessment } from "@/lib/api/server";
 import type { AssessmentResult, StudentFact } from "@/lib/api/types";
 
-import { FACT_INPUTS, toStudentFact } from "./facts";
+import { FACT_INPUTS, toStudentFact } from "@/features/assessment/model/facts";
 
 export type AssessState =
   | { status: "idle" }

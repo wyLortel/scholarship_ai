@@ -1,6 +1,6 @@
 import type { ConditionEvaluation, EligibilityGroup, RuleResult } from "@/lib/api/types";
 
-import { factName } from "./facts";
+import { factName } from "@/features/assessment/model/facts";
 
 // UX 계약(docs/02-product/03-UX-contract.md)의 의사결정 순간별 카피. 판정 값은 서버가 준 것만 쓴다.
 export const groupLabel: Record<EligibilityGroup, string> = {

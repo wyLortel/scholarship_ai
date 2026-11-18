@@ -4,7 +4,7 @@ import type { AssessmentResult, ConditionEvaluation } from "@/lib/api/types";
 
 import { ChatView } from "./ChatView";
 import { GREETING, questionText, startText } from "./script";
-import type { ChatMessage, ChatNotice, ChatQuestion } from "./types";
+import type { ChatMessage, ChatNotice, ChatQuestion } from "@/features/chat/model/types";
 
 // TEST_ONLY 공고 A 대화(정해진 질문). 판정 값은 API 응답 예시를 그대로 쓴다 — 실제 판정이 아니다.
 const noticeA: ChatNotice = {

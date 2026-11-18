@@ -1,12 +1,18 @@
 import Link from "next/link";
 
-import { AssessmentResultView } from "@/features/assessment/AssessmentResultView";
-import assessmentStyles from "@/features/assessment/assessment.module.css";
-import { groupLabel } from "@/features/assessment/copy";
+import { AssessmentResultView } from "@/features/assessment/ui/AssessmentResultView";
+import assessmentStyles from "@/features/assessment/ui/assessment.module.css";
+import { groupLabel } from "@/features/assessment/ui/copy";
 
 import styles from "./chat.module.css";
 import { CHECKING_TEXT, resultText } from "./script";
-import type { ChatChoice, ChatMessage, ChatNotice, ChatPhase, UsedFact } from "./types";
+import type {
+  ChatChoice,
+  ChatMessage,
+  ChatNotice,
+  ChatPhase,
+  UsedFact,
+} from "@/features/chat/model/types";
 
 type Props = {
   notices: ChatNotice[];

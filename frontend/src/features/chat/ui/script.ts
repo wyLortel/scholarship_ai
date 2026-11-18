@@ -1,9 +1,9 @@
 import type { AssessmentResult } from "@/lib/api/types";
 
-import { groupMessage, objectParticle } from "@/features/assessment/copy";
-import { factName } from "@/features/assessment/facts";
+import { groupMessage, objectParticle } from "@/features/assessment/ui/copy";
+import { factName } from "@/features/assessment/model/facts";
 
-import type { ChatNotice, ChatQuestion } from "./types";
+import type { ChatNotice, ChatQuestion } from "@/features/chat/model/types";
 
 // 데모용 정해진 대화 문구 (LLM 미연결, OPEN-19).
 // 규칙: 결과가 오기 전에는 가능·불가를 말하지 않고, 결과 문장은 API 응답의 카피만 쓴다 (AC-B06).
