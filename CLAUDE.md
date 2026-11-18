@@ -15,7 +15,7 @@
 | 공고 수집·버전·검증 | [`08-notice-governance.md`](docs/01-domain/08-notice-governance.md), [`06-state-machines.md`](docs/01-domain/06-state-machines.md) §2, [`01-acceptance-tests.md`](docs/04-delivery/01-acceptance-tests.md) §A | 접속 실패 ≠ 변경 없음, 검증 실패 후보는 Rule Engine에 넘기지 않음 |
 | 관리자 검토 | [`08-notice-governance.md`](docs/01-domain/08-notice-governance.md), [`06-state-machines.md`](docs/01-domain/06-state-machines.md) §5, [`01-acceptance-tests.md`](docs/04-delivery/01-acceptance-tests.md) §D | 검토는 추출 정합성만, 기관 해석 대행 금지 |
 | 질문·대기·재개 / 신청 준비 / 초안 | [`09-application-preparation.md`](docs/01-domain/09-application-preparation.md), [`06-state-machines.md`](docs/01-domain/06-state-machines.md) §4, [`04-agent-workflow-contract.md`](docs/03-architecture/04-agent-workflow-contract.md), [`examples/preparation-cases.json`](examples/preparation-cases.json) | 같은 case ID 유지, 준비 ≠ 제출, 증빙 업로드 금지 |
-| API / UI | [`03-UX-contract.md`](docs/02-product/03-UX-contract.md), [`contracts/README.md`](contracts/README.md), 해당 기능의 AC | 프론트에서 자격 계산 금지 |
+| API / UI | [`03-UX-contract.md`](docs/02-product/03-UX-contract.md), [`contracts/README.md`](contracts/README.md), 해당 기능의 AC, 화면 시안 [`screens/README.md`](screens/README.md)(참고용) | 프론트·채팅 문장에서 자격 계산 금지 |
 | AI 프롬프트 / LLM 단계 | [`prompts/README.md`](prompts/README.md), [`04-agent-workflow-contract.md`](docs/03-architecture/04-agent-workflow-contract.md) | 추출·설명·초안 프롬프트를 판정에 사용 금지 |
 | 인프라 / AI 실행 | [`01-architecture-v7.md`](docs/03-architecture/01-architecture-v7.md), 관련 [`adr/`](docs/03-architecture/adr/README.md) | v7은 목표 설계, 자체 Worker 제거 금지(ADR-0007) |
 | 제품 범위·우선순위 | [`01-PRD.md`](docs/02-product/01-PRD.md), [`03-open-decisions.md`](docs/00-governance/03-open-decisions.md) | `PROPOSED`는 자동 승인 아님 |
