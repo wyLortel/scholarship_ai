@@ -117,3 +117,20 @@ def test_BR_B09_empty_rule_notice_d_is_needs_review(client):
 
     validate(body, "AssessmentResult")
     assert body["eligibilityResult"] == "NEEDS_REVIEW"
+
+
+def test_rule_tree_for_and_notice_a(client):
+    body = client.post("/api/assessments", json=request_a(3, 7)).json()
+
+    assert body["ruleTree"]["type"] == "AND"
+    assert body["ruleTree"]["result"] == "FAIL"
+    assert [(c["conditionId"], c["result"]) for c in body["ruleTree"]["children"]] == [
+        ("grade", "PASS"),
+        ("income", "FAIL"),
+    ]
+
+
+def test_empty_rule_notice_d_has_no_rule_tree(client):
+    body = client.post("/api/assessments", json=request_a(3, 4, "fixture-notice-d-v1")).json()
+
+    assert body["ruleTree"] is None
