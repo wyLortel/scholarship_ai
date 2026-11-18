@@ -47,6 +47,8 @@ class NoticeCondition:
     conditionId: str
     label: str
     evidence: EvidenceRef | None
+    # 이 조건이 비교하는 학생 사실 필드. 입력 화면이 무엇을 물을지 고르는 데만 쓴다.
+    studentFactRef: str | None = None
 
 
 @dataclass(frozen=True)
