@@ -18,8 +18,9 @@ API·모듈 호출·이벤트를 바꿀 때는 소비자가 받은 결과를 어
 
 | 계약 | 전달하는 내용과 약속 | 소비자가 볼 실패·검증 사례 |
 |---|---|---|
-| 프론트 → 판정 API `POST /api/assessments` | 공고 버전과 타입을 갖춘 사실을 전달한다. `200`의 `group`, `details`, `noticeVersionId`, `isStale`을 표시·판정 근거에 사용한다. | 미확인은 결과 안에 담길 수 있다. 버전 충돌·검증 미완료의 `409`에서는 확정 판정이 노출되지 않고 충돌 사유가 전달되는지 AC-B05, AC-B07로 확인한다. |
-| 프론트 → 준비 API `POST /api/preparations` | 대상 공고·기대 버전 및 `Idempotency-Key`를 보낸다. `202`의 `caseId`로 진행을 조회한다. | 응답 유실 시 같은 논리적 요청에는 같은 키를 사용하고, 조회 가능한 업무 상태를 확인한다. 준비 완료 표시는 `preparationStatus`에 연결한다. AC-C03, AC-C07, AC-R01과 [ADR-0005](../adr/0005-async-outbox-idempotency.md)를 확인한다. |
+| 프론트 → 판정 API `POST /api/assessments` | 공고 버전과 타입을 갖춘 사실을 전달한다. `200`의 `eligibilityResult`, `details`, `noticeVersionId`, `isStale`, `evidenceComplete`를 표시·판정 근거에 사용한다. 화면은 값을 계산하지 않고 그대로 표시한다. | 미확인은 결과 안에 담길 수 있다. 미검증 공고는 `409 NOTICE_NOT_VERIFIED`, 빈 규칙은 `200 NEEDS_REVIEW`(#23 정책). 버전 충돌·검증 미완료의 `409`에서는 확정 판정이 노출되지 않고 충돌 사유가 전달되는지 AC-B05, AC-B07로 확인한다. |
+| 프론트 → MVP 준비 요약 `POST /api/preparation-summaries` (데모) | 공고 버전과 사실을 보내면 체크리스트·미확인 항목·공식 제출 URL을 **저장 없이** 돌려준다. 준비 건·`caseId`·재개가 없다. | `preparationStatus`는 `PREPARED`, `PREPARED_WITH_OPEN_ITEMS`, `STOPPED`뿐이고 제출 상태가 없다(AC-C07). 최신 확인 실패를 전달할 필드는 아직 없다. 데모에 #40을 넣으면 계약에 추가한다. |
+| 프론트 → 준비 API `POST /api/preparations` (목표 설계, 저장·재개) | 대상 공고·기대 버전 및 `Idempotency-Key`를 보낸다. `202`의 `caseId`로 진행을 조회한다. | 응답 유실 시 같은 논리적 요청에는 같은 키를 사용하고, 조회 가능한 업무 상태를 확인한다. 준비 완료 표시는 `preparationStatus`에 연결한다. AC-C03, AC-C07, AC-R01과 [ADR-0005](../adr/0005-async-outbox-idempotency.md)를 확인한다. |
 | 유스케이스 → 공식 출처 연동 어댑터 | 유스케이스는 원문·첨부 참조와 확인 결과처럼 자신이 필요한 값을 요청하고, 어댑터는 기관별 형식과 네트워크 결과를 변환한다. | 기관 타임아웃과 정상 확인의 구분을 AC-A02, AC-C01로 점검한다. 메서드 이름과 타입은 구현 티켓에서 기존 계약을 확인해 정한다. |
 
 업무 유스케이스가 필요로 하는 연동 계약을 기준으로 어댑터를 연결한다. 기관 연동을 바꿀 때 같은 의미를 제공할 수 있으면 변환과 fixture를 수정한다. 의미까지 달라지면 계약 소비자와 합의한다.
