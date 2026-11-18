@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { formatDateTime } from "@/lib/format";
 import type { NoticeSummary } from "@/lib/api/types";
 
@@ -44,6 +46,11 @@ export function NoticeCard({ notice }: { notice: NoticeSummary }) {
       ) : (
         <p className={styles.muted}>공식 원문 링크 없음</p>
       )}
+      <p>
+        <Link href={`/notices/${encodeURIComponent(notice.noticeVersionId)}/check`}>
+          내 정보로 조건 확인하기 →
+        </Link>
+      </p>
     </article>
   );
 }
