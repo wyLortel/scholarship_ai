@@ -1,7 +1,7 @@
 [project]
 name = "scholarship-backend"
 version = "0.1.0"
-description = "Scholarship AI backend (FastAPI). Rule Engine lives in app/eligibility/rules.py only."
+description = "Scholarship AI backend (FastAPI). Rule Engine lives in app/eligibility/domain/rules.py only."
 requires-python = ">=3.13,<3.14"
 dependencies = [
     "fastapi>=0.115",
