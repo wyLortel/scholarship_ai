@@ -11,6 +11,20 @@
 3. 개발 중 도메인 규칙의 빈틈을 발견하면 코드로 결정하지 말고 [`docs/00-governance/03-open-decisions.md`](docs/00-governance/03-open-decisions.md)에 기록한다.
 4. 문서나 ID를 고쳤으면 `python3 tools/check_pack.py`로 링크·ID 정의·FR↔AC 연결을 검사한다.
 
+## 로컬 실행 (Docker)
+
+필요한 것: Docker + Docker Compose. 비밀값은 `.env`에 두고 커밋하지 않는다(`.env.example` 참고).
+
+```bash
+docker compose up --build              # 백엔드 http://localhost:8000
+curl http://localhost:8000/api/health  # {"status":"ok"}
+
+docker compose run --rm backend pytest                                # 백엔드 테스트
+docker compose run --rm backend sh -c "ruff check . && ruff format --check ."  # 린트·포맷 검사
+```
+
+백엔드 코드는 `backend/app/`에 있다. 자격 판정 계산은 `backend/app/domain/eligibility/` 한 곳에서만 한다.
+
 ## 무엇이 어느 문서의 유일한 책임인가? (Single Source of Truth)
 
 | 책임/질문 | 유일 기준 문서 |
