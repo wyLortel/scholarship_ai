@@ -675,3 +675,18 @@ button:disabled {
     scroll-behavior: auto !important;
   }
 }
+
+/* 공용 부품 보강 (이슈 109) — 토큰만 쓴다 */
+.ui-badge--lg {
+  font-size: var(--text-h3);
+  padding: var(--space-1) var(--space-4);
+}
+.ui-panel--tinted {
+  background: var(--color-surface-tinted);
+}
+.ui-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  object-fit: contain;
+  vertical-align: middle;
+}

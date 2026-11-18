@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { AssessmentForm } from "@/features/assessment/ui/AssessmentForm";
 import { AppShell } from "@/features/navigation/ui/AppShell";
 import { getNotice, getNotices } from "@/lib/api/server";
+import { Badge } from "@/shared/components";
 
 import { assessAction } from "@/features/assessment/server/actions";
 
@@ -39,7 +40,11 @@ export default async function CheckPage({
         <p>
           <Link href="/notices">← 공고 목록</Link>
         </p>
-        {notice.isTestOnly && <p>TEST_ONLY · 가상 공고</p>}
+        {notice.isTestOnly && (
+          <p>
+            <Badge tone="demo">TEST_ONLY · 가상 공고</Badge>
+          </p>
+        )}
         <h1>{notice.title}</h1>
         <p>
           아래 정보를 선택하면 이 공고의 조건과 비교해 결과를 보여드립니다. 모르는 항목은

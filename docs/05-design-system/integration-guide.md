@@ -3,14 +3,15 @@
 ## 1. 이 저장소에서의 위치
 `docs/05-design-system/README.md`의 "폴더 위치" 표를 따른다. 프론트는 Next.js App Router(ADR-0013), CSS Modules + 전역 CSS다.
 
-## 2. 디자인 토큰 사용 (#94에서 적용)
+## 2. 디자인 토큰 사용 (#109에서 적용)
 ```tsx
 // frontend/src/app/layout.tsx
 import "@/design-system/design-tokens.css";
 import "@/design-system/components.css";
 ```
 ```tsx
-import { StatusBadge, MissingInfoQuestion } from "@/design-system/ScholarshipUI";
+import { Badge, Button, SelectField } from "@/shared/components"; // 공용 부품
+import { MissingInfoQuestion } from "@/design-system/ScholarshipUI"; // 도메인 시작본
 ```
 
 ## 3. Skill 및 Hook
