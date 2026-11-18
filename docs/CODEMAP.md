@@ -13,7 +13,7 @@
 | AI 상담(채팅) 데모 | (판정은 `eligibility/`) | `features/chat/`, 라우트 `app/chat/` | — (Storybook `Chat/ChatView`) | #93, AC-B06 |
 | 공통 화면 틀(왼쪽 메뉴) | — | `features/navigation/ui/AppShell.tsx` (`/notices`, 조건 확인, `/chat`) | — | #94 |
 | C. 신청 준비 | `preparation/` (빈 패키지) | — | — | #31 이후 |
-| 공통 | `main.py`(라우터 등록), `config.py`, `health.py` | `lib/api/`(FastAPI 호출·타입), `lib/format.ts`, `design-system/` | `contract.py`, `test_contract_examples.py`, `test_health.py` | #23 계약 |
+| 공통 | `main.py`(라우터 등록), `config.py`, `health.py` | `lib/api/`(FastAPI 호출·타입), `lib/format.ts`, `shared/components/`(공용 부품), `design-system/`(토큰·CSS), `public/icons/` | `contract.py`, `test_contract_examples.py`, `test_health.py` | #23 계약 |
 
 ## 기능 폴더 안의 계층
 
@@ -61,6 +61,20 @@ frontend/src/features/notices/
 | `model/` | 기능이 쓰는 데이터 모양·변환(입력 항목, 타입) | 화면, 판정 규칙 |
 
 백엔드와 업무 단위는 맞추되(`notices` ↔ `notice`, `assessment`·`chat` ↔ `eligibility`), 안쪽은 프론트 특성에 맞춰 세 가지로만 나눈다. 코드가 없는 폴더는 만들지 않는다.
+
+## 공용 부품 (Shared Components)
+
+```text
+frontend/src/shared/components/   Button, Chip(+ChipGroup), SelectField, Badge, Panel, InlineNotice, Icon (+stories)
+                                  import { Button, Badge } from "@/shared/components"
+frontend/src/design-system/       design-tokens.css, components.css(ui-* 클래스) — layout.tsx에서 전역 import
+frontend/public/icons/<name>.png  아이콘 12장(512px). 주소는 /icons/<name>.png, 코드에서는 <Icon name="..." />
+```
+
+- 여러 기능에서 자주 쓰는 모양만 여기 둔다. 한 기능에서만 쓰면 그 기능의 `ui/`에 둔다.
+- 공용 부품은 **판정을 모른다.** `Badge`는 색조(`positive`·`caution`·`negative`·`neutral`·`demo`)만 받고, 판정 → 색조는 기능 쪽(`features/assessment/ui/copy.ts`의 `groupTone`·`resultTone`)이 정한다. 색만으로 뜻을 전하지 않게 글자를 같이 넣는다.
+- Storybook에서는 `Shared Components/…`로 본다.
+- 새 아이콘은 `public/icons/`에 넣고 `Icon.tsx`의 `ICON_NAMES`에 이름을 추가한다.
 
 ## 요청 하나의 길 (판정 예)
 

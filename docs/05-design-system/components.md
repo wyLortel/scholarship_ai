@@ -4,6 +4,8 @@
 
 ## A. 기본 부품(Primitive)
 
+> 구현됨(#109, `frontend/src/shared/components/`): `PrimaryButton` → `Button`, `StatusBadge` → `Badge`(색조만), `SurfaceCard` → `Panel`, `SelectField`, `InlineNotice`, 채팅 선택지 → `Chip`, 아이콘 → `Icon`. 나머지는 쓰일 때 만든다.
+
 | 부품명 | 목적 / 필수 데이터 | Variants / States | 참조 화면 |
 |---|---|---|---|
 | `AppHeader` | 로고, 현재 메뉴, 로그인 상태, 알림 | guest/auth/admin, mobile, active | 01–17 |

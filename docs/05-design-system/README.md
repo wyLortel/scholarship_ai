@@ -19,12 +19,14 @@
 | 디자인 문서 | `docs/05-design-system/` (이 폴더) |
 | 화면 시안 이미지 | [`screens/`](../../screens/README.md) (키트의 `references/`와 같은 이미지라 하나만 둔다) |
 | 토큰·공통 CSS | `frontend/src/design-system/design-tokens.css`, `frontend/src/design-system/components.css` |
-| React 부품 | `frontend/src/design-system/ScholarshipUI.tsx` |
+| 공용 React 부품(Shared Components) | `frontend/src/shared/components/` (Button, Chip, SelectField, Badge, Panel, InlineNotice, Icon). 위치·규칙은 [`docs/CODEMAP.md`](../CODEMAP.md) |
+| 아이콘 이미지 | `frontend/public/icons/` |
+| 도메인 부품 시작본(아직 화면 미사용) | `frontend/src/design-system/ScholarshipUI.tsx` |
 | 정적 부품 카탈로그 | [`ui-catalog.html`](ui-catalog.html) (브라우저로 바로 열기) |
 | Claude Code Skill | `.claude/skills/scholarship-design-system/SKILL.md` |
 | 색상 직접 지정 검사 | `node tools/check_design_system.mjs` (경고만, 디자인 품질 증명 아님) |
 
-아직 화면에 연결하지 않았다. 토큰·부품 적용과 기존 `notices` 화면의 색상 교체는 #94에서 한다.
+토큰·공통 CSS와 공용 부품은 공고 목록·조건 확인·채팅 화면에 연결했다(#109).
 
 ## 추천 적용 순서
 1. 시안과 본 문서의 UI 규칙을 팀이 승인한다.
