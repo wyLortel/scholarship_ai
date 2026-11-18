@@ -5,6 +5,8 @@
  */
 import * as React from "react";
 
+import { Badge, Button, Panel } from "./index";
+
 export type EligibilityState = "possible" | "needs-info" | "ineligible" | "pending" | "changed";
 
 export type FactProvenance = "profile" | "student-confirmed" | "source-extracted" | "unverified";
@@ -23,49 +25,6 @@ function classNames(...values: Array<string | undefined | false>): string {
 
 export function StatusBadge({ status, label }: { status: EligibilityState; label?: string }) {
   return <span className={`ui-badge ui-badge--${status}`}>{label ?? statusText[status]}</span>;
-}
-
-export function DemoBadge() {
-  return <span className="ui-badge ui-badge--demo">시연용 가상 데이터</span>;
-}
-
-export interface UIButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "quiet";
-  loading?: boolean;
-}
-
-export function UIButton({
-  variant = "secondary",
-  loading = false,
-  disabled,
-  className,
-  children,
-  ...props
-}: UIButtonProps) {
-  return (
-    <button
-      type="button"
-      className={classNames("ui-button", `ui-button--${variant}`, className)}
-      disabled={disabled || loading}
-      aria-busy={loading || undefined}
-      {...props}
-    >
-      {loading ? "처리 중…" : children}
-    </button>
-  );
-}
-
-export function Panel({
-  as: Element = "section",
-  className,
-  children,
-  ...props
-}: React.ComponentPropsWithoutRef<"section"> & { as?: "section" | "article" }) {
-  return (
-    <Element className={classNames("ui-panel", className)} {...props}>
-      {children}
-    </Element>
-  );
 }
 
 export interface ScholarshipSummary {
@@ -101,7 +60,7 @@ export function ScholarshipCard({
       </div>
       {data.isDemo && (
         <div>
-          <DemoBadge />
+          <Badge tone="demo">시연용 가상 데이터</Badge>
         </div>
       )}
       <div className="ui-scholarship__details">
@@ -109,13 +68,11 @@ export function ScholarshipCard({
         <div>모집: {data.recruitmentStatus}</div>
       </div>
       <div className="ui-row">
-        {onViewEvidence && (
-          <UIButton onClick={() => onViewEvidence(data.id)}>자격 근거 보기</UIButton>
-        )}
+        {onViewEvidence && <Button onClick={() => onViewEvidence(data.id)}>자격 근거 보기</Button>}
         {onAskAI && (
-          <UIButton variant="primary" onClick={() => onAskAI(data.id)}>
+          <Button variant="primary" onClick={() => onAskAI(data.id)}>
             AI에게 추가로 물어보기
-          </UIButton>
+          </Button>
         )}
       </div>
     </Panel>
@@ -177,7 +134,7 @@ export function SourceEvidenceCard({
     <section className="ui-evidence" aria-label="공고 원문 근거">
       <div className="ui-row ui-row--spread">
         <strong>📚 원문 근거 · {clause}</strong>
-        {isDemo && <DemoBadge />}
+        {isDemo && <Badge tone="demo">시연용 가상 데이터</Badge>}
       </div>
       <blockquote className="ui-evidence__quote">{quote}</blockquote>
       <div className="ui-muted ui-small">
@@ -289,7 +246,7 @@ export function ChatComposer({
         placeholder={placeholder}
         disabled={sending}
       />
-      <UIButton
+      <Button
         variant="primary"
         type="submit"
         disabled={!text.trim()}
@@ -297,7 +254,7 @@ export function ChatComposer({
         aria-label="메시지 보내기"
       >
         ➤
-      </UIButton>
+      </Button>
     </form>
   );
 }
@@ -373,9 +330,9 @@ export function DraftEditor({
           {state === "error" && "저장에 실패했습니다. 다시 시도해 주세요."}
           {state === "idle" && "AI가 생성한 초안이며 공식 제출이 아닙니다."}
         </span>
-        <UIButton variant="primary" onClick={save} loading={state === "saving"}>
+        <Button variant="primary" onClick={save} loading={state === "saving"}>
           초안 저장
-        </UIButton>
+        </Button>
       </div>
     </Panel>
   );

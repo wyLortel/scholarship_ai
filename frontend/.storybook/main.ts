@@ -4,6 +4,8 @@ import type { StorybookConfig } from "@storybook/nextjs-vite";
 const config: StorybookConfig = {
   framework: "@storybook/nextjs-vite",
   stories: ["../src/**/*.stories.@(ts|tsx)"],
+  // public/icons 등 정적 파일을 Next와 같은 경로(/icons/...)로 제공
+  staticDirs: ["../public"],
 };
 
 export default config;
