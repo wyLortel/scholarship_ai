@@ -1,6 +1,9 @@
-import Link from "next/link";
+"use client";
 
-import { Badge, Icon, Panel, type IconName } from "@/shared/components";
+import Link from "next/link";
+import { useState } from "react";
+
+import { Badge, Button, Icon, Panel, type IconName } from "@/shared/components";
 import { AssessmentResultView } from "@/features/assessment/ui/AssessmentResultView";
 import { groupLabel, groupTone } from "@/features/assessment/ui/copy";
 import type { ResultEntry } from "@/features/results/server/actions";
@@ -11,6 +14,7 @@ import styles from "./results.module.css";
 // 판정을 받지 못한 공고는 배지 없이 '확인하지 못함'을 그대로 보여 준다(숨기지 않음).
 export function ResultCard({ entry, icon }: { entry: ResultEntry; icon: IconName }) {
   const { notice } = entry;
+  const [open, setOpen] = useState(false);
   const titleId = `result-${notice.noticeId}`;
   return (
     <Panel as="article" aria-labelledby={titleId} className={styles.card}>
@@ -50,15 +54,23 @@ export function ResultCard({ entry, icon }: { entry: ResultEntry; icon: IconName
 
       <div className={styles.actions}>
         {entry.status === "done" && (
-          <details className={styles.evidence}>
-            <summary className="ui-button ui-button--secondary">자격 근거 보기</summary>
-            <AssessmentResultView result={entry.result} />
-          </details>
+          <Button
+            aria-expanded={open}
+            aria-controls={`${titleId}-evidence`}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? "자격 근거 접기" : "자격 근거 보기"}
+          </Button>
         )}
         <Link href="/chat" className="ui-button ui-button--primary">
           AI에게 추가로 물어보기 →
         </Link>
       </div>
+      {entry.status === "done" && open && (
+        <div id={`${titleId}-evidence`}>
+          <AssessmentResultView result={entry.result} />
+        </div>
+      )}
     </Panel>
   );
 }

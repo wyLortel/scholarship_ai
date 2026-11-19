@@ -87,17 +87,6 @@
   align-items: flex-start;
 }
 
-.evidence {
-  flex-basis: 100%;
-  order: 2;
-}
-
-.evidence summary {
-  list-style: none;
-  display: inline-flex;
-  margin-bottom: var(--space-3);
-}
-
 .side {
   position: sticky;
   top: var(--space-6);
