@@ -11,7 +11,9 @@
 | A. 공고 목록·버전·근거 | `notice/` | `features/notices/`, 라우트 `app/notices/page.tsx` | `notice/` | #24, #25, #26(상세 API), BR-A05 |
 | B. 자격 판정 (Rule Engine) | `eligibility/` (계산은 `domain/rules.py`에서만) | `features/assessment/`, 라우트 `app/notices/[noticeVersionId]/check/` | `eligibility/` | #27, #28, #29, AC-B01, AC-B02, AC-B03, AC-B04, AC-B08, AC-B10 |
 | AI 상담(채팅) 데모 | (판정은 `eligibility/`) | `features/chat/`, 라우트 `app/chat/` | — (Storybook `Chat/ChatView`) | #93, AC-B06 |
-| 공통 화면 틀(왼쪽 메뉴) | — | `features/navigation/ui/AppShell.tsx` (`/notices`, 조건 확인, `/chat`) | — | #94 |
+| 공통 화면 틀(왼쪽 메뉴) | — | `features/navigation/ui/AppShell.tsx` (홈, `/chat`, `/results`, `/notices`, 조건 확인) | — | #94 |
+| 홈 (시안 01) | (공고 목록은 `notice/`) | `features/home/`, 라우트 `app/page.tsx` | — (Storybook `Home/HomeView`) | #94, BR-A05 |
+| 추천 결과 (시안 06) | (공고마다 `POST /api/assessments`) | `features/results/`, 라우트 `app/results/` | — (Storybook `Results/ResultList`) | #94, BR-B02 |
 | C. 신청 준비 (MVP 요약) | `preparation/` (`POST /api/preparation-summaries`, 체크리스트는 `domain/checklist.py`) | `features/preparation/`, 채팅의 '신청 준비하기' | `preparation/` | #33, #34, AC-C05, AC-C07, BR-C04, BR-C05, BR-C07, BR-C08 |
 | 공통 | `main.py`(라우터 등록), `config.py`, `health.py` | `lib/api/`(FastAPI 호출·타입), `lib/format.ts`, `shared/components/`(공용 부품), `design-system/`(토큰·CSS), `public/icons/` | `contract.py`, `test_contract_examples.py`, `test_health.py` | #23 계약 |
 
@@ -54,8 +56,13 @@ frontend/src/features/assessment/
 frontend/src/features/chat/
   ui/      ChatSession(상태·서버 액션 호출), ChatView(+stories), chat.module.css, script.ts(정해진 대화 문구)
   model/   types.ts
+frontend/src/features/home/
+  ui/      HomeView(+stories), home.module.css (공고 카드는 notices의 NoticeCard 재사용, 판정 배지 없음)
 frontend/src/features/notices/
   ui/      NoticeCard, NoticeList(+stories), notices.module.css
+frontend/src/features/results/
+  ui/      ResultsView(입력 패널), ResultList·ResultCard(+stories), results.module.css
+  server/  actions.ts (같은 사실로 검증된 공고마다 판정 API 호출, 그룹 개수는 응답을 세기만)
 frontend/src/features/preparation/
   ui/      DocumentChecklist, PreparationSummaryView(+stories), copy.ts(준비 상태 문구), preparation.module.css (업로드 입력 없음)
   server/  actions.ts (같은 답변 → POST /api/preparation-summaries)

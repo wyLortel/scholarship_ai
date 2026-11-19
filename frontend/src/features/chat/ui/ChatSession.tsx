@@ -59,7 +59,6 @@ export function ChatSession({ notices }: { notices: ChatNotice[] }) {
   function prepare() {
     if (!selected || phase.kind !== "done") return;
     const { result } = phase;
-    setMessages((m) => [...m, { id: `prep-${Date.now()}`, from: "user", text: "신청 준비하기" }]);
     setPhase({ kind: "done", result, preparation: { status: "loading" } });
     startTransition(async () => {
       const state = await prepareAnswers(selected.noticeVersionId, answers);
