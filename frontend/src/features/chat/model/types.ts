@@ -1,4 +1,10 @@
-import type { AssessmentResult } from "@/lib/api/types";
+import type { AssessmentResult, PreparationSummary } from "@/lib/api/types";
+
+/** 결과 다음 '신청 준비하기'의 진행 상태. 준비 요약은 API 응답 그대로 (제출 아님). */
+export type ChatPreparation =
+  | { status: "loading" }
+  | { status: "done"; summary: PreparationSummary }
+  | { status: "error"; message: string };
 
 /** 채팅에서 고를 수 있는 공고(검증된 공고 상세에서 만든다). */
 export type ChatNotice = {
@@ -27,7 +33,7 @@ export type ChatPhase =
   | { kind: "choosing" }
   | { kind: "asking"; question: ChatQuestion; choices: ChatChoice[] }
   | { kind: "checking" }
-  | { kind: "done"; result: AssessmentResult }
+  | { kind: "done"; result: AssessmentResult; preparation?: ChatPreparation }
   | { kind: "error"; message: string };
 
 /** 오른쪽 패널의 "지금 쓰는 내 정보" 한 줄 */

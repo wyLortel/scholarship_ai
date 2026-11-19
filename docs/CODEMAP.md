@@ -12,7 +12,7 @@
 | B. 자격 판정 (Rule Engine) | `eligibility/` (계산은 `domain/rules.py`에서만) | `features/assessment/`, 라우트 `app/notices/[noticeVersionId]/check/` | `eligibility/` | #27, #28, #29, AC-B01, AC-B02, AC-B03, AC-B04, AC-B08, AC-B10 |
 | AI 상담(채팅) 데모 | (판정은 `eligibility/`) | `features/chat/`, 라우트 `app/chat/` | — (Storybook `Chat/ChatView`) | #93, AC-B06 |
 | 공통 화면 틀(왼쪽 메뉴) | — | `features/navigation/ui/AppShell.tsx` (`/notices`, 조건 확인, `/chat`) | — | #94 |
-| C. 신청 준비 | `preparation/` (빈 패키지) | — | — | #31 이후 |
+| C. 신청 준비 (MVP 요약) | `preparation/` (`POST /api/preparation-summaries`, 체크리스트는 `domain/checklist.py`) | `features/preparation/`, 채팅의 '신청 준비하기' | `preparation/` | #33, AC-C05, BR-C05, BR-C08 |
 | 공통 | `main.py`(라우터 등록), `config.py`, `health.py` | `lib/api/`(FastAPI 호출·타입), `lib/format.ts`, `shared/components/`(공용 부품), `design-system/`(토큰·CSS), `public/icons/` | `contract.py`, `test_contract_examples.py`, `test_health.py` | #23 계약 |
 
 ## 기능 폴더 안의 계층
@@ -27,6 +27,10 @@ backend/app/notice/
   application/     service.py
   domain/          model.py, repository.py(저장소 계약 Protocol)
   infrastructure/  fixture_loader.py, fixture_repository.py(TEST_ONLY 구현, 나중에 DB 구현이 옆에)
+backend/app/preparation/
+  api/             router.py, schemas.py
+  application/     service.py(판정을 다시 받아 체크리스트·제출 안내를 붙임, 저장 없음)
+  domain/          checklist.py(서류 → 체크리스트 규칙), status.py(판정 → 준비 상태)
 ```
 
 | 계층 | 하는 일 | 하지 않는 일 |
@@ -36,7 +40,7 @@ backend/app/notice/
 | `domain/` | 업무 객체·규칙·저장소 계약. 판정 3값 계산은 `eligibility/domain/rules.py` **한 곳** | FastAPI·pydantic·DB import |
 | `infrastructure/` | 저장소 계약의 구현(fixture, 나중에 DB·외부 API) | 판정 |
 
-의존 방향: `api` → `application` → `domain` ← `infrastructure`. `domain`이 웹·pydantic·다른 계층을 import하면 `backend/tests/test_layer_dependencies.py`가 실패한다. 기능 사이에서는 `eligibility`가 `notice`를 읽을 수 있고, 반대 방향은 금지한다.
+의존 방향: `api` → `application` → `domain` ← `infrastructure`. `domain`이 웹·pydantic·다른 계층을 import하면 `backend/tests/test_layer_dependencies.py`가 실패한다. 기능 사이에서는 `eligibility`가 `notice`를, `preparation`이 `eligibility`·`notice`를 읽을 수 있고, 반대 방향은 금지한다.
 
 **코드가 없는 계층 폴더는 만들지 않는다**(예: `eligibility/infrastructure/` 없음).
 
@@ -52,6 +56,9 @@ frontend/src/features/chat/
   model/   types.ts
 frontend/src/features/notices/
   ui/      NoticeCard, NoticeList(+stories), notices.module.css
+frontend/src/features/preparation/
+  ui/      DocumentChecklist(+stories), preparation.module.css (업로드 입력 없음)
+  server/  actions.ts (같은 답변 → POST /api/preparation-summaries)
 ```
 
 | 폴더 | 하는 일 | 하지 않는 일 |
@@ -60,7 +67,7 @@ frontend/src/features/notices/
 | `server/` | 서버에서만 도는 코드(서버 액션). 입력을 계약 형식으로 바꿔 `lib/api/server.ts`로 보낸다 | 판정 계산, 입력값 로그 |
 | `model/` | 기능이 쓰는 데이터 모양·변환(입력 항목, 타입) | 화면, 판정 규칙 |
 
-백엔드와 업무 단위는 맞추되(`notices` ↔ `notice`, `assessment`·`chat` ↔ `eligibility`), 안쪽은 프론트 특성에 맞춰 세 가지로만 나눈다. 코드가 없는 폴더는 만들지 않는다.
+백엔드와 업무 단위는 맞추되(`notices` ↔ `notice`, `assessment`·`chat` ↔ `eligibility`, `preparation` ↔ `preparation`), 안쪽은 프론트 특성에 맞춰 세 가지로만 나눈다. 코드가 없는 폴더는 만들지 않는다.
 
 ## 공용 부품 (Shared Components)
 

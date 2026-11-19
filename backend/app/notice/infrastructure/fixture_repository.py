@@ -2,7 +2,13 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from app.notice.domain.model import EvidenceRef, NoticeCondition, NoticeSummary, NoticeVersion
+from app.notice.domain.model import (
+    EvidenceRef,
+    NoticeCondition,
+    NoticeDocument,
+    NoticeSummary,
+    NoticeVersion,
+)
 from app.notice.infrastructure.fixture_loader import (
     FixtureEvidence,
     FixtureNotice,
@@ -46,6 +52,20 @@ def _version(n: FixtureNotice) -> NoticeVersion:
             )
             for c in n.conditions
         ),
+        documents=tuple(
+            NoticeDocument(
+                itemId=d.itemId,
+                documentName=d.documentName,
+                reason=d.reason,
+                isConditional=d.isConditional,
+                appliesWhen=d.appliesWhen,
+                issuer=d.issuer,
+                issuanceGuideUrl=d.issuanceGuideUrl,
+                evidence=_evidence(d.evidence),
+            )
+            for d in n.documents
+        ),
+        officialSubmissionUrl=n.officialSubmissionUrl,
     )
 
 

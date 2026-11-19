@@ -14,6 +14,7 @@ from app.eligibility.api.schemas import (
     RuleNodeOut,
 )
 from app.eligibility.application.service import (
+    AssessedCondition,
     Assessment,
     NoticeNotFound,
     NoticeNotVerified,
@@ -30,7 +31,7 @@ def get_clock() -> Callable[[], datetime]:
     return lambda: datetime.now(UTC)
 
 
-def _error(status: int, code: str, message: str, notice_version_id: str) -> JSONResponse:
+def error_response(status: int, code: str, message: str, notice_version_id: str) -> JSONResponse:
     return JSONResponse(
         status_code=status,
         content={
@@ -42,23 +43,41 @@ def _error(status: int, code: str, message: str, notice_version_id: str) -> JSON
     )
 
 
-def _to_response(a: Assessment) -> AssessmentResultOut:
-    details = [
-        ConditionEvaluationOut(
-            conditionId=c.outcome.condition_id,
-            label=c.notice_condition.label if c.notice_condition else c.outcome.condition_id,
-            result=c.outcome.result,
-            reasonCode=c.outcome.reason_code,
-            evidence=(
-                EvidenceOut(**vars(c.notice_condition.evidence))
-                if c.notice_condition and c.notice_condition.evidence
-                else None
-            ),
-            missingEvidenceFields=list(c.missing_evidence_fields),
-            studentFactRef=c.outcome.field,
+def condition_out(c: AssessedCondition) -> ConditionEvaluationOut:
+    return ConditionEvaluationOut(
+        conditionId=c.outcome.condition_id,
+        label=c.notice_condition.label if c.notice_condition else c.outcome.condition_id,
+        result=c.outcome.result,
+        reasonCode=c.outcome.reason_code,
+        evidence=(
+            EvidenceOut(**vars(c.notice_condition.evidence))
+            if c.notice_condition and c.notice_condition.evidence
+            else None
+        ),
+        missingEvidenceFields=list(c.missing_evidence_fields),
+        studentFactRef=c.outcome.field,
+    )
+
+
+def facts_in(body: AssessmentRequestIn) -> dict[str, Fact]:
+    return {f.field: Fact(field=f.field, is_known=f.isKnown, value=f.value) for f in body.facts}
+
+
+def domain_error(e: NoticeNotFound | NoticeNotVerified) -> JSONResponse:
+    if isinstance(e, NoticeNotFound):
+        return error_response(
+            404, "NOTICE_NOT_FOUND", "공고 버전을 찾을 수 없습니다.", e.notice_version_id
         )
-        for c in a.conditions
-    ]
+    return error_response(
+        409,
+        "NOTICE_NOT_VERIFIED",
+        "아직 검증되지 않은 공고라 판정하지 않습니다.",
+        e.notice_version_id,
+    )
+
+
+def _to_response(a: Assessment) -> AssessmentResultOut:
+    details = [condition_out(c) for c in a.conditions]
     return AssessmentResultOut(
         assessmentId=uuid.uuid4().hex,
         noticeVersionId=a.notice_version_id,
@@ -91,15 +110,7 @@ def post_assessment(
     repo: Annotated[NoticeRepository, Depends(get_notice_repository)],
     clock: Annotated[Callable[[], datetime], Depends(get_clock)],
 ):
-    facts = {f.field: Fact(field=f.field, is_known=f.isKnown, value=f.value) for f in body.facts}
     try:
-        return _to_response(assess(repo, body.noticeVersionId, facts, clock()))
-    except NoticeNotFound as e:
-        return _error(404, "NOTICE_NOT_FOUND", "공고 버전을 찾을 수 없습니다.", e.notice_version_id)
-    except NoticeNotVerified as e:
-        return _error(
-            409,
-            "NOTICE_NOT_VERIFIED",
-            "아직 검증되지 않은 공고라 판정하지 않습니다.",
-            e.notice_version_id,
-        )
+        return _to_response(assess(repo, body.noticeVersionId, facts_in(body), clock()))
+    except (NoticeNotFound, NoticeNotVerified) as e:
+        return domain_error(e)

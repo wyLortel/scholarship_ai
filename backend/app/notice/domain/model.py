@@ -52,12 +52,30 @@ class NoticeCondition:
 
 
 @dataclass(frozen=True)
+class NoticeDocument:
+    """공고 원문에 적힌 제출 서류 요구 한 건 (09 §2). 학생 증빙 파일이 아니다 (BR-C08)."""
+
+    itemId: str
+    documentName: str
+    reason: str
+    isConditional: bool
+    appliesWhen: str | None
+    # 없으면 None(=발급처 확인 필요). 창작하지 않는다.
+    issuer: str | None
+    issuanceGuideUrl: str | None
+    evidence: EvidenceRef
+
+
+@dataclass(frozen=True)
 class NoticeVersion:
-    """판정에 쓰는 공고 버전: 요약 + 검증된 규칙 트리 + 조건별 근거."""
+    """판정·준비에 쓰는 공고 버전: 요약 + 검증된 규칙 트리 + 조건별 근거 + 제출 서류."""
 
     summary: NoticeSummary
     ruleExpression: Mapping[str, Any]
     conditions: tuple[NoticeCondition, ...]
+    documents: tuple[NoticeDocument, ...] = ()
+    # 학생이 직접 제출하는 공식 경로 (BR-C07). 서비스는 제출하지 않는다.
+    officialSubmissionUrl: str | None = None
 
     @property
     def is_verified(self) -> bool:
