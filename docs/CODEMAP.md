@@ -12,7 +12,7 @@
 | B. 자격 판정 (Rule Engine) | `eligibility/` (계산은 `domain/rules.py`에서만) | `features/assessment/`, 라우트 `app/notices/[noticeVersionId]/check/` | `eligibility/` | #27, #28, #29, AC-B01, AC-B02, AC-B03, AC-B04, AC-B08, AC-B10 |
 | AI 상담(채팅) 데모 | (판정은 `eligibility/`) | `features/chat/`, 라우트 `app/chat/` | — (Storybook `Chat/ChatView`) | #93, AC-B06 |
 | 공통 화면 틀(왼쪽 메뉴) | — | `features/navigation/ui/AppShell.tsx` (`/notices`, 조건 확인, `/chat`) | — | #94 |
-| C. 신청 준비 (MVP 요약) | `preparation/` (`POST /api/preparation-summaries`, 체크리스트는 `domain/checklist.py`) | `features/preparation/`, 채팅의 '신청 준비하기' | `preparation/` | #33, AC-C05, BR-C05, BR-C08 |
+| C. 신청 준비 (MVP 요약) | `preparation/` (`POST /api/preparation-summaries`, 체크리스트는 `domain/checklist.py`) | `features/preparation/`, 채팅의 '신청 준비하기' | `preparation/` | #33, #34, AC-C05, AC-C07, BR-C04, BR-C05, BR-C07, BR-C08 |
 | 공통 | `main.py`(라우터 등록), `config.py`, `health.py` | `lib/api/`(FastAPI 호출·타입), `lib/format.ts`, `shared/components/`(공용 부품), `design-system/`(토큰·CSS), `public/icons/` | `contract.py`, `test_contract_examples.py`, `test_health.py` | #23 계약 |
 
 ## 기능 폴더 안의 계층
@@ -57,7 +57,7 @@ frontend/src/features/chat/
 frontend/src/features/notices/
   ui/      NoticeCard, NoticeList(+stories), notices.module.css
 frontend/src/features/preparation/
-  ui/      DocumentChecklist(+stories), preparation.module.css (업로드 입력 없음)
+  ui/      DocumentChecklist, PreparationSummaryView(+stories), copy.ts(준비 상태 문구), preparation.module.css (업로드 입력 없음)
   server/  actions.ts (같은 답변 → POST /api/preparation-summaries)
 ```
 
