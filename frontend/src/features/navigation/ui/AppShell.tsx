@@ -4,11 +4,12 @@ import { Icon, type IconName } from "@/shared/components";
 
 import styles from "./navigation.module.css";
 
-export type NavKey = "home" | "chat" | "notices";
+export type NavKey = "home" | "chat" | "results" | "notices";
 
 const ITEMS: { key: NavKey; href: string; label: string; icon: IconName }[] = [
   { key: "home", href: "/", label: "홈", icon: "graduation-cap" },
   { key: "chat", href: "/chat", label: "AI와 장학금 찾기", icon: "chat-bubble" },
+  { key: "results", href: "/results", label: "장학금 추천 결과", icon: "certificate" },
   { key: "notices", href: "/notices", label: "장학금 공고 목록", icon: "search" },
 ];
 
