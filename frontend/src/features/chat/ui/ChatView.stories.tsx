@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import type { AssessmentResult, ConditionEvaluation, PreparationSummary } from "@/lib/api/types";
+import type { AssessmentResult, ConditionEvaluation } from "@/lib/api/types";
+import { openItemsSummary, preparedSummary } from "@/features/preparation/ui/storyData";
 
 import { ChatView } from "./ChatView";
 import { GREETING, questionText, startText } from "./script";
@@ -70,49 +71,6 @@ const result = (
   warning: null,
   ruleTree: null,
 });
-
-// examples/api/preparation-summary.prepared.json과 같은 값 (TEST_ONLY)
-const preparedSummary: PreparationSummary = {
-  noticeId: noticeA.noticeId,
-  noticeVersionId: noticeA.noticeVersionId,
-  eligibilityResult: "ELIGIBLE",
-  preparationStatus: "PREPARED",
-  checklist: [
-    {
-      itemId: "doc-enrollment",
-      documentName: "재학증명서",
-      reason: "지원 자격(재학생) 확인용으로 제출 서류에 명시됨",
-      isConditional: false,
-      appliesWhen: null,
-      issuer: "재학 중인 대학교",
-      issuanceGuideUrl: "https://example.org/test-only/issuance/enrollment",
-      evidence: {
-        ...condition("grade", "PASS").evidence!,
-        evidenceId: "ev-a-doc-enrollment",
-        location: "본문 4. 제출 서류 (1)",
-        quote: "재학증명서 1부",
-      },
-    },
-    {
-      itemId: "doc-family",
-      documentName: "가족관계증명서",
-      reason: "소득구간 확인이 필요한 경우 제출하도록 명시됨",
-      isConditional: true,
-      appliesWhen: "소득구간 확인 서류를 요청받은 경우",
-      issuer: null,
-      issuanceGuideUrl: null,
-      evidence: {
-        ...condition("grade", "PASS").evidence!,
-        evidenceId: "ev-a-doc-family",
-        location: "본문 4. 제출 서류 (2)",
-        quote: "해당자에 한하여 가족관계증명서 1부",
-      },
-    },
-  ],
-  openItems: [],
-  failedConditions: [],
-  officialSubmissionUrl: "https://example.org/test-only/fixture-notice-a/apply",
-};
 
 const bot = (id: string, text: string, context?: ChatQuestion): ChatMessage => ({
   id,
@@ -212,6 +170,19 @@ export const Prepared: Story = {
       preparation: { status: "done", summary: preparedSummary },
     },
     usedFacts: used("3학년", "4구간"),
+  },
+};
+
+/** BR-C04 신청 준비: 소득 모름 → 확인 필요 항목을 남긴 채 준비, 제출 링크는 학생이 직접 */
+export const PreparedWithOpenItems: Story = {
+  args: {
+    messages: [...conversation("3학년", "모름"), user("prep", "신청 준비하기")],
+    phase: {
+      kind: "done",
+      result: result("NEEDS_REVIEW", "PASS", "UNKNOWN"),
+      preparation: { status: "done", summary: openItemsSummary },
+    },
+    usedFacts: used("3학년", "모름"),
   },
 };
 

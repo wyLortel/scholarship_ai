@@ -3,7 +3,7 @@ import { AssessmentResultView } from "@/features/assessment/ui/AssessmentResultV
 import { groupLabel, groupTone } from "@/features/assessment/ui/copy";
 
 import styles from "./chat.module.css";
-import { DocumentChecklist } from "@/features/preparation/ui/DocumentChecklist";
+import { PreparationSummaryView } from "@/features/preparation/ui/PreparationSummaryView";
 
 import { CHECKING_TEXT, PREPARED_INTRO, PREPARING_TEXT, resultText } from "./script";
 import type {
@@ -87,7 +87,7 @@ export function ChatView(props: Props) {
             <li className={`${styles.bot} ${styles.wide}`}>
               <p>{PREPARED_INTRO}</p>
               <div className={styles.card}>
-                <DocumentChecklist items={phase.preparation.summary.checklist} />
+                <PreparationSummaryView summary={phase.preparation.summary} />
               </div>
             </li>
           )}
