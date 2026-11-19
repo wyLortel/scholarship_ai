@@ -78,6 +78,12 @@ export function ChatView(props: Props) {
               <p className={styles.why}>조건별 결과와 원문 근거는 오른쪽 패널에서 볼 수 있어요.</p>
             </li>
           )}
+          {/* 학생이 '신청 준비하기'를 누른 것은 판정 결과 다음에 보인다 */}
+          {phase.kind === "done" && phase.preparation && (
+            <li className={styles.user}>
+              <p>신청 준비하기</p>
+            </li>
+          )}
           {phase.kind === "done" && phase.preparation?.status === "loading" && (
             <li className={styles.bot} role="status">
               <p>{PREPARING_TEXT}</p>

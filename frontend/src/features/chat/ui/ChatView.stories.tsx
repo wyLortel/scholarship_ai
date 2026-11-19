@@ -163,7 +163,7 @@ export const Ineligible: Story = {
 /** AC-C05 신청 준비(시안 08): 결과 다음 '신청 준비하기' → 서류 체크리스트, 업로드 없음 */
 export const Prepared: Story = {
   args: {
-    messages: [...conversation("3학년", "4구간"), user("prep", "신청 준비하기")],
+    messages: conversation("3학년", "4구간"),
     phase: {
       kind: "done",
       result: result("ELIGIBLE", "PASS", "PASS"),
@@ -176,7 +176,7 @@ export const Prepared: Story = {
 /** BR-C04 신청 준비: 소득 모름 → 확인 필요 항목을 남긴 채 준비, 제출 링크는 학생이 직접 */
 export const PreparedWithOpenItems: Story = {
   args: {
-    messages: [...conversation("3학년", "모름"), user("prep", "신청 준비하기")],
+    messages: conversation("3학년", "모름"),
     phase: {
       kind: "done",
       result: result("NEEDS_REVIEW", "PASS", "UNKNOWN"),
@@ -189,7 +189,7 @@ export const PreparedWithOpenItems: Story = {
 /** 준비 요약을 불러오지 못함: 판정은 그대로 두고 다시 시도만 */
 export const PrepareError: Story = {
   args: {
-    messages: [...conversation("3학년", "4구간"), user("prep", "신청 준비하기")],
+    messages: conversation("3학년", "4구간"),
     phase: {
       kind: "done",
       result: result("ELIGIBLE", "PASS", "PASS"),
