@@ -84,6 +84,19 @@ export const NeedsReview: Story = {
   },
 };
 
+/** AC-B05: 빈 규칙 공고 D → 보여 줄 조건 없이 '아직 확인 중' + 사유 (가능 금지) */
+export const EmptyRule: Story = {
+  args: {
+    result: {
+      ...base,
+      noticeVersionId: "fixture-notice-d-v1",
+      eligibilityResult: "NEEDS_REVIEW",
+      details: [],
+      ruleTree: null,
+    },
+  },
+};
+
 /** AC-B02: 1학년·소득 모름 → 학년 FAIL이 있어 전체 불가, 소득은 모름 그대로 */
 export const FailWithUnknown: Story = {
   args: {

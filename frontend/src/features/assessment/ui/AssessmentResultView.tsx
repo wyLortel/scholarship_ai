@@ -28,7 +28,7 @@ export function AssessmentResultView({ result }: { result: AssessmentResult }) {
       <p className={styles.message}>{groupMessage(group, result.details)}</p>
       {result.ruleTree ? (
         <TreeChildren node={result.ruleTree} byId={byId} />
-      ) : (
+      ) : result.details.length === 0 ? null : (
         <ul className={styles.conditions}>
           {result.details.map((d) => (
             <ConditionItem key={d.conditionId} detail={d} />
