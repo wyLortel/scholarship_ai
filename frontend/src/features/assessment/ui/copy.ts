@@ -18,6 +18,10 @@ export function groupMessage(group: EligibilityGroup, details: ConditionEvaluati
     const failed = details.filter((d) => d.result === "FAIL").map((d) => d.label);
     return `이 공고의 [${failed.join(", ")}] 조건이 입력 정보와 맞지 않습니다. 아래 공식 원문 근거를 확인해 주세요.`;
   }
+  if (details.length === 0) {
+    // 빈 규칙·미검증 공고(공고 D): 보여 줄 조건이 없으므로 '아래 조건'을 가리키지 않는다 (AC-B05, BR-B09).
+    return EMPTY_RULE_MESSAGE;
+  }
   const missing = details
     .filter((d) => d.result === "UNKNOWN" && d.reasonCode === "MISSING_FACT")
     .map((d) => factName(d.studentFactRef));
@@ -30,6 +34,9 @@ export function groupMessage(group: EligibilityGroup, details: ConditionEvaluati
   }
   return "아직 판단을 마치지 못한 조건이 있습니다. 아래 '확인 필요' 조건을 확인해 주세요.";
 }
+
+export const EMPTY_RULE_MESSAGE =
+  "이 공고의 조건을 아직 확인 중입니다. 사유: 공식 원문에서 자격 조건을 아직 검증하지 못했어요. 그래서 지금은 가능 여부를 알려 드릴 수 없어요.";
 
 // UNKNOWN일 때 이유를 함께 보여준다(색상만으로 상태를 전달하지 않음).
 export const unknownReason: Partial<Record<ConditionEvaluation["reasonCode"], string>> = {
