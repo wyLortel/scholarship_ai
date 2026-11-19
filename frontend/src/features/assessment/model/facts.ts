@@ -69,6 +69,16 @@ export function toStudentFact(
   return { ...base, unit, isKnown: true, value };
 }
 
+/** 채팅·폼 답변 목록을 계약 StudentFact 목록으로. 하나라도 선택 안 했으면 null. */
+export function answersToFacts(
+  answers: { field: string; raw: FormDataEntryValue | null }[],
+): StudentFact[] | null {
+  const facts = answers
+    .filter((a) => FACT_INPUTS[a.field] !== undefined)
+    .map((a) => toStudentFact(FACT_INPUTS[a.field], a.raw));
+  return facts.every((f): f is StudentFact => f !== null) ? facts : null;
+}
+
 /** 선택지 목록(값, 표시 문구). 마지막은 항상 모름. */
 export function choicesFor(input: FactInput): { value: string; label: string }[] {
   const known =

@@ -1,9 +1,9 @@
 "use server";
 
 import { postAssessment } from "@/lib/api/server";
-import type { AssessmentResult, StudentFact } from "@/lib/api/types";
+import type { AssessmentResult } from "@/lib/api/types";
 
-import { FACT_INPUTS, toStudentFact } from "@/features/assessment/model/facts";
+import { answersToFacts } from "@/features/assessment/model/facts";
 
 export type AssessState =
   | { status: "idle" }
@@ -33,18 +33,12 @@ async function assess(
   noticeVersionId: string,
   answers: { field: string; raw: FormDataEntryValue | null }[],
 ): Promise<AssessState> {
-  const facts = answers
-    .filter((a) => FACT_INPUTS[a.field] !== undefined)
-    .map((a) => toStudentFact(FACT_INPUTS[a.field], a.raw));
-
-  if (!noticeVersionId || facts.some((f) => f === null)) {
+  const facts = answersToFacts(answers);
+  if (!noticeVersionId || facts === null) {
     return { status: "error", message: "모든 항목을 선택해 주세요. 모르면 '모름'을 고르세요." };
   }
 
-  const response = await postAssessment({
-    noticeVersionId,
-    facts: facts.filter((f): f is StudentFact => f !== null),
-  });
+  const response = await postAssessment({ noticeVersionId, facts });
   if (!response.ok) {
     return { status: "error", message: "조건을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요." };
   }
