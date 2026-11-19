@@ -3,7 +3,9 @@ import { AssessmentResultView } from "@/features/assessment/ui/AssessmentResultV
 import { groupLabel, groupTone } from "@/features/assessment/ui/copy";
 
 import styles from "./chat.module.css";
-import { CHECKING_TEXT, resultText } from "./script";
+import { DocumentChecklist } from "@/features/preparation/ui/DocumentChecklist";
+
+import { CHECKING_TEXT, PREPARED_INTRO, PREPARING_TEXT, resultText } from "./script";
 import type {
   ChatChoice,
   ChatMessage,
@@ -20,9 +22,20 @@ type Props = {
   usedFacts: UsedFact[];
   onSelectNotice?: (notice: ChatNotice) => void;
   onAnswer?: (choice: ChatChoice) => void;
+  onPrepare?: () => void;
   onRestart?: () => void;
   onChooseAnother?: () => void;
 };
+
+// '신청 준비하기'는 API 판정이 불가가 아닐 때만 보인다(불가의 다음 행동은 #39).
+// 판정을 다시 계산하지 않고 서버 값만 본다.
+function canPrepare(phase: ChatPhase): boolean {
+  return (
+    phase.kind === "done" &&
+    phase.result.eligibilityResult !== "INELIGIBLE" &&
+    (phase.preparation === undefined || phase.preparation.status === "error")
+  );
+}
 
 // 표시 전용: 대화와 패널을 그린다. 판정은 phase.result(API 응답)만 보여 준다 (AC-B06).
 export function ChatView(props: Props) {
@@ -65,6 +78,24 @@ export function ChatView(props: Props) {
               <p className={styles.why}>조건별 결과와 원문 근거는 오른쪽 패널에서 볼 수 있어요.</p>
             </li>
           )}
+          {phase.kind === "done" && phase.preparation?.status === "loading" && (
+            <li className={styles.bot} role="status">
+              <p>{PREPARING_TEXT}</p>
+            </li>
+          )}
+          {phase.kind === "done" && phase.preparation?.status === "done" && (
+            <li className={`${styles.bot} ${styles.wide}`}>
+              <p>{PREPARED_INTRO}</p>
+              <div className={styles.card}>
+                <DocumentChecklist items={phase.preparation.summary.checklist} />
+              </div>
+            </li>
+          )}
+          {phase.kind === "done" && phase.preparation?.status === "error" && (
+            <li className={styles.bot} role="alert">
+              <p>{phase.preparation.message}</p>
+            </li>
+          )}
           {phase.kind === "error" && (
             <li className={styles.bot} role="alert">
               <p>{phase.message}</p>
@@ -87,6 +118,13 @@ export function ChatView(props: Props) {
             ))}
           {(phase.kind === "done" || phase.kind === "error") && (
             <>
+              {canPrepare(phase) && (
+                <Button variant="primary" onClick={props.onPrepare}>
+                  {phase.kind === "done" && phase.preparation?.status === "error"
+                    ? "신청 준비 다시 시도"
+                    : "신청 준비하기"}
+                </Button>
+              )}
               <Button onClick={props.onRestart}>다시 답하기</Button>
               <Button onClick={props.onChooseAnother}>다른 장학금 확인하기</Button>
             </>

@@ -126,3 +126,16 @@
     max-width: 100%;
   }
 }
+
+/* 준비 자료처럼 카드가 들어가는 말풍선은 조금 더 넓게 (시안 08) */
+.wide {
+  max-width: 92%;
+}
+
+.card {
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}

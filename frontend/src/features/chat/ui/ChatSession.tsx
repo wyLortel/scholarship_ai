@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 
 import { assessAnswers } from "@/features/assessment/server/actions";
 import { FACT_INPUTS, answerLabel, choicesFor, factName } from "@/features/assessment/model/facts";
+import { prepareAnswers } from "@/features/preparation/server/actions";
 
 import { ChatView } from "./ChatView";
 import { GREETING, questionText, startText } from "./script";
@@ -54,6 +55,18 @@ export function ChatSession({ notices }: { notices: ChatNotice[] }) {
     });
   }
 
+  // 같은 답변으로 준비 요약을 받는다. 준비 상태·체크리스트는 서버가 정한다.
+  function prepare() {
+    if (!selected || phase.kind !== "done") return;
+    const { result } = phase;
+    setMessages((m) => [...m, { id: `prep-${Date.now()}`, from: "user", text: "신청 준비하기" }]);
+    setPhase({ kind: "done", result, preparation: { status: "loading" } });
+    startTransition(async () => {
+      const state = await prepareAnswers(selected.noticeVersionId, answers);
+      setPhase({ kind: "done", result, preparation: state });
+    });
+  }
+
   function begin(notice: ChatNotice, extra: ChatMessage[]) {
     setSelected(notice);
     setAnswers([]);
@@ -98,6 +111,7 @@ export function ChatSession({ notices }: { notices: ChatNotice[] }) {
       usedFacts={usedFacts}
       onSelectNotice={onSelectNotice}
       onAnswer={onAnswer}
+      onPrepare={prepare}
       onRestart={() =>
         selected &&
         begin(selected, [{ id: `re-${Date.now()}`, from: "user", text: "다시 답할게요" }])

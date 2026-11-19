@@ -26,6 +26,11 @@ export function questionText(q: ChatQuestion): string {
 
 export const CHECKING_TEXT = "입력한 정보를 공고 조건과 비교하고 있어요…";
 
+export const PREPARING_TEXT = "공고 원문에서 필요한 서류를 정리하고 있어요…";
+
+export const PREPARED_INTRO =
+  "신청 준비에 필요한 서류를 공고 원문에서 정리했어요. 발급처와 원문 근거를 함께 확인해 주세요.";
+
 /** 결과 문장: API가 준 판정 그룹과 조건 결과로만 만든다. */
 export function resultText(result: AssessmentResult): string {
   return groupMessage(result.eligibilityResult, result.details);
